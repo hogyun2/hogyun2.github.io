@@ -65,12 +65,12 @@ content:
     layout: list
     content:
       - layout: left
-        title: NHN CLOUD
-        link: www.nhncloud.com/kr
-        sub_title: Junior Backend Developer
-        caption: 2022.02 ~ 현재
+        title: ReFeree
+        link: [Link](https://arxiv.org/abs/2410.01325)
+        sub_title: IEEE Robotics and Automation Letters
+        caption: 
         description: | # this will include new lines to allow paragraphs
-          Email 서비스를 운영하고 개선해나가고 있습니다. <br><br>
+          ReFeree: Radar-Based Lightweight and Robust Localization using Feature and Free space <br><br>
           기술 스택
             - <mark>Spring Boot</mark>,<mark>nginx</mark>,<mark>Rabbitmq</mark>,<mark>Junit5</mark>, 
             - <mark>Jenkins</mark>, <mark>Sonarqube</mark>, <mark>Grafana</mark>
