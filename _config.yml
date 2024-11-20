@@ -61,26 +61,30 @@ about_content: | # this will include new lines to allow paragraphs
 #    - Images ![alt text](/images/landscape-trees.jpg "Trees")
 
 content:
-  - title: Publications # Title for the section
-    layout: list # Type of content section (list/text)
+  - title: Publication
+    layout: list
     content:
       - layout: left
-        # border: weak  # Value of `weak` will display a weak border below this item. # Any 
-        #               # other value (or no value) means no border will be displayed
-        title: Project name
-        link: Link to project (eg. sproogen.github.io/modern-resume-theme)(optional)
-        link_text: Link Text
-        additional_links:
-          - title:  Github page for project (eg. sproogen/modern-resume-theme)
-            icon: fab fa-github
-            url: Link to project (eg. sproogen.github.io/modern-resume-theme)(optional)
-          - title:  Github page for project (eg. sproogen/modern-resume-theme)
-            icon: fab fa-github
-            url: Link to project (eg. sproogen.github.io/modern-resume-theme)(optional)
-        quote: >
-          Short overview of the project (optional)
+        title: NHN CLOUD
+        link: www.nhncloud.com/kr
+        sub_title: Junior Backend Developer
+        caption: 2022.02 ~ 현재
         description: | # this will include new lines to allow paragraphs
-          Description about the work on/with the project
+          Email 서비스를 운영하고 개선해나가고 있습니다. <br><br>
+          기술 스택
+            - <mark>Spring Boot</mark>,<mark>nginx</mark>,<mark>Rabbitmq</mark>,<mark>Junit5</mark>, 
+            - <mark>Jenkins</mark>, <mark>Sonarqube</mark>, <mark>Grafana</mark>
+            - <mark>Mybatis</mark>, <mark>MySQL</mark>, <mark>Git</mark>
+
+      - title: LG CNS
+        link: www.nhncloud.com/kr
+        sub_title: Junior Backend Developer
+        caption: 2021.01. ~ 2022.01
+        description: | # this will include new lines to allow paragraphs
+          LG Uplus 서비스 Ucube 시스템의 단말기 판매 기능을 개발하였습니다.<br><br>
+          기술 스택
+            - <mark>Spring Boot</mark>, <mark>JPA</mark>
+
   - title: Experience
     layout: list
     content:
