@@ -7,7 +7,7 @@ version: 2
 
 # Personal info
 name: Hogyun Kim
-title: Ph.D candidates
+title: Ph.D candidate
 email: hg.kim@inha.edu
 # email_title: Email (Email title override)
 phone: 82-10-9364-2307
@@ -19,19 +19,19 @@ website: Your website (eg. https://google.com)(optional)
 darkmode: false
 
 # Social links
-#twitter_username: jekyllrb
+twitter_username: jekyllrb
 github_username:  jekyll
-#stackoverflow_username: "00000001"
-#dribbble_username: jekyll
-#facebook_username: jekyll
-#flickr_username: jekyll
+stackoverflow_username: "00000001"
+dribbble_username: jekyll
+facebook_username: jekyll
+flickr_username: jekyll
 instagram_username: jekyll
 linkedin_username: jekyll
-#xing_username: jekyll
-#pinterest_username: jekyll
+xing_username: jekyll
+pinterest_username: jekyll
 youtube_username: jekyll
 orcid_username: 0000-0000-0000-0000
-googlescholar_username: D847cGsAAAAJ
+googlescholar_username: t5UEbooAAAAJ
 
 # Additional icon links
 additional_links:
@@ -51,7 +51,7 @@ additional_links:
 # About Section
 # about_title: About Me (Use this to override about section title)
 about_profile_image: Directory of profile image (eg. images/profile.jpg)
-# about_content: | # this will include new lines to allow paragraphs
+about_content: | # this will include new lines to allow paragraphs
   Write an awesome description about yourself here, this supports markdown, so you can add [links](http://foobar.com) and highlight things <mark>like this</mark>.
 
   You can even add paragraphs by using empty lines like this and add anything else [markdown](https://www.markdownguide.org/getting-started#what-is-markdown) supports such as
@@ -61,7 +61,7 @@ about_profile_image: Directory of profile image (eg. images/profile.jpg)
     - Images ![alt text](/images/landscape-trees.jpg "Trees")
 
 content:
-  - title: Publication # Title for the section
+  - title: Publications # Title for the section
     layout: list # Type of content section (list/text)
     content:
       - layout: left
