@@ -72,6 +72,7 @@ content:
         caption: 
         description: | # this will include new lines to allow paragraphs
           ReFeree: Radar-Based Lightweight and Robust Localization using Feature and Free space <br><br>
+          Hogyun Kim,
             - <mark>Radar</mark>,<mark>Place Recognition</mark>,<mark>Localization</mark>
 
       - title: SOLiD
@@ -81,6 +82,7 @@ content:
         caption: 
         description: | # this will include new lines to allow paragraphs
           Narrowing your FOV with SOLiD: Spatially Organized and Lightweight Global Descriptor for FOV-constrained LiDAR Place Recognition<br><br>
+          Hogyun Kim,
             - <mark>LiDAR</mark>, <mark>Narrow FOV</mark>, <mark>Place Recognition</mark>, <mark>Multi-Robot</mark>
 
   - title: Experience
