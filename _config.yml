@@ -19,7 +19,7 @@ website: Your website (eg. https://google.com)(optional)
 darkmode: false
 
 # Social links
-twitter_username: jekyllrb
+# twitter_username: jekyllrb
 github_username:  jekyll
 stackoverflow_username: "00000001"
 dribbble_username: jekyll
