@@ -68,23 +68,20 @@ content:
         title: ReFeree
         link: https://arxiv.org/abs/2410.01325
         link_text: Arxiv
-        sub_title: IEEE Robotics and Automation Letters
+        sub_title: RA-L
         caption: 
         description: | # this will include new lines to allow paragraphs
           ReFeree: Radar-Based Lightweight and Robust Localization using Feature and Free space <br><br>
-          기술 스택
-            - <mark>Spring Boot</mark>,<mark>nginx</mark>,<mark>Rabbitmq</mark>,<mark>Junit5</mark>, 
-            - <mark>Jenkins</mark>, <mark>Sonarqube</mark>, <mark>Grafana</mark>
-            - <mark>Mybatis</mark>, <mark>MySQL</mark>, <mark>Git</mark>
+            - <mark>Radar</mark>,<mark>Place Recognition</mark>,<mark>Localization</mark>
 
-      - title: LG CNS
-        link: www.nhncloud.com/kr
-        sub_title: Junior Backend Developer
-        caption: 2021.01. ~ 2022.01
+      - title: SOLiD
+        link: https://arxiv.org/abs/2408.07330
+        link_text: Arxiv
+        sub_title: RA-L
+        caption: 
         description: | # this will include new lines to allow paragraphs
-          LG Uplus 서비스 Ucube 시스템의 단말기 판매 기능을 개발하였습니다.<br><br>
-          기술 스택
-            - <mark>Spring Boot</mark>, <mark>JPA</mark>
+          Narrowing your FOV with SOLiD: Spatially Organized and Lightweight Global Descriptor for FOV-constrained LiDAR Place Recognition<br><br>
+            - <mark>LiDAR</mark>, <mark>Narrow FOV</mark>, <mark>Place Recognition</mark>, <mark>Multi-Robot</mark>
 
   - title: Experience
     layout: list
