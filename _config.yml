@@ -61,7 +61,7 @@ about_profile_image: Directory of profile image (eg. images/profile.jpg)
     - Images ![alt text](/images/landscape-trees.jpg "Trees")
 
 content:
-  - title: Projects # Title for the section
+  - title: Publication # Title for the section
     layout: list # Type of content section (list/text)
     content:
       - layout: left
