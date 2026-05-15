@@ -1,441 +1,669 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hogyun Kim</title>
-
-    <meta name="author" content="Hogyun Kim">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    
-  </head>
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css">
+</head>
+<body>
+    <!-- Sticky Navigation -->
+    <nav class="sticky-nav" id="stickyNav">
+        <div class="nav-container">
+            <div class="nav-brand">Hogyun Kim</div>
+            <ul class="nav-links">
+                <li><a href="#profile" data-section="profile">About</a></li>
+                <li><a href="#news" data-section="news">News</a></li>
+                <li><a href="#research" data-section="research">Research</a></li>
+                <li><a href="#etc" data-section="etc">ETC</a></li>
+            </ul>
+            <button class="nav-theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
 
-  <body>
-    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-      <tr style="padding:0px">
-        <td style="padding:0px">
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr style="padding:0px">
-              <td style="padding:2.5%;width:63%;vertical-align:middle">
-                <p class="name" style="text-align: center;">
-                  Hogyun Kim
-                </p>
-                <p>
-                  I'm a PhD student in the Department of Electrical and Computer Engineering at <a href="https://www.inha.ac.kr/kr/index.do">Inha University</a>, advised by <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a> in <a href="https://sparolab.github.io/">SPARO Lab</a>. 
-                  I also received my B.S. in Naval Architecture and Ocean Engineering from Inha University.
-                  My research focuses on <em>scalable and collaborative robot autonomy</em> in multi-robot systems, studying how robots perceive, map, and operate in shared environments through communication-efficient coordination and interaction.
-                </p>
-                <p style="text-align:center">
-                  <a href="hg.kim@inha.edu">Email</a> &nbsp;/&nbsp;
-                  <a href="data/pdf/CV.pdf">CV</a> &nbsp;/&nbsp;
-                  <a href="https://www.linkedin.com/in/hogyun-kim/">LinkedIn</a> &nbsp;/&nbsp;
-                  <a href="https://scholar.google.com/citations?user=t5UEbooAAAAJ&hl">Scholar</a> &nbsp;/&nbsp;
-                  <a href="https://github.com/hogyun2/">Github</a>
-                </p>
-              </td>
-              <td style="padding:2.5%;width:37%;max-width:37%">
-                <a href="images/profile/hogyun.png"><img style="width:100%;max-width:100%;object-fit: cover; border-radius: 50%;" alt="profile photo" src="images/profile/hogyun.png" class="hoverZoomLink"></a>
-              </td>
-            </tr>
-          </tbody></table>
-			
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-                <td style="padding:16px;width:100%;vertical-align:middle">
-                  <h2>News</h2>
-                  <ul style="list-style-type:disc; padding-left:20px;">
-                    <li>[26.03.12] &nbsp; Selected a student representative on the Safety, Security, and Rescue Robotics (SSRR) community </li>
-					<li>[26.03.03] &nbsp; Submitted one paper to IEEE/RSJ IROS 2026 (1st Author)</li>
-			  	    <li>[26.02.10] &nbsp; Submitted one paper to IEEE T-FR 2026 (1st Author)</li>
-                    <li>[26.02.01] &nbsp; Accepted one paper to IEEE ICRA 2026 (2nd Author)</li>
-                    <li>[26.01.23] &nbsp; Awarded the Silver Prize in 32nd Samsung Humantech Paper Award (1st Author)</li>                    
-                    <li>[26.01.16] &nbsp; Submitted one paper to IJRR 2026 (1st Author)</li>
-                    <li>[25.08.29] &nbsp; Awarded Ph.D Candidate Research Fellowship in NRF (Principal Investigator)</li>
-                    <li>[25.08.05] &nbsp; Invited for IEEE T-FR Special Issue (1st Author)</li>
-                    <li>[25.06.16] &nbsp; Accepted one paper to IEEE/RSJ IROS 2025 (2nd Author)</li>
-                    <li>[25.06.01] &nbsp; Accepted one paper to IEEE T-IV 2025 (2nd Author)</li>
-                    <li>[25.04.30] &nbsp; Selected for Spotlight Talk at ICRA 2025 Workshop on Field Robotics (1st Author)</li>
-                    <li>[25.01.28] &nbsp; Accepted two papers to IEEE ICRA 2025 (Co-Author)</li>
-                    <li>[24.09.18] &nbsp; Accepted one paper to IEEE RA-L 2024 (1st Author)</li>
-                    <li>[24.07.22] &nbsp; Accepted one paper to IEEE RA-L 2024 (1st Author)</li>
-                    <li>[24.05.13] &nbsp; Awarded Best Paper Award (3rd Place) at ICRA 2024 Workshop on Future of Construction (2nd Author)</li>
-                    <li>[23.05.16] &nbsp; Accepted one paper to IEEE ICRA 2024 Workshop on Radar in Robotics (1st Author)</li>
-                    <li>[24.01.09] &nbsp; Accepted one paper to IEEE Sensors Letters 2024 (1st Author)</li>
-                    <li>[23.05.16] &nbsp; Accepted one paper to IEEE ICRA 2023 Workshop on Future of Construction (1st Author)</li>
-                    <li>[23.01.17] &nbsp; Accepted one paper to IEEE ICRA 2023 (1st Author)</li>
-                    <li>[22.08.10] &nbsp; Accepted one paper to IEEE IROS 2022 Late-Breaking (1st Author)</li>
-                  </ul>
-                </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px 10px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+    <div class="container">
+        <!-- Header -->
+        <header class="profile" id="profile">
+            <div class="profile-content">
+                <div class="profile-image">
+                    <img src="images/profile/hogyun.png" alt="Hogyun Kim">
+                </div>
+                <div class="profile-info">
+                    <h1>Hogyun Kim</h1>
+                    <p class="description">
+                        I'm a PhD student in the Department of Electrical and Computer Engineering at <a href="https://www.inha.ac.kr/kr/index.do">Inha University</a>, 
+                        advised by <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a> in <a href="https://sparolab.github.io/">SPARO Lab</a>. 
+                        I also received my B.S. in Naval Architecture and Ocean Engineering from Inha University.
+                        My research focuses on <em>scalable and collaborative robot autonomy</em> in multi-robot systems, studying how robots perceive, map, and operate in shared environments through communication-efficient coordination and interaction.
+                    </p>
+                    <div class="links">
+                        <a href="mailto:hg.kim@inha.edu"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="data/pdf/CV.pdf"><i class="fas fa-file-pdf"></i> CV</a>
+                        <a href="https://www.linkedin.com/in/hogyun-kim/"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        <a href="https://scholar.google.com/citations?user=t5UEbooAAAAJ&hl"><i class="fas fa-graduation-cap"></i> Scholar</a>
+                        <a href="https://github.com/hogyun2/"><i class="fab fa-github"></i> Github</a>
+                    </div>
+                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
 
-			<table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Research</h2>
-                <p>
-                  My research interests lie in multi-robot systems spanning both robot autonomy and interaction.
-                  To date, my work has focused on multi-robot SLAM and place recognition for shared environmental perception, with an emphasis on communication-efficient knowledge mapping and sharing.
-                  Building on this foundation, I am expanding my research toward interactive and collaborative multi-robot systems that integrate perception, planning, and coordination.
-                  Some papers are <span class="highlight">highlighted</span>.
-                </p>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px 10px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+        <!-- News -->
+        <section class="news" id="news">
+            <h2>News</h2>
+            <div class="news-grid">
+                <div class="news-item">
+                    <span class="date">[26.03.15]</span>
+                    <span class="content"><i class="fas fa-trophy" style="color: #f59e0b; margin-right: 4px;"></i>Selected as an award finalist at IEEE ICRA 2026 (1st Author)</span>
+                </div>
+                <div class="news-item">
+                    <span class="date">[26.03.12]</span>
+                    <span class="content">Selected a student representative on the Safety, Security, and Rescue Robotics (SSRR) community</span>
+                </div>
+                <div class="news-item">
+                    <span class="date">[26.03.03]</span>
+                    <span class="content">Submitted one paper to IEEE/RSJ IROS 2026 (1st Author)</span>
+                </div>
+                <div class="news-item">
+                    <span class="date">[26.02.10]</span>
+                    <span class="content">Submitted one paper to IEEE T-FR 2026 (1st Author)</span>
+                </div>
+                <div class="news-item">
+                    <span class="date">[26.02.01]</span>
+                    <span class="content">Accepted one paper to IEEE ICRA 2026 (2nd Author)</span>
+                </div>
+                <div class="news-item">
+                    <span class="date">[26.01.23]</span>
+                    <span class="content"><i class="fas fa-trophy" style="color: #f59e0b; margin-right: 4px;"></i>Awarded the Silver Prize in 32nd Samsung Humantech Paper Award (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[26.01.16]</span>
+                    <span class="content">Submitted one paper to IJRR 2026 (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.08.29]</span>
+                    <span class="content"><i class="fas fa-award" style="color: #059669; margin-right: 4px;"></i>Awarded Ph.D Candidate Research Fellowship in NRF (Principal Investigator)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.08.05]</span>
+                    <span class="content">Invited for IEEE T-FR Special Issue (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.06.16]</span>
+                    <span class="content">Accepted one paper to IEEE/RSJ IROS 2025 (2nd Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.06.01]</span>
+                    <span class="content">Accepted one paper to IEEE T-IV 2025 (2nd Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.04.30]</span>
+                    <span class="content">Selected for Spotlight Talk at ICRA 2025 Workshop on Field Robotics (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[25.01.28]</span>
+                    <span class="content">Accepted two papers to IEEE ICRA 2025 (Co-Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[24.09.18]</span>
+                    <span class="content">Accepted one paper to IEEE RA-L 2024 (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[24.07.22]</span>
+                    <span class="content">Accepted one paper to IEEE RA-L 2024 (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[24.05.13]</span>
+                    <span class="content"><i class="fas fa-trophy" style="color: #f59e0b; margin-right: 4px;"></i>Awarded Best Paper Award (3rd Place) at ICRA 2024 Workshop on Future of Construction (2nd Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[24.01.09]</span>
+                    <span class="content">Accepted one paper to IEEE Sensors Letters 2024 (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[23.05.16]</span>
+                    <span class="content">Accepted one paper to IEEE ICRA 2023 Workshop on Future of Construction (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[23.01.17]</span>
+                    <span class="content">Accepted one paper to IEEE ICRA 2023 (1st Author)</span>
+                </div>
+                <div class="news-item hidden">
+                    <span class="date">[22.08.10]</span>
+                    <span class="content">Accepted one paper to IEEE IROS 2022 Late-Breaking (1st Author)</span>
+                </div>
+            </div>
+            <button class="show-more-btn" onclick="toggleNews()">Show More</button>
+        </section>
 
-          <tr bgcolor="#ffffd0">
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/commerge.jpg" alt="kiss_imu" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="">
-                <span class="papertitle">Commerge: Communication-Efficient, Robust and Fast LiDAR Map Merging Framework for Multi-Robot Coordination in Resource-Constrained Scenarios </span>
-              </a>
-              <br>
-              <strong>Hogyun Kim</strong>,
-              <a href="https://jivvon1.github.io">Jiwon Choi</a>,
-              <a href="https://scholar.google.com/citations?user=2bvLmqQAAAAJ&hl=en">Juwon Kim</a>,
-              <a href="https://scholar.google.com/citations?user=kiBTkqMAAAAJ&hl=en">Geonmo Yang</a>,
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong</a>,
-              <a href="https://limhyungtae.github.io">Hyungtae Lim</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>IJRR submitted</em>, 2026
-              <br>
-              Under Review
-              <!-- <a href="">project page</a> /
-              <a href="">arXiv</a> /
-              <a href="">paper</a> /
-              <a href="">code</a> -->
-              <p>[TL;DR] Communication-Efficient Multi-Robot Map Merging Framework</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/kiss_imu.png" alt="kiss_imu" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/13T7KDTN119Gg4sY5okPPd7rD4vVIBTye/view?usp=sharing">
-                <span class="papertitle">KISS-IMU: Self-supervised Inertial Odometry with Motion-balanced Learning and Uncertainty-aware Inference </span>
-              </a>
-              <br>
-              <a href="https://jivvon1.github.io">Jiwon Choi</a>,
-              <strong>Hogyun Kim</strong>,
-              <a href="https://scholar.google.com/citations?user=kiBTkqMAAAAJ&hl=en">Geonmo Yang</a>,
-              <a href="https://scholar.google.com/citations?user=4-5Fi9kAAAAJ&hl=en">Juhui Lee</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>ICRA</em>, 2026
-              <br>
-              Accepted to Appear (<span style="color:red; font-weight:bold;">Award Finalist</span>)
-              <!-- <a href="">project page</a> /
-              <a href="">arXiv</a> /
-              <a href="">paper</a> /
-              <a href="">code</a> -->
-              <p>[TL;DR] Self-Supervised Inertial Odometry (IO)</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/marscalib.png" alt="b3do" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1cdxca6dOpLL5Ci_utPYwPFv23ktfVQbp/view?usp=sharing">
-                <span class="papertitle">MARSCalib: Multi-robot, Automatic, Robust, Spherical Target-based Extrinsic Calibration in Field and Extraterrestrial Environments </span>
-              </a>
-              <br>
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong</a>,
-              <strong>Hogyun Kim</strong>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>IROS</em>, 2025
-              <br>
-              <a href="https://sparolab.github.io/research/marscalib/">project page</a> /
-              <a href="https://arxiv.org/abs/2507.17130">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/document/11247397">paper</a> /
-              <a href="https://github.com/sparolab/MARSCalib">code</a> /
-              <a href="https://www.youtube.com/watch?v=H4f7Wx7x3LU">youtube</a>
-              <p>[TL;DR] Multi-Robot, Spherical Target-based LiDAR-camera Calibration</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/uni_mapper.png" alt="b3do" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1zPlEPBRy9tVY8gCul2q-3bgQz8pbGUUb/view?usp=sharing">
-                <span class="papertitle">Uni-Mapper: Unified Mapping Framework for Multi-modal LiDARs in Complex and Dynamic Environments </span>
-              </a>
-              <br>
-              <a href="https://scholar.google.com/citations?user=F6dY8DoAAAAJ&hl=en">Gilhwan Kang</a>,
-              <strong>Hogyun Kim</strong>,
-              <a href="http://www.cs.berkeley.edu/%7Emfritz/">Byunghee Choi</a>,
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong</a>,
-              <a href="https://scholar.google.com/citations?user=gGfBRawAAAAJ&hl=en">Youngsik Shin</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>T-IV</em>, 2025
-              <br>
-              <a href="https://sparolab.github.io/research/uni_mapper/">project page</a> /
-              <a href="https://arxiv.org/abs/2507.20538">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/abstract/document/11057931">paper</a> /
-              <a href="https://github.com/sparolab/uni-mapper">code</a> /
-              <a href="https://www.youtube.com/watch?v=SK0TU9Vy3Is">youtube</a>
-              <p>[TL;DR] Multi-Robot and Multi-Modal LiDARs Mapping Framework</p>
-            </td>
-          </tr>
-
-          <tr bgcolor="#ffffd0">
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/skid-slam.png" alt="b3do" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1rdHV7vXFubO6zY0QSSVW4I7GB4DJfaiQ/view?usp=sharing">
-                <span class="papertitle">SKiD-SLAM: Robust, Lightweight, and Distributed Multi-Robot LiDAR SLAM in Resource-Constrained Field Environments </span>
-              </a>
-              <br>
-              <strong>Hogyun Kim</strong>,
-              <a href="https://jivvon1.github.io">Jiwon Choi</a>,
-              <a href="https://scholar.google.com/citations?user=2bvLmqQAAAAJ&hl=en">Juwon Kim</a>,
-              <a href="https://scholar.google.com/citations?user=kiBTkqMAAAAJ&hl=en">Geonmo Yang</a>,
-              <a href="https://scholar.google.com/citations?user=dE64iRYAAAAJ&hl=en">Dongjin Cho</a>,
-              <a href="https://limhyungtae.github.io">Hyungtae Lim</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>ICRA workshop on Field Robotics (<span style="color:red; font-weight:bold;">spotlight talk</span>)</em>, 2025
-              <br>
-              <a href="https://sparolab.github.io/research/skid_slam/">project page</a> /
-              <a href="https://arxiv.org/abs/2505.08230">arXiv</a> /
-              <a href="https://github.com/sparolab/SKiD-SLAM">code</a>
-              <p>[TL;DR] Multi-Robot and Distributed LiDAR SLAM Framework</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/diter_plus.png" alt="diter_plus" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1BppfuCBXnoP605Oad1qWK2VX0sPFB7E2/view?usp=sharing">
-                <span class="papertitle">DiTer++: Diverse Terrain and Multi-modal Dataset for Multi-Robot SLAM in Multi-session Environments </span>
-              </a>
-              <br>
-              <a href="https://scholar.google.com/citations?user=2bvLmqQAAAAJ&hl=en">Juwon Kim</a>,
-              <strong>Hogyun Kim</strong>,
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong</a>,
-              <a href="https://scholar.google.com/citations?user=gGfBRawAAAAJ&hl=en">Youngsik Shin</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>ICRA</em>, 2025
-              <br>
-              <a href="https://sparolab.github.io/research/diter_plus/">project page</a> /
-              <a href="https://arxiv.org/abs/2412.05839">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/abstract/document/10629042">paper</a> /
-              <a href="https://github.com/sparolab/DiTer-plusplus">code</a> /
-              <a href="https://www.dropbox.com/scl/fo/zoawkn9s3thsjv3mkqux8/AN9G8TzeE_Uw92QBpE8hIKk?rlkey=h3d9eu8pf0g6w3h0ywbdbqiv6&e=2&st=t2gf8v6y&dl=0">download link</a> /
-              <a href="https://www.youtube.com/watch?v=RJ_netgAOT8">youtube</a>
-              <p>[TL;DR] Multi-Robot and Multi-Modal Dataset</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/polaris.gif" alt="polaris" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1u83L3-0ry1gTJh0X8attddqNeDgjnOby/view?usp=sharing">
-                <span class="papertitle">PoLaRIS Dataset: A Maritime Object Detection and Tracking Dataset in Pohang Canal </span>
-              </a>
-              <br>
-              <a href="https://jivvon1.github.io">Jiwon Choi</a>,
-              <a href="https://scholar.google.com/citations?user=dE64iRYAAAAJ&hl=en">Dongjin Cho</a>,
-              <a href="https://scholar.google.com/citations?user=iKsImcYAAAAJ&hl=en">Giheyon Lee</a>,
-              <strong>Hogyun Kim</strong>,
-              <a href="https://scholar.google.com/citations?user=kiBTkqMAAAAJ&hl=en">Geonmo Yang</a>,
-              <a href="https://scholar.google.com/citations?user=87nuF54AAAAJ&hl=en">Joowan Kim</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>ICRA</em>, 2025
-              <br>
-              <a href="https://sparolab.github.io/research/polaris/">project page</a> /
-              <a href="https://arxiv.org/abs/2412.06192">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/document/11128583">paper</a> /
-              <a href="https://github.com/sparolab/PoLaRIS">code</a> /
-              <a href="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeXqji_9KVj6SEk3lYVewzi_krMeQNNen2r2E9ZCAwKhPfNwQ/viewform">download link</a> /
-              <a href="https://www.youtube.com/watch?v=26BinQIRc78">youtube</a>
-              <p>[TL;DR] Object Detection and Tracking Dataset in Maritime</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/referee.png" alt="b3do" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1ZfmEg5xz0fK8XD_hRLqXTStj5ry0Zcoi/view?usp=sharing">
-                <span class="papertitle">ReFeree: Radar-based Lightweight and Robust Localization using Feature and Free space </span>
-              </a>
-              <br>
-              <strong>Hogyun Kim*</strong>,
-              <a href="https://scholar.google.com/citations?user=JCJAwgIAAAAJ&hl=en">Byunghee Choi*</a>,
-              <a href="https://scholar.google.com/citations?user=rcp7sWAAAAAJ&hl=en">Euncheol Choi</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>RA-L</em>, 2024
-              <br>
-              <a href="https://sparolab.github.io/research/referee/">project page</a> /
-              <a href="https://arxiv.org/abs/2410.01325">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/document/10705066">paper</a> /
-              <a href="https://github.com/sparolab/referee">code</a> /
-              <a href="https://www.youtube.com/watch?v=aQ0OlHYJCYI">youtube</a>
-              <p>[TL;DR] Lightweight Radar Place Recognition</p>
-            </td>
-          </tr>
-
-          <tr bgcolor="#ffffd0">
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/solid.gif" alt="solid" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1Gci27G7u6qkLiNP_zhwgc9QvpNMF5gL9/view?usp=sharing">
-                <span class="papertitle">Narrowing your FOV with SOLiD: Spatially Organized and Lightweight Global Descriptor for FOV-constrained LiDAR Place Recognition </span>
-              </a>
-              <br>
-              <strong>Hogyun Kim</strong>,
-              <a href="https://jivvon1.github.io">Jiwon Choi</a>,
-              <a href="https://scholar.google.com/citations?user=UPg-JuQAAAAJ&hl=en">Taehu Sim</a>,
-              <a href="https://sites.google.com/view/aprl-dgist">Giseop Kim</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>RA-L</em>, 2024
-              <br>
-              <a href="https://sparolab.github.io/research/solid/">project page</a> /
-              <a href="https://arxiv.org/abs/2408.07330">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/abstract/document/10629042">paper</a> /
-              <a href="https://github.com/sparolab/solid">code</a> /
-              <a href="https://www.youtube.com/watch?v=4sAWWfZTwLs">youtube</a>
-              <p>[TL;DR] Lightweight LiDAR Place Recognition</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/diter.gif" alt="diter" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1-6uJt53_N5oWFzgM9OZYFZPT0d3-w6tP/view?usp=sharing">
-                <span class="papertitle">DiTer: Diverse Terrain and Multimodal Dataset for Field Robot Navigation in Outdoor Environments </span>
-              </a>
-              <br>
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong*</a>,
-              <strong>Hogyun Kim*</strong>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>IEEE Sensors Letters</em>, 2024
-              <br>
-              <a href="https://sparolab.github.io/research/diter/">project page</a> /
-              <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10416213">paper</a> /
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdyVM9Qhb2Qd7G7QbTigeH-gGraOFOgZSJrSsdqRV7mCwTvRw/viewform">download link</a> /
-              <a href="https://www.youtube.com/watch?v=i-2FwYKT5ss">youtube</a>
-              <p>[TL;DR] Multi-Modal Legged Robot Datasets</p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="padding:16px;width:20%;vertical-align:middle">
-              <img src="images/sonar_context.png" alt="sonar_context" width="160" style="border-style: none">
-            </td>
-            <td style="padding:8px;width:80%;vertical-align:middle">
-              <a href="https://drive.google.com/file/d/1ka3tjNRA8kXs9C0y3mZWiBZa-gwlRSnI/view?usp=sharing">
-                <span class="papertitle">Robust Imaging Sonar-based Place Recognition and Localization in Underwater Environments</span>
-              </a>
-              <br>
-              <strong>Hogyun Kim</strong>,
-              <a href="https://scholar.google.com/citations?user=F6dY8DoAAAAJ&hl=en">Gilhwan Kang</a>,
-              <a href="https://scholar.google.com/citations?user=ZAO6skQAAAAJ&hl=en">Seokhwan Jeong</a>,
-              <a href="https://scholar.google.com/citations?user=BHO8C5YAAAAJ&hl=en">Seungjun Ma</a>,
-              <a href="https://sites.google.com/site/ygchocv/home">Younggun Cho</a>
-              <br>
-              <em>ICRA</em>, 2023
-              <br>
-              <a href="https://sparolab.github.io/research/sonar_context/">project page</a> /
-              <a href="https://arxiv.org/abs/2305.14773">arXiv</a> /
-              <a href="https://ieeexplore.ieee.org/document/10161518">paper</a> /
-              <a href="https://github.com/sparolab/sonar_context">code</a> /
-              <a href="https://www.youtube.com/watch?v=JRD_xuqtHZU">youtube</a>
-              <p>[TL;DR] Sonar Place Recognition in Underwater</p>
-            </td>
-          </tr>
-	
-          </tbody></table>
-
-          
-					<table style="width:100%; margin:0 auto; border:0; border-spacing:0; padding:16px;"><tbody>
-            <tr>
-              <td>
-                <h2>ETC</h2>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+        <!-- Research -->
+        <section class="research" id="research">
+            <h2>Research</h2>
+            <p class="section-intro">
+                My research interests lie in multi-robot systems spanning both robot autonomy and interaction.
+                To date, my work has focused on multi-robot SLAM and place recognition for shared environmental perception, 
+                with an emphasis on communication-efficient knowledge mapping and sharing.
+                Some papers are <span class="highlight">highlighted</span>.
+            </p>
             
-           
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #fcb97d;">
-								 <h2>Presentation</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:middle">
-                <a href="https://www.summerschoolprague.com/">IEEE RAS Summer School on Multi-Robot Systems, 2024</a>
-                <br>
-                <a href="https://2024.icros.org/">ICROS OS on Robotics and AI Tech. for Space and Extreme Environments, 2024</a>
-                <br>
-                <a href="https://kros.org/Conference/ConferenceView.asp?AC=0&CODE=CC20240802&CpPage=246#CONF/">KRoC OS on Cutting-Edge Tech. and App. for Autonomous Multi-Robot/Agent Collabo, 2025</a>
-              </td>
-            </tr>
+            <!-- Search and Filters -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="paper-search" placeholder="Search papers, authors, or keywords..." oninput="searchPapers()">
+                    <button class="clear-search" onclick="clearSearch()" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paper Filters -->
+            <div class="paper-filters">
+                <div class="filter-group">
+                    <label for="year-filter">Year:</label>
+                    <select id="year-filter" onchange="filterPapers()">
+                        <option value="all">All Years</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="venue-filter">Venue:</label>
+                    <select id="venue-filter" onchange="filterPapers()">
+                        <option value="all">All Venues</option>
+                        <option value="IJRR">IJRR</option>
+                        <option value="ICRA">ICRA</option>
+                        <option value="IROS">IROS</option>
+                        <option value="RA-L">RA-L</option>
+                        <option value="T-IV">T-IV</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <button class="reset-filters" onclick="resetFilters()">Reset All</button>
+            </div>
+            
+            <div class="papers">
+                <!-- Highlighted Paper 1 -->
+                <div class="paper highlighted" data-year="2026" data-venue="IJRR">
+                    <img src="images/commerge.jpg" alt="Commerge">
+                    <div class="paper-content">
+                        <h3>Commerge: Communication-Efficient, Robust and Fast LiDAR Map Merging Framework for Multi-Robot Coordination in Resource-Constrained Scenarios</h3>
+                        <div class="authors">
+                            <strong>Hogyun Kim</strong>, Jiwon Choi, Juwon Kim, Geonmo Yang, Seokhwan Jeong, Hyungtae Lim, Younggun Cho
+                        </div>
+                        <div class="venue">IJRR submitted, 2026</div>
+                        <div class="status">Under Review</div>
+                        <p class="tldr">Communication-Efficient Multi-Robot Map Merging Framework</p>
+                    </div>
+                </div>
 
+                <!-- Regular Papers -->
+                <div class="paper" data-year="2026" data-venue="ICRA">
+                    <img src="images/kiss_imu.png" alt="KISS-IMU">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/13T7KDTN119Gg4sY5okPPd7rD4vVIBTye/view?usp=sharing">KISS-IMU: Self-supervised Inertial Odometry with Motion-balanced Learning and Uncertainty-aware Inference</a></h3>
+                        <div class="authors">
+                            Jiwon Choi, <strong>Hogyun Kim</strong>, Geonmo Yang, Juhui Lee, Younggun Cho
+                        </div>
+                        <div class="venue">ICRA, 2026</div>
+                        <div class="status award"><i class="fas fa-trophy" style="color: #f59e0b; margin-right: 4px;"></i>Award Finalist</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/kiss_imu/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2603.06205"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://www.youtube.com/watch?v=cjAFROi-jG0&feature=youtu.be"><i class="fab fa-youtube"></i> video</a>
+                            <a href="https://github.com/sparolab/KISS-IMU"><i class="fab fa-github"></i> code</a>
+                        </div>
+                        <p class="tldr">Self-Supervised Inertial Odometry (IO)</p>
+                    </div>
+                </div>
 
-            <tr>
-              <td align="center" style="padding:16px;width:20%;vertical-align:middle">
-						     <div class="colored-box" style="background-color: #c6b89e;">
-								 <h2>Academic Service</h2>
-								 </div>
-              </td>
-              <td style="padding:8px;width:80%;vertical-align:center">
-                <a href="https://journals.sagepub.com/home/IJR/">Reviewer, IJRR 2025</a>
-                <br>
-                <a href="https://www.ieee-ras.org/publications/ra-l/">Reviewer, RAL 2024, 2025, 2026</a>
-                <br>
-                <a href="https://2026.ieee-icra.org/">Reviewer, ICRA 2026</a>
-                <br>
-                <a href="https://www.iros25.org/">Reviewer, IROS 2025</a>
-                <br>
-                <a href="https://ieeeoes.org/publication/ieee-joe/">Reviewer, IEEE JOE 2025</a>
-                <br>
-              </td>
-            </tr>
-						            
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:0px">
-                <br>
-                <p style="text-align:right;font-size:small;">
-                  Feel free to steal this website's <a href="https://github.com/jonbarron/jonbarron_website">source code</a>. <strong>Do not</strong> scrape the HTML from this page itself, as it includes analytics tags that you do not want on your own website &mdash; use the github code instead. Also, consider using <a href="https://leonidk.com/">Leonid Keselman</a>'s <a href="https://github.com/leonidk/new_website">Jekyll fork</a> of this page.
-                </p>
-              </td>
-            </tr>
-          </tbody></table>
-        </td>
-      </tr>
-    </table>
-  </body>
+                <div class="paper" data-year="2025" data-venue="IROS">
+                    <img src="images/marscalib.png" alt="MARSCalib">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1cdxca6dOpLL5Ci_utPYwPFv23ktfVQbp/view?usp=sharing">MARSCalib: Multi-robot, Automatic, Robust, Spherical Target-based Extrinsic Calibration in Field and Extraterrestrial Environments</a></h3>
+                        <div class="authors">
+                            Seokhwan Jeong, <strong>Hogyun Kim</strong>, Younggun Cho
+                        </div>
+                        <div class="venue">IROS, 2025</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/marscalib/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2507.17130"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/document/11247397"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/MARSCalib"><i class="fab fa-github"></i> code</a>
+                        </div>
+                        <p class="tldr">Multi-Robot, Spherical Target-based LiDAR-camera Calibration</p>
+                    </div>
+                </div>
+
+                <!-- Highlighted Paper 2 -->
+                <div class="paper highlighted" data-year="2025" data-venue="Workshop">
+                    <img src="images/skid-slam.png" alt="SKiD-SLAM">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1rdHV7vXFubO6zY0QSSVW4I7GB4DJfaiQ/view?usp=sharing">SKiD-SLAM: Robust, Lightweight, and Distributed Multi-Robot LiDAR SLAM in Resource-Constrained Field Environments</a></h3>
+                        <div class="authors">
+                            <strong>Hogyun Kim</strong>, Jiwon Choi, Juwon Kim, Geonmo Yang, Dongjin Cho, Hyungtae Lim, Younggun Cho
+                        </div>
+                        <div class="venue">ICRA workshop on Field Robotics (<span class="spotlight">spotlight talk</span>), 2025</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/skid_slam/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2505.08230"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://github.com/sparolab/SKiD-SLAM"><i class="fab fa-github"></i> code</a>
+                        </div>
+                        <p class="tldr">Multi-Robot and Distributed LiDAR SLAM Framework</p>
+                    </div>
+                </div>
+
+                <!-- Highlighted Paper 3 -->
+                <div class="paper highlighted" data-year="2024" data-venue="RA-L">
+                    <img src="images/solid.gif" alt="SOLiD">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1Gci27G7u6qkLiNP_zhwgc9QvpNMF5gL9/view?usp=sharing">Narrowing your FOV with SOLiD: Spatially Organized and Lightweight Global Descriptor for FOV-constrained LiDAR Place Recognition</a></h3>
+                        <div class="authors">
+                            <strong>Hogyun Kim</strong>, Jiwon Choi, Taehu Sim, Giseop Kim, Younggun Cho
+                        </div>
+                        <div class="venue">RA-L, 2024</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/solid/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2408.07330"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/abstract/document/10629042"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/solid"><i class="fab fa-github"></i> code</a>
+                        </div>
+                        <p class="tldr">Lightweight LiDAR Place Recognition</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2024" data-venue="RA-L">
+                    <img src="images/referee.png" alt="ReFeree">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1ZfmEg5xz0fK8XD_hRLqXTStj5ry0Zcoi/view?usp=sharing">ReFeree: Radar-based Lightweight and Robust Localization using Feature and Free space</a></h3>
+                        <div class="authors">
+                            <strong>Hogyun Kim*</strong>, Byunghee Choi*, Euncheol Choi, Younggun Cho
+                        </div>
+                        <div class="venue">RA-L, 2024</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/referee/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2410.01325"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/document/10705066"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/referee"><i class="fab fa-github"></i> code</a>
+                        </div>
+                        <p class="tldr">Lightweight Radar Place Recognition</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2025" data-venue="T-IV">
+                    <img src="images/uni_mapper.png" alt="Uni-Mapper">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1zPlEPBRy9tVY8gCul2q-3bgQz8pbGUUb/view?usp=sharing">Uni-Mapper: Unified Mapping Framework for Multi-modal LiDARs in Complex and Dynamic Environments</a></h3>
+                        <div class="authors">
+                            Gilhwan Kang, <strong>Hogyun Kim</strong>, Byunghee Choi, Seokhwan Jeong, Youngsik Shin, Younggun Cho
+                        </div>
+                        <div class="venue">T-IV, 2025</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/uni_mapper/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2507.20538"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/abstract/document/11057931"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/uni-mapper"><i class="fab fa-github"></i> code</a>
+                            <a href="https://www.youtube.com/watch?v=SK0TU9Vy3Is"><i class="fab fa-youtube"></i> youtube</a>
+                        </div>
+                        <p class="tldr">Multi-Robot and Multi-Modal LiDARs Mapping Framework</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2025" data-venue="ICRA">
+                    <img src="images/diter_plus.png" alt="DiTer++">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1BppfuCBXnoP605Oad1qWK2VX0sPFB7E2/view?usp=sharing">DiTer++: Diverse Terrain and Multi-modal Dataset for Multi-Robot SLAM in Multi-session Environments</a></h3>
+                        <div class="authors">
+                            Juwon Kim, <strong>Hogyun Kim</strong>, Seokhwan Jeong, Youngsik Shin, Younggun Cho
+                        </div>
+                        <div class="venue">ICRA, 2025</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/diter_plus/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2412.05839"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/abstract/document/10629042"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/DiTer-plusplus"><i class="fab fa-github"></i> code</a>
+                            <a href="https://www.dropbox.com/scl/fo/zoawkn9s3thsjv3mkqux8/AN9G8TzeE_Uw92QBpE8hIKk?rlkey=h3d9eu8pf0g6w3h0ywbdbqiv6&e=2&st=t2gf8v6y&dl=0"><i class="fas fa-download"></i> download</a>
+                            <a href="https://www.youtube.com/watch?v=RJ_netgAOT8"><i class="fab fa-youtube"></i> youtube</a>
+                        </div>
+                        <p class="tldr">Multi-Robot and Multi-Modal Dataset</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2025" data-venue="ICRA">
+                    <img src="images/polaris.gif" alt="PoLaRIS">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1u83L3-0ry1gTJh0X8attddqNeDgjnOby/view?usp=sharing">PoLaRIS Dataset: A Maritime Object Detection and Tracking Dataset in Pohang Canal</a></h3>
+                        <div class="authors">
+                            Jiwon Choi, Dongjin Cho, Giheyon Lee, <strong>Hogyun Kim</strong>, Geonmo Yang, Joowan Kim, Younggun Cho
+                        </div>
+                        <div class="venue">ICRA, 2025</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/polaris/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2412.06192"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/document/11128583"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/PoLaRIS"><i class="fab fa-github"></i> code</a>
+                            <a href="https://docs.google.com/forms/u/1/d/e/1FAIpQLSeXqji_9KVj6SEk3lYVewzi_krMeQNNen2r2E9ZCAwKhPfNwQ/viewform"><i class="fas fa-download"></i> download</a>
+                            <a href="https://www.youtube.com/watch?v=26BinQIRc78"><i class="fab fa-youtube"></i> youtube</a>
+                        </div>
+                        <p class="tldr">Object Detection and Tracking Dataset in Maritime</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2024" data-venue="Others">
+                    <img src="images/diter.gif" alt="DiTer">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1-6uJt53_N5oWFzgM9OZYFZPT0d3-w6tP/view?usp=sharing">DiTer: Diverse Terrain and Multimodal Dataset for Field Robot Navigation in Outdoor Environments</a></h3>
+                        <div class="authors">
+                            Seokhwan Jeong*, <strong>Hogyun Kim*</strong>, Younggun Cho
+                        </div>
+                        <div class="venue">IEEE Sensors Letters, 2024</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/diter/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10416213"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdyVM9Qhb2Qd7G7QbTigeH-gGraOFOgZSJrSsdqRV7mCwTvRw/viewform"><i class="fas fa-download"></i> download</a>
+                            <a href="https://www.youtube.com/watch?v=i-2FwYKT5ss"><i class="fab fa-youtube"></i> youtube</a>
+                        </div>
+                        <p class="tldr">Multi-Modal Legged Robot Datasets</p>
+                    </div>
+                </div>
+
+                <div class="paper" data-year="2023" data-venue="ICRA">
+                    <img src="images/sonar_context.png" alt="Sonar Context">
+                    <div class="paper-content">
+                        <h3><a href="https://drive.google.com/file/d/1ka3tjNRA8kXs9C0y3mZWiBZa-gwlRSnI/view?usp=sharing">Robust Imaging Sonar-based Place Recognition and Localization in Underwater Environments</a></h3>
+                        <div class="authors">
+                            <strong>Hogyun Kim</strong>, Gilhwan Kang, Seokhwan Jeong, Seungjun Ma, Younggun Cho
+                        </div>
+                        <div class="venue">ICRA, 2023</div>
+                        <div class="links">
+                            <a href="https://sparolab.github.io/research/sonar_context/"><i class="fas fa-globe"></i> project</a>
+                            <a href="https://arxiv.org/abs/2305.14773"><i class="ai ai-arxiv"></i> arXiv</a>
+                            <a href="https://ieeexplore.ieee.org/document/10161518"><i class="fas fa-file-alt"></i> paper</a>
+                            <a href="https://github.com/sparolab/sonar_context"><i class="fab fa-github"></i> code</a>
+                            <a href="https://www.youtube.com/watch?v=JRD_xuqtHZU"><i class="fab fa-youtube"></i> youtube</a>
+                        </div>
+                        <p class="tldr">Sonar Place Recognition in Underwater</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ETC Section -->
+        <section class="etc" id="etc">
+            <h2>ETC</h2>
+            <div class="etc-grid">
+                <div class="etc-card">
+                    <h3 style="background: linear-gradient(135deg, #fcb97d, #f59e0b);">Presentation</h3>
+                    <ul>
+                        <li><a href="https://www.summerschoolprague.com/">IEEE RAS Summer School on Multi-Robot Systems, 2024</a></li>
+                        <li><a href="https://2024.icros.org/">ICROS OS on Robotics and AI Tech. for Space and Extreme Environments, 2024</a></li>
+                        <li><a href="https://kros.org/Conference/ConferenceView.asp?AC=0&CODE=CC20240802&CpPage=246#CONF/">KRoC OS on Cutting-Edge Tech. and App. for Autonomous Multi-Robot/Agent Collabo, 2025</a></li>
+                    </ul>
+                </div>
+                <div class="etc-card">
+                    <h3 style="background: linear-gradient(135deg, #c6b89e, #92857a);">Academic Service</h3>
+                    <ul>
+                        <li><a href="https://journals.sagepub.com/home/IJR/">Reviewer, IJRR 2025</a></li>
+                        <li><a href="https://www.ieee-ras.org/publications/ra-l/">Reviewer, RAL 2024, 2025, 2026</a></li>
+                        <li><a href="https://2026.ieee-icra.org/">Reviewer, ICRA 2026</a></li>
+                        <li><a href="https://www.iros25.org/">Reviewer, IROS 2025</a></li>
+                        <li><a href="https://ieeeoes.org/publication/ieee-joe/">Reviewer, IEEE JOE 2025</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Feel free to steal this website's <a href="https://github.com/jonbarron/jonbarron_website">source code</a>. 
+            Consider using <a href="https://leonidk.com/">Leonid Keselman</a>'s <a href="https://github.com/leonidk/new_website">Jekyll fork</a>.</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleNews() {
+            const hiddenItems = document.querySelectorAll('.news-item.hidden');
+            const btn = document.querySelector('.show-more-btn');
+            
+            if (hiddenItems[0].style.display === 'grid') {
+                hiddenItems.forEach(item => {
+                    item.style.display = 'none';
+                });
+                btn.textContent = 'Show More';
+            } else {
+                hiddenItems.forEach(item => {
+                    item.style.display = 'grid';
+                });
+                btn.textContent = 'Show Less';
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle i');
+            const navThemeToggle = document.querySelector('.nav-theme-toggle i');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.className = 'fas fa-moon';
+                if (navThemeToggle) navThemeToggle.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.className = 'fas fa-sun';
+                if (navThemeToggle) navThemeToggle.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        function smoothScroll(targetId) {
+            const element = document.getElementById(targetId);
+            if (element) {
+                const headerOffset = 80; // Account for sticky nav height
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        // Handle navigation clicks
+        document.querySelectorAll('.nav-links a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                smoothScroll(targetId);
+            });
+        });
+
+        // Navigation active state and sticky behavior
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('stickyNav');
+            const scrollTop = window.pageYOffset;
+            
+            // Show/hide sticky nav
+            if (scrollTop > 100) {
+                nav.classList.add('visible');
+            } else {
+                nav.classList.remove('visible');
+            }
+
+            // Highlight current section
+            const sections = ['profile', 'news', 'research', 'etc'];
+            let current = '';
+
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    if (scrollTop >= sectionTop - 150 && scrollTop < sectionTop + sectionHeight - 150) {
+                        current = sectionId;
+                    }
+                }
+            });
+
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            if (current) {
+                const activeLink = document.querySelector(`[data-section="${current}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        });
+
+        // Update nav theme toggle icon
+        function updateNavThemeIcon() {
+            const navThemeToggle = document.querySelector('.nav-theme-toggle i');
+            const profileThemeToggle = document.querySelector('.theme-toggle i');
+            if (navThemeToggle && profileThemeToggle) {
+                navThemeToggle.className = profileThemeToggle.className;
+            }
+        }
+
+        // Search functionality
+        function searchPapers() {
+            const searchTerm = document.getElementById('paper-search').value.toLowerCase();
+            const clearButton = document.querySelector('.clear-search');
+            
+            // Show/hide clear button
+            clearButton.style.display = searchTerm ? 'block' : 'none';
+            
+            // Filter papers
+            filterPapers();
+        }
+
+        function clearSearch() {
+            document.getElementById('paper-search').value = '';
+            document.querySelector('.clear-search').style.display = 'none';
+            filterPapers();
+        }
+
+        // Paper filtering functions
+        function filterPapers() {
+            const yearFilter = document.getElementById('year-filter').value;
+            const venueFilter = document.getElementById('venue-filter').value;
+            const searchTerm = document.getElementById('paper-search').value.toLowerCase();
+            const papers = document.querySelectorAll('.paper');
+
+            papers.forEach(paper => {
+                const paperYear = paper.getAttribute('data-year');
+                const paperVenue = paper.getAttribute('data-venue');
+                
+                // Get all text content for search
+                const title = paper.querySelector('h3').textContent.toLowerCase();
+                const authors = paper.querySelector('.authors').textContent.toLowerCase();
+                const tldr = paper.querySelector('.tldr') ? paper.querySelector('.tldr').textContent.toLowerCase() : '';
+                const venue = paper.querySelector('.venue').textContent.toLowerCase();
+                const searchContent = `${title} ${authors} ${tldr} ${venue}`;
+                
+                const yearMatch = yearFilter === 'all' || paperYear === yearFilter;
+                const venueMatch = venueFilter === 'all' || paperVenue === venueFilter;
+                const searchMatch = !searchTerm || searchContent.includes(searchTerm);
+                
+                if (yearMatch && venueMatch && searchMatch) {
+                    paper.style.display = 'grid';
+                    paper.classList.remove('filtered-out');
+                    
+                    // Highlight search terms
+                    if (searchTerm) {
+                        highlightSearchTerms(paper, searchTerm);
+                    } else {
+                        removeHighlights(paper);
+                    }
+                } else {
+                    paper.style.display = 'none';
+                    paper.classList.add('filtered-out');
+                    removeHighlights(paper);
+                }
+            });
+
+            // Update filter results count
+            const visiblePapers = document.querySelectorAll('.paper:not(.filtered-out)').length;
+            updateFilterResults(visiblePapers);
+        }
+
+        function highlightSearchTerms(paper, searchTerm) {
+            const textElements = paper.querySelectorAll('h3, .authors, .tldr, .venue');
+            textElements.forEach(element => {
+                const text = element.textContent;
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                const highlightedText = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+                if (highlightedText !== text) {
+                    element.innerHTML = highlightedText;
+                }
+            });
+        }
+
+        function removeHighlights(paper) {
+            const highlights = paper.querySelectorAll('.search-highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('year-filter').value = 'all';
+            document.getElementById('venue-filter').value = 'all';
+            document.getElementById('paper-search').value = '';
+            document.querySelector('.clear-search').style.display = 'none';
+            
+            const papers = document.querySelectorAll('.paper');
+            papers.forEach(paper => {
+                paper.style.display = 'grid';
+                paper.classList.remove('filtered-out');
+                removeHighlights(paper);
+            });
+
+            updateFilterResults(papers.length);
+        }
+
+        function updateFilterResults(count) {
+            let resultText = document.querySelector('.filter-results');
+            if (!resultText) {
+                resultText = document.createElement('div');
+                resultText.className = 'filter-results';
+                document.querySelector('.paper-filters').appendChild(resultText);
+            }
+            
+            if (count === document.querySelectorAll('.paper').length) {
+                resultText.textContent = '';
+            } else {
+                resultText.textContent = `Showing ${count} paper${count !== 1 ? 's' : ''}`;
+            }
+        }
+
+        // 페이지 로드시 저장된 테마 적용
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.querySelector('.theme-toggle i');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeToggle.className = 'fas fa-sun';
+                updateNavThemeIcon();
+            }
+        });
+    </script>
+</body>
 </html>
