@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts - Hogyun Kim</title>
+    <link rel="shortcut icon" href="images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css">
+    <style>
+        /* Posts-specific styles */
+        .posts-container {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .posts-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .posts-sidebar {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+            border: 1px solid var(--border-color);
+        }
+
+        .posts-sidebar h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        .posts-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .posts-nav li {
+            margin-bottom: 8px;
+        }
+
+        .posts-nav a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .posts-nav a:hover,
+        .posts-nav a.active {
+            background: var(--bg-primary);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .post-section {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .post-section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            scroll-margin-top: 120px;
+        }
+
+        .post-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 24px 0 16px 0;
+            scroll-margin-top: 120px;
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .post-content p {
+            margin-bottom: 16px;
+        }
+
+        .post-content ul, .post-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        .post-content code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+
+        .post-content pre {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-home:hover {
+            color: var(--primary-hover);
+            transform: translateX(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .posts-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 20px;
+            }
+            
+            .posts-sidebar {
+                order: -1;
+                position: static;
+            }
+            
+            .posts-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="posts-container">
+        <main class="posts-content">
+            <a href="index.html" class="back-to-home">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+
+            <section id="introduction" class="post-section">
+                <h2>Posts</h2>
+                <div class="post-content">
+                    <p>Welcome to my blog! Here I share thoughts, insights, and experiences from my research journey in robotics and AI. You can navigate through different topics using the sidebar on the right.</p>
+                </div>
+            </section>
+
+            <section id="research-insights" class="post-section">
+                <h2>Research Insights</h2>
+                <div class="post-content">
+                    <h3>Multi-Robot SLAM Challenges</h3>
+                    <p>Working on multi-robot SLAM systems presents unique challenges that single-robot systems don't face. Here are some key insights from my experience...</p>
+                    
+                    <h3>Communication-Efficient Algorithms</h3>
+                    <p>In resource-constrained environments, every byte of communication matters. Our approach to reducing bandwidth while maintaining accuracy...</p>
+                </div>
+            </section>
+
+            <section id="technical-posts" class="post-section">
+                <h2>Technical Posts</h2>
+                <div class="post-content">
+                    <h3>LiDAR Place Recognition</h3>
+                    <p>A deep dive into how we developed SOLiD for FOV-constrained environments...</p>
+                    
+                    <h3>Radar-based Localization</h3>
+                    <p>Exploring the use of radar sensors for robust localization in challenging conditions...</p>
+                </div>
+            </section>
+
+            <section id="conference-experiences" class="post-section">
+                <h2>Conference Experiences</h2>
+                <div class="post-content">
+                    <h3>ICRA 2025 Reflections</h3>
+                    <p>My experience presenting at ICRA 2025 and the insights gained from the robotics community...</p>
+                    
+                    <h3>Workshop Presentations</h3>
+                    <p>Lessons learned from presenting at various workshops and the importance of interdisciplinary collaboration...</p>
+                </div>
+            </section>
+
+            <section id="personal-thoughts" class="post-section">
+                <h2>Personal Thoughts</h2>
+                <div class="post-content">
+                    <h3>PhD Journey</h3>
+                    <p>Reflections on the challenges and rewards of pursuing a PhD in robotics...</p>
+                    
+                    <h3>Work-Life Balance</h3>
+                    <p>Finding balance between research intensity and personal well-being...</p>
+                </div>
+            </section>
+        </main>
+
+        <aside class="posts-sidebar">
+            <h3>Contents</h3>
+            <ul class="posts-nav">
+                <li><a href="#introduction" data-target="introduction">Introduction</a></li>
+                <li><a href="#research-insights" data-target="research-insights">Research Insights</a></li>
+                <li><a href="#technical-posts" data-target="technical-posts">Technical Posts</a></li>
+                <li><a href="#conference-experiences" data-target="conference-experiences">Conference Experiences</a></li>
+                <li><a href="#personal-thoughts" data-target="personal-thoughts">Personal Thoughts</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <script>
+        // Theme toggle functionality (same as main page)
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Apply saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
+
+        // Sidebar navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.posts-nav a');
+            const sections = document.querySelectorAll('.post-section');
+
+            // Smooth scrolling
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Intersection Observer for active navigation
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -60% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentId = entry.target.id;
+                        
+                        // Update active nav link
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('data-target') === currentId) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
