@@ -507,13 +507,22 @@
             const sections = ['profile', 'news', 'research', 'etc'];
             let current = '';
 
-            sections.forEach(sectionId => {
+            sections.forEach((sectionId, index) => {
                 const section = document.getElementById(sectionId);
                 if (section) {
                     const sectionTop = section.offsetTop;
                     const sectionHeight = section.offsetHeight;
-                    if (scrollTop >= sectionTop - 150 && scrollTop < sectionTop + sectionHeight - 150) {
-                        current = sectionId;
+                    const isLastSection = index === sections.length - 1;
+                    
+                    // For the last section, check if we're in it or at the bottom of page
+                    if (isLastSection) {
+                        if (scrollTop >= sectionTop - 150) {
+                            current = sectionId;
+                        }
+                    } else {
+                        if (scrollTop >= sectionTop - 150 && scrollTop < sectionTop + sectionHeight - 150) {
+                            current = sectionId;
+                        }
                     }
                 }
             });
