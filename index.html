@@ -502,41 +502,45 @@
             } else {
                 nav.classList.remove('visible');
             }
+        });
 
-            // Highlight current section
-            const sections = ['profile', 'news', 'research', 'etc'];
-            let current = '';
+        // Use Intersection Observer for better section detection
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -60% 0px',
+            threshold: 0
+        };
 
-            sections.forEach((sectionId, index) => {
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
-                    const isLastSection = index === sections.length - 1;
-                    
-                    // For the last section, check if we're in it or at the bottom of page
-                    if (isLastSection) {
-                        if (scrollTop >= sectionTop - 150) {
-                            current = sectionId;
-                        }
-                    } else {
-                        if (scrollTop >= sectionTop - 150 && scrollTop < sectionTop + sectionHeight - 150) {
-                            current = sectionId;
-                        }
-                    }
+        const observer = new IntersectionObserver((entries) => {
+            let currentSection = null;
+            
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    currentSection = entry.target.id;
                 }
             });
 
-            // Update active nav link
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-            if (current) {
-                const activeLink = document.querySelector(`[data-section="${current}"]`);
+            if (currentSection) {
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                const activeLink = document.querySelector(`[data-section="${currentSection}"]`);
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
             }
+        }, observerOptions);
+
+        // Observe all sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = ['profile', 'news', 'research', 'etc'];
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    observer.observe(section);
+                }
+            });
         });
 
         // Update nav theme toggle icon
