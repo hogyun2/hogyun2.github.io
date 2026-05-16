@@ -9,132 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css">
     <style>
-        /* Posts-specific styles */
-        .posts-container {
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 40px;
+        /* Posts page specific styles */
+        .posts-page {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px;
+            background: var(--bg-primary);
             min-height: 100vh;
-        }
-
-        .posts-content {
-            background: var(--bg-primary);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .posts-sidebar {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 120px;
-            height: fit-content;
-            border: 1px solid var(--border-color);
-        }
-
-        .posts-sidebar h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 8px;
-        }
-
-        .posts-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .posts-nav li {
-            margin-bottom: 8px;
-        }
-
-        .posts-nav a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent;
-        }
-
-        .posts-nav a:hover,
-        .posts-nav a.active {
-            background: var(--bg-primary);
-            color: var(--primary-color);
-            border-left-color: var(--primary-color);
-        }
-
-        .post-section {
-            margin-bottom: 40px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .post-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .post-section h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            scroll-margin-top: 120px;
-        }
-
-        .post-section h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 24px 0 16px 0;
-            scroll-margin-top: 120px;
-        }
-
-        .post-content {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 1rem;
-        }
-
-        .post-content p {
-            margin-bottom: 16px;
-        }
-
-        .post-content ul, .post-content ol {
-            margin: 16px 0;
-            padding-left: 24px;
-        }
-
-        .post-content li {
-            margin-bottom: 8px;
-        }
-
-        .post-content code {
-            background: var(--bg-secondary);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9em;
-        }
-
-        .post-content pre {
-            background: var(--bg-secondary);
-            padding: 16px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 16px 0;
         }
 
         .back-to-home {
@@ -153,167 +34,224 @@
             transform: translateX(-2px);
         }
 
+        .posts-header {
+            margin-bottom: 40px;
+        }
+
+        .posts-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .posts-intro {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .post-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 80px;
+            gap: 20px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .post-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-left-color: var(--primary-hover);
+        }
+
+        .post-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .post-content {
+            color: var(--text-primary);
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .post-excerpt {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .post-category {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            align-self: start;
+        }
+
+        .category-personal {
+            background: #e0f2fe;
+            color: #0277bd;
+        }
+
+        .category-research {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .category-technical {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .category-conference {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        [data-theme="dark"] .category-personal {
+            background: #0d47a1;
+            color: #81d4fa;
+        }
+
+        [data-theme="dark"] .category-research {
+            background: #4a148c;
+            color: #ce93d8;
+        }
+
+        [data-theme="dark"] .category-technical {
+            background: #1b5e20;
+            color: #a5d6a7;
+        }
+
+        [data-theme="dark"] .category-conference {
+            background: #bf360c;
+            color: #ffcc02;
+        }
+
         @media (max-width: 768px) {
-            .posts-container {
-                grid-template-columns: 1fr;
-                padding: 20px;
-                gap: 20px;
-            }
-            
-            .posts-sidebar {
-                order: -1;
-                position: static;
-            }
-            
-            .posts-content {
+            .posts-page {
                 padding: 24px;
+            }
+            
+            .post-item {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                text-align: left;
+                padding: 16px;
+            }
+            
+            .post-date {
+                font-size: 0.8rem;
+            }
+            
+            .post-category {
+                justify-self: start;
+                width: fit-content;
             }
         }
     </style>
 </head>
 <body>
-    <div class="posts-container">
-        <main class="posts-content">
-            <a href="index.html" class="back-to-home">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
+    <div class="posts-page">
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <div class="posts-header">
+            <h1>Posts</h1>
+            <p class="posts-intro">
+                Welcome to my blog! Here I share personal thoughts, research insights, and experiences from my PhD journey in robotics and AI.
+            </p>
+        </div>
+
+        <div class="posts-grid">
+            <a href="posts/phd-journey-reflections.html" class="post-item">
+                <span class="post-date">2026.03.10</span>
+                <div class="post-content">
+                    <div class="post-title">PhD Journey: Reflections on Growth and Challenges</div>
+                    <div class="post-excerpt">Thoughts on the ups and downs of pursuing a PhD in robotics, the lessons learned, and how the journey has shaped my perspective on research and life...</div>
+                </div>
+                <span class="post-category category-personal">Personal</span>
             </a>
 
-            <section id="introduction" class="post-section">
-                <h2>Posts</h2>
+            <a href="posts/icra-2025-experience.html" class="post-item">
+                <span class="post-date">2026.03.05</span>
                 <div class="post-content">
-                    <p>Welcome to my blog! Here I share thoughts, insights, and experiences from my research journey in robotics and AI. You can navigate through different topics using the sidebar on the right.</p>
+                    <div class="post-title">ICRA 2025: My First Major Conference Experience</div>
+                    <div class="post-excerpt">Reflecting on presenting at ICRA 2025, the networking opportunities, and valuable feedback received from the robotics community...</div>
                 </div>
-            </section>
+                <span class="post-category category-conference">Conference</span>
+            </a>
 
-            <section id="research-insights" class="post-section">
-                <h2>Research Insights</h2>
+            <a href="posts/multi-robot-slam-insights.html" class="post-item">
+                <span class="post-date">2026.02.28</span>
                 <div class="post-content">
-                    <h3>Multi-Robot SLAM Challenges</h3>
-                    <p>Working on multi-robot SLAM systems presents unique challenges that single-robot systems don't face. Here are some key insights from my experience...</p>
-                    
-                    <h3>Communication-Efficient Algorithms</h3>
-                    <p>In resource-constrained environments, every byte of communication matters. Our approach to reducing bandwidth while maintaining accuracy...</p>
+                    <div class="post-title">Multi-Robot SLAM: Key Challenges and Insights</div>
+                    <div class="post-excerpt">Sharing practical insights from developing communication-efficient multi-robot SLAM systems and the unique challenges they present...</div>
                 </div>
-            </section>
+                <span class="post-category category-research">Research</span>
+            </a>
 
-            <section id="technical-posts" class="post-section">
-                <h2>Technical Posts</h2>
+            <a href="posts/solid-development-story.html" class="post-item">
+                <span class="post-date">2026.02.15</span>
                 <div class="post-content">
-                    <h3>LiDAR Place Recognition</h3>
-                    <p>A deep dive into how we developed SOLiD for FOV-constrained environments...</p>
-                    
-                    <h3>Radar-based Localization</h3>
-                    <p>Exploring the use of radar sensors for robust localization in challenging conditions...</p>
+                    <div class="post-title">Behind SOLiD: Developing a Lightweight LiDAR Descriptor</div>
+                    <div class="post-excerpt">The technical story behind SOLiD development, from initial concept to publication, including the challenges and breakthroughs...</div>
                 </div>
-            </section>
+                <span class="post-category category-technical">Technical</span>
+            </a>
 
-            <section id="conference-experiences" class="post-section">
-                <h2>Conference Experiences</h2>
+            <a href="posts/work-life-balance-phd.html" class="post-item">
+                <span class="post-date">2026.02.01</span>
                 <div class="post-content">
-                    <h3>ICRA 2025 Reflections</h3>
-                    <p>My experience presenting at ICRA 2025 and the insights gained from the robotics community...</p>
-                    
-                    <h3>Workshop Presentations</h3>
-                    <p>Lessons learned from presenting at various workshops and the importance of interdisciplinary collaboration...</p>
+                    <div class="post-title">Finding Balance: Work-Life Harmony in PhD</div>
+                    <div class="post-excerpt">Personal strategies for maintaining mental health and productivity during the demanding PhD journey, and lessons learned along the way...</div>
                 </div>
-            </section>
+                <span class="post-category category-personal">Personal</span>
+            </a>
 
-            <section id="personal-thoughts" class="post-section">
-                <h2>Personal Thoughts</h2>
+            <a href="posts/radar-localization-journey.html" class="post-item">
+                <span class="post-date">2026.01.20</span>
                 <div class="post-content">
-                    <h3>PhD Journey</h3>
-                    <p>Reflections on the challenges and rewards of pursuing a PhD in robotics...</p>
-                    
-                    <h3>Work-Life Balance</h3>
-                    <p>Finding balance between research intensity and personal well-being...</p>
+                    <div class="post-title">Radar-based Localization: From Concept to ReFeree</div>
+                    <div class="post-excerpt">The development journey of ReFeree, exploring radar sensors for robust localization and the technical challenges we overcame...</div>
                 </div>
-            </section>
-        </main>
-
-        <aside class="posts-sidebar">
-            <h3>Contents</h3>
-            <ul class="posts-nav">
-                <li><a href="#introduction" data-target="introduction">Introduction</a></li>
-                <li><a href="#research-insights" data-target="research-insights">Research Insights</a></li>
-                <li><a href="#technical-posts" data-target="technical-posts">Technical Posts</a></li>
-                <li><a href="#conference-experiences" data-target="conference-experiences">Conference Experiences</a></li>
-                <li><a href="#personal-thoughts" data-target="personal-thoughts">Personal Thoughts</a></li>
-            </ul>
-        </aside>
+                <span class="post-category category-technical">Technical</span>
+            </a>
+        </div>
     </div>
 
     <script>
-        // Theme toggle functionality (same as main page)
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            
-            if (currentTheme === 'dark') {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        // Apply saved theme
+        // Theme toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
             }
-        });
-
-        // Sidebar navigation functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.posts-nav a');
-            const sections = document.querySelectorAll('.post-section');
-
-            // Smooth scrolling
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('data-target');
-                    const targetSection = document.getElementById(targetId);
-                    
-                    if (targetSection) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            // Intersection Observer for active navigation
-            const observerOptions = {
-                root: null,
-                rootMargin: '-20% 0px -60% 0px',
-                threshold: 0
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const currentId = entry.target.id;
-                        
-                        // Update active nav link
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('data-target') === currentId) {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
-
-            // Observe all sections
-            sections.forEach(section => {
-                observer.observe(section);
-            });
         });
     </script>
 </body>
