@@ -208,6 +208,50 @@
             word-break: break-word;
         }
 
+        /* ---------- one-sentence thesis ---------- */
+        .thesis {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 12px 12px 0;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+        }
+
+        .thesis-eyebrow {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .thesis-sentence {
+            font-size: 1.15rem;
+            line-height: 2.1;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin: 0;
+            text-wrap: pretty;
+        }
+
+        /* the clause carries ink; the cluster colour rides underneath it */
+        .thesis-sentence mark {
+            background: none;
+            color: inherit;
+            border-bottom: 3px solid var(--c);
+            padding-bottom: 2px;
+        }
+
+        .thesis-legend {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin: 16px 0 0;
+            line-height: 1.9;
+        }
+
         /* ---------- bar chart ---------- */
         .chart { display: flex; flex-direction: column; gap: 5px; }
 
@@ -432,6 +476,25 @@
                     이 줄이 곧 범례 역할을 합니다.
                 </p>
                 <div class="tiles" id="tiles"></div>
+            </div>
+
+            <p>
+                재미있는 건 이 네 갈래가 서로 겹치지 않으면서 논문의 파이프라인 순서와 그대로 맞아떨어진다는
+                점입니다. 그래서 네 갈래를 순서대로 이으면 논문 한 편이 한 문장이 됩니다.
+            </p>
+
+            <div class="thesis">
+                <p class="thesis-eyebrow">네 갈래를 한 문장으로</p>
+                <p class="thesis-sentence">
+                    <mark style="--c:var(--c-robot)">여러 로봇이 각자 만든 부분 맵</mark>을
+                    <mark style="--c:var(--c-map)">로봇 상태와 프론티어 영역이 인코딩된 하나의 전역 맵</mark>으로 합친 뒤,
+                    <mark style="--c:var(--c-vlm)">VLM이 전역 플래너로서 각 로봇에 프론티어를 배분</mark>해,
+                    별도의 과제별 학습 없이
+                    <mark style="--c:var(--c-nav)">미지 환경에서 목표 물체를 협력 탐색</mark>하도록 하는 프레임워크.
+                </p>
+                <p class="thesis-legend">
+                    밑줄 색 = 위 클러스터 색 · 멀티로봇 협업 &rarr; 맵·프론티어 탐색 &rarr; VLM·추론 &rarr; 내비게이션 과제
+                </p>
             </div>
 
             <h2>최다 빈출 키워드 20</h2>
