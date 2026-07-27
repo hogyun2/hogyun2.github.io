@@ -330,6 +330,154 @@
         @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
         .row:hover .tip, .row:focus-visible .tip { opacity: 1; }
 
+        /* ---------- pipeline ---------- */
+        .loop-head {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 32px 0 4px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .loop-head:first-child { margin-top: 0; }
+
+        .loop-tick {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 3px 11px;
+            white-space: nowrap;
+        }
+
+        .loop-what {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stage {
+            display: grid;
+            grid-template-columns: 26px 1fr;
+            gap: 16px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stage:last-child { border-bottom: none; }
+
+        /* the rail dot carries the cluster colour, tying each stage
+           back to the four clusters counted above */
+        .stage-rail {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .stage-rail::before {
+            content: "";
+            position: absolute;
+            top: 26px;
+            bottom: -18px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .stage:last-child .stage-rail::before { display: none; }
+
+        .stage-num {
+            position: relative;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--c);
+            color: #fff;
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+        }
+
+        .stage-body { min-width: 0; }
+
+        .stage-body h4 {
+            font-size: 1rem;
+            font-weight: 650;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .stage-body p {
+            font-size: 0.95rem;
+            margin: 10px 0 0;
+        }
+
+        .io {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+        }
+
+        .io-chip {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        .io-chip.out {
+            border-color: var(--c);
+            color: var(--text-primary);
+        }
+
+        .io-arrow { color: var(--text-muted); }
+
+        .stage-code {
+            display: block;
+            overflow-x: auto;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            white-space: pre;
+        }
+
+        .stage-flag {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: #92400e;
+            background: #fef3c7;
+            border-radius: 4px;
+            padding: 2px 7px;
+            margin-left: 6px;
+            vertical-align: 2px;
+        }
+
+        [data-theme="dark"] .stage-flag {
+            color: #fcd34d;
+            background: #451a03;
+        }
+
         /* ---------- table view ---------- */
         details {
             background: var(--bg-secondary);
@@ -442,7 +590,7 @@
             <div class="post-meta">
                 <span><i class="fas fa-calendar"></i> 2026년 7월 27일</span>
                 <span class="post-category">Research</span>
-                <span><i class="fas fa-clock"></i> 4분 읽기</span>
+                <span><i class="fas fa-clock"></i> 12분 읽기</span>
             </div>
         </div>
 
@@ -457,6 +605,11 @@
                 세미나 준비하면서 이 논문의 본문 어휘 분포를 뽑아봤습니다. 논문이 실제로 무엇에 지면을 쓰는지는
                 초록의 주장보다 어휘 빈도가 더 정직하게 보여주는 경우가 있어서, 제목~결론 구간을 통째로 세어봤습니다.
                 참고문헌 목록과 페이지 워터마크는 제외했고, 단수/복수는 하나로 합쳤습니다.
+            </p>
+            <p>
+                세어놓고 보니 상위 어휘가 네 갈래로 깔끔하게 갈렸고, 그 네 갈래가 논문의 파이프라인 순서와
+                그대로 맞아떨어졌습니다. 그래서 이 글은 <strong>빈도 통계 &rarr; 한 문장 요약 &rarr; 방법론 상세 &rarr; 공개 코드 대조</strong>
+                순으로 이어집니다. 통계에서 출발해 구현까지 내려가는 셈입니다.
             </p>
 
             <div class="runline">
@@ -528,6 +681,304 @@
                 <code>point cloud</code>가 1위인 건 각 로봇의 sub-map을 통합한 전역 맵 표현이 시스템의 중심 축이기
                 때문이고, <code>visual prompt</code>는 VLM에 텍스트가 아니라 맵 이미지에 로봇 상태와 프론티어를
                 인코딩해 넣는 이 논문 특유의 입력 방식을 가리킵니다.
+            </p>
+
+            <h2>한 문장을 펼치면 — 방법론 파이프라인</h2>
+
+            <p>
+                위 한 문장은 논문을 압축한 것이니, 이번엔 반대로 펼쳐보겠습니다.
+                각 단계의 입력과 출력을 따라가면 시스템이 실제로 무엇을 주고받는지 보입니다.
+                단계 번호의 색은 위 클러스터 색과 같습니다 — 어느 갈래의 어휘가 그 단계를 설명하는지 표시한 것입니다.
+            </p>
+
+            <p>
+                주목할 점은 <strong>루프가 두 주기로 돈다</strong>는 것입니다. 지각과 이동은 매 스텝 일어나지만,
+                VLM 호출은 25스텝에 한 번뿐입니다. 나머지 24스텝 동안 로봇은 이미 받은 목표를 향해 스스로 움직입니다.
+            </p>
+
+            <div class="panel">
+                <div class="pipeline">
+
+                    <div class="loop-head">
+                        <span class="loop-tick">매 스텝 · 로봇별</span>
+                        <span class="loop-what">각 로봇이 독립적으로 보고 그린다</span>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">1</div></div>
+                        <div class="stage-body">
+                            <h4>지각 · 검출 · 분할</h4>
+                            <div class="io">
+                                <span class="io-chip">RGB-D 이미지 + 자세</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-nav)">물체별 세그멘테이션 마스크</span>
+                            </div>
+                            <p>
+                                YOLO-World가 열린 어휘(open-vocabulary)로 후보 박스를 찾고, Mobile-SAM이 클래스와 무관하게
+                                마스크를 뜹니다. 학습 때 못 본 물체 이름도 텍스트로 주면 찾기 때문에,
+                                과제마다 다시 학습할 필요가 없습니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">2</div></div>
+                        <div class="stage-body">
+                            <h4>3D 투영 · 노이즈 제거</h4>
+                            <div class="io">
+                                <span class="io-chip">depth + 마스크 + 자세</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-map)">로봇별 포인트 클라우드</span>
+                            </div>
+                            <p>
+                                depth 픽셀을 3D 점으로 되돌린 뒤 현재 자세로 전역 좌표계에 옮깁니다.
+                                이때 <strong>마스크된 영역만이 아니라 마스크 안 된 영역도 함께</strong> 투영합니다.
+                                벽과 바닥에는 마스크가 안 붙는데, 이들을 빼면 물체만 허공에 뜬 지도가 되어
+                                장애물 회피도 프론티어 추출도 불가능해지기 때문입니다.
+                            </p>
+                            <p>
+                                이어서 DBSCAN이 <em>주변에 동료가 없는 점</em>을 버립니다. 물체 경계에서 앞뒤 depth가
+                                섞여 생기는 허공의 점, 유리·금속 반사로 튄 점이 여기서 걸러집니다.
+                                남겨두면 없는 자리에 가짜 장애물이 생겨 로봇이 멀쩡한 통로를 막힌 것으로 봅니다.
+                            </p>
+                            <code class="stage-code">pcd.cluster_dbscan(eps=0.02, min_points=10)</code>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-robot)">3</div></div>
+                        <div class="stage-body">
+                            <h4>전역 맵 병합</h4>
+                            <div class="io">
+                                <span class="io-chip">로봇별 클라우드 &times; n</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-robot)">하나의 전역 클라우드</span>
+                            </div>
+                            <p>
+                                각 로봇의 추정 자세를 기준으로 공통 좌표계에 합칩니다. 여기서부터 로봇들은
+                                <strong>같은 지도를 봅니다</strong> — 서로 다른 시점에서 본 것이 하나로 모이는 지점이고,
+                                협업이 성립하는 출발점입니다. 실환경에서는 시작 전에 Generalized-ICP로 초기 정렬을 맞춥니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">4</div></div>
+                        <div class="stage-body">
+                            <h4>2D 맵 3채널 생성</h4>
+                            <div class="io">
+                                <span class="io-chip">전역 3D 클라우드</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-map)">obstacle · explored · top-view</span>
+                            </div>
+                            <p>
+                                24&times;24m를 5cm 격자로 나눈 480&times;480 맵입니다. 세 채널이 각각 다른 규칙으로 채워집니다.
+                                obstacle에는 카메라 높이 밴드 안의 점만, explored에는 그 아래 모든 점이 들어갑니다.
+                                top-view는 각 칸에서 <strong>가장 높은 점의 색</strong>만 남겨(z-buffer) 위에서 내려다본 그림을 만드는데,
+                                이게 나중에 VLM이 "여기는 타일 바닥이니 주방이겠군"이라고 판단할 재료가 됩니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="loop-head">
+                        <span class="loop-tick">25 스텝마다 · 전역 1회</span>
+                        <span class="loop-what">어디로 갈지 다시 정한다</span>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">5</div></div>
+                        <div class="stage-body">
+                            <h4>프론티어 추출</h4>
+                            <div class="io">
+                                <span class="io-chip">obstacle + explored 맵</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-map)">후보 프론티어 최대 6개</span>
+                            </div>
+                            <p>
+                                프론티어는 <strong>탐색된 자유공간 중 미지 영역과 맞닿은 칸</strong>입니다.
+                                안쪽 자유공간은 이미 다 봤으니 갈 이유가 없고, 벽 쪽 경계는 갈 수가 없습니다.
+                                둘 다 아닌 곳만 남기면 "가면 새로 보이는 곳"이 됩니다.
+                            </p>
+                            <p>
+                                계산은 뺄셈입니다. 탐색 영역의 윤곽선에서 부풀린 장애물 윤곽선을 빼면 그 경계만 남습니다.
+                                장애물 쪽을 굳이 부풀리는 건 두 채널의 픽셀이 정확히 맞지 않아,
+                                그냥 빼면 벽을 따라 실오라기 같은 가짜 프론티어가 남기 때문입니다.
+                            </p>
+                            <code class="stage-code">obstacle_map = cv2.dilate(obstacle_map, 7x7)   # 벽 윤곽 부풀리기
+contour    = max(contours, key=cv2.contourArea)  # 탐색영역 최대 윤곽
+target_edge = edge_map - obstacle_map            # 경계만 남김
+measure.label(target_edge, connectivity=2)       # 붙은 칸끼리 묶기</code>
+                            <p>
+                                묶인 덩어리 하나가 "갈 수 있는 방향 하나"(문 하나, 복도 하나)가 되고,
+                                8칸 미만은 노이즈로 버립니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-vlm)">6</div></div>
+                        <div class="stage-body">
+                            <h4>프롬프트 조립</h4>
+                            <div class="io">
+                                <span class="io-chip">top-view + 후보 + 로봇 자세</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-vlm)">이미지 N장 + 텍스트 1벌</span>
+                            </div>
+                            <p>
+                                이 논문에서 가장 특이한 설계입니다. 후보가 5개면 <strong>지도 이미지를 5장 만듭니다.</strong>
+                                배경과 로봇 표시는 모든 장에 동일하게 들어가고, 빨간 프론티어 마스크와 좌상단 번호만 장마다 바뀝니다.
+                                한 장에 후보를 전부 그리면 VLM이 "3번 프론티어"를 특정하지 못하므로,
+                                장 단위로 쪼개 식별 부담을 없앤 것입니다.
+                            </p>
+                            <p>
+                                텍스트 프롬프트는 후보 수와 무관하게 한 벌이고, 코드에 통째로 하드코딩된 고정 템플릿입니다.
+                                사용자가 주는 건 찾을 물체 이름 하나뿐입니다.
+                            </p>
+                            <code class="stage-code">"two robots need to find a " + goal_name</code>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-vlm)">7</div></div>
+                        <div class="stage-body">
+                            <h4>VLM 프론티어 배분</h4>
+                            <div class="io">
+                                <span class="io-chip">이미지 N장 + 목표 물체</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-vlm)">JSON 배분표 + 이유</span>
+                            </div>
+                            <p>
+                                판단 기준은 둘입니다. <strong>협력적 탐색</strong>(로봇들이 흩어져 커버리지를 넓히도록)과
+                                <strong>의미적 관련성</strong>(목표가 있을 법한 쪽으로). 두 번째가 VLM을 쓰는 이유 전부입니다 —
+                                "sink를 찾아라"면 침실 쪽보다 타일과 싱크대가 보이는 쪽을 고릅니다.
+                                가까운 프론티어부터 가는 기존 방식은 못 하는 판단입니다.
+                            </p>
+                            <code class="stage-code">{"robot_0": "frontier_1", "robot_1": "frontier_0",
+ "reason": "..."}</code>
+                            <p>
+                                형식을 어기거나 없는 ID를 부르면 재시도하고, 5회를 소진하면 전 로봇을
+                                가장 가까운 프론티어로 보냅니다. 프론티어가 아예 없으면 VLM을 부르지 않고 임의 좌표로 대체합니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="loop-head">
+                        <span class="loop-tick">매 스텝 · 로봇별</span>
+                        <span class="loop-what">받은 목표까지 알아서 간다</span>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">8</div></div>
+                        <div class="stage-body">
+                            <h4>로컬 정책</h4>
+                            <div class="io">
+                                <span class="io-chip">목표 좌표 + obstacle 맵</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-nav)">행동 1개</span>
+                            </div>
+                            <p>
+                                목표점은 프론티어 덩어리의 무게중심입니다. 여기까지 가는 충돌 없는 경로는
+                                FMM 플래너가 짜고, 행동은 전진 25cm · 좌우 회전 30&deg; · 상하 시선 · 정지 여섯 가지 중 하나입니다.
+                            </p>
+                            <p>
+                                <strong>VLM은 여기 관여하지 않습니다.</strong> 논문이 이유를 명시합니다 — VLM은 고수준 계획엔 강하지만
+                                세밀한 저수준 제어에는 신뢰도가 떨어지기 때문입니다. 이 역할 분리가 실환경에서 5 FPS를
+                                유지하는 근거이기도 합니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="stage">
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">9</div></div>
+                        <div class="stage-body">
+                            <h4>목표 발견 · 종료</h4>
+                            <div class="io">
+                                <span class="io-chip">목표 물체 포인트 클라우드</span>
+                                <span class="io-arrow">&rarr;</span>
+                                <span class="io-chip out" style="--c:var(--c-nav)">접근 후 정지</span>
+                            </div>
+                            <p>
+                                목표가 검출되는 순간 흐름이 바뀝니다. 프론티어 목표를 덮어쓰고,
+                                <strong>VLM은 더 이상 호출되지 않습니다.</strong> 탐색 모드에서 접근 모드로 전환되어
+                                물체의 최근접점을 향해 직진합니다. 0.1m 안에서 정지하면 성공이고, 에피소드당 최대 500스텝입니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <h2>공개 코드와 대조해보면</h2>
+
+            <p>
+                저자들이 공개한 구현(<code>Co-NavGPT2</code>)을 논문과 한 줄씩 맞춰봤습니다.
+                프론티어 추출은 논문 문장과 코드가 정확히 대응했고, 앞서 애매했던 서술도 코드가 답을 줬습니다.
+                다만 <strong>논문에 없는 구현 사실이 여럿</strong> 나왔습니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>논문 서술과 공개 구현 대조. 마지막 두 항목은 서술과 어긋나는 부분입니다.</caption>
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>논문</th>
+                            <th>코드</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>프론티어 개수</td>
+                            <td>언급 없음</td>
+                            <td class="term">최대 6개 (<code>if i == 5: break</code>)</td>
+                        </tr>
+                        <tr>
+                            <td>프론티어 ID 순서</td>
+                            <td>언급 없음</td>
+                            <td class="term">FMM 거리 오름차순 &mdash; <code>frontier_0</code>이 항상 최근접</td>
+                        </tr>
+                        <tr>
+                            <td>목표점 좌표</td>
+                            <td>언급 없음</td>
+                            <td class="term">클러스터 무게중심 <code>centroid</code></td>
+                        </tr>
+                        <tr>
+                            <td>작은 클러스터 임계값</td>
+                            <td>"small clusters"</td>
+                            <td class="term">8셀</td>
+                        </tr>
+                        <tr>
+                            <td>재시도</td>
+                            <td>"올바른 출력까지 재생성"</td>
+                            <td class="term">5회 상한 &rarr; 실패 시 전원 최근접</td>
+                        </tr>
+                        <tr>
+                            <td>프론티어 없을 때</td>
+                            <td>탐색된 공간 내 임의점</td>
+                            <td class="term">맵 전체에서 임의점 (탐색 여부 미확인)</td>
+                        </tr>
+                        <tr>
+                            <td>VLM 모델</td>
+                            <td>GPT-5</td>
+                            <td class="term">GPT-4o 하드코딩</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                마지막 항목은 저장소 이력을 보면 설명됩니다. <strong>마지막 커밋이 2025년 7월 3일</strong>로,
+                논문 투고(2025년 9월 29일)보다 석 달 앞섭니다. 공개된 코드는 논문 최종본 이전 버전으로 보는 것이 자연스럽습니다.
+                아래 지적들도 그 전제 위에서 읽어야 합니다.
+            </p>
+
+            <p>
+                다만 <strong>프론티어 ID가 거리순</strong>이라는 점은 짚어둘 만합니다.
+                논문은 ID를 단순한 식별 라벨처럼 서술하지만, 실제로는 거리 정보가 번호 순서에 인코딩되어 있습니다.
+                그래서 VLM이 <code>frontier_0</code>을 골랐을 때 그것이 의미적 판단인지
+                낮은 번호를 선호하는 편향인지 구분되지 않습니다.
+                논문의 핵심 주장은 VLM의 semantic prior가 성능에 기여한다는 것인데,
+                어블레이션이 이 둘을 분리해내지 못하는 구조입니다.
             </p>
 
             <details>
