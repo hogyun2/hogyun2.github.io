@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-NavGPT 논문 키워드 빈도 분석 - Hogyun Kim</title>
+    <meta name="description" content="Co-NavGPT (IEEE RA-L 2026) 본문의 어휘 분포를 키워드 빈도·개념구·주제 클러스터로 분석했습니다.">
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .post-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        .back-to-posts {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 32px;
+            transition: all 0.2s ease;
+        }
+
+        .back-to-posts:hover {
+            color: var(--primary-hover);
+            transform: translateX(-2px);
+        }
+
+        .post-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .post-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .post-category {
+            background: #f3e5f5;
+            color: #7b1fa2;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        [data-theme="dark"] .post-category {
+            background: #4a148c;
+            color: #ce93d8;
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 16px;
+        }
+
+        .post-content p { margin-bottom: 16px; }
+
+        .paper-ref {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* ---------- chart tokens ---------- */
+        .viz {
+            --c-nav:    #2a78d6;
+            --c-map:    #eb6834;
+            --c-robot:  #1baf7a;
+            --c-vlm:    #eda100;
+            --c-other:  #9aa0ac;
+            --c-phrase: #4a3aa7;
+            --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        }
+
+        [data-theme="dark"] .viz {
+            --c-nav:    #3987e5;
+            --c-map:    #d95926;
+            --c-robot:  #199e70;
+            --c-vlm:    #c98500;
+            --c-other:  #767c88;
+            --c-phrase: #9085e9;
+        }
+
+        /* ---------- run summary ---------- */
+        .runline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 24px;
+            padding: 14px 0;
+            margin-bottom: 32px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .runline b {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ---------- panels ---------- */
+        .panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel h3 {
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .panel-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* ---------- cluster tiles ---------- */
+        .tiles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+            gap: 12px;
+        }
+
+        .tile {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .tile-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: var(--c);
+            flex: none;
+        }
+
+        .tile-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .tile-sub {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin: 4px 0 8px;
+        }
+
+        .tile-terms {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        /* ---------- bar chart ---------- */
+        .chart { display: flex; flex-direction: column; gap: 5px; }
+
+        .row {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(5.5rem, 8.5rem) 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .chart-phrase .row {
+            grid-template-columns: minmax(6rem, 11.5rem) 1fr auto;
+        }
+
+        .row:hover, .row:focus-visible { background: var(--bg-primary); }
+        .row:focus-visible { box-shadow: 0 0 0 2px var(--primary-color); }
+
+        .row-label {
+            font-family: var(--mono);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .track { height: 18px; display: flex; align-items: center; }
+
+        .bar {
+            height: 18px;
+            width: var(--w);
+            background: var(--c);
+            border-radius: 0 4px 4px 0;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bar {
+                transform-origin: left center;
+                animation: viz-grow 560ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+                animation-delay: var(--d);
+            }
+            @keyframes viz-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+        }
+
+        .row-value {
+            font-family: var(--mono);
+            font-variant-numeric: tabular-nums;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 2.2rem;
+            text-align: right;
+        }
+
+        .tip {
+            position: absolute;
+            right: 0;
+            bottom: calc(100% - 2px);
+            z-index: 5;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            line-height: 1.45;
+            padding: 6px 9px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 110ms ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
+        .row:hover .tip, .row:focus-visible .tip { opacity: 1; }
+
+        /* ---------- table view ---------- */
+        details {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0 24px;
+            margin-bottom: 24px;
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 18px 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary::before {
+            content: "+";
+            font-family: var(--mono);
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        details[open] summary::before { content: "\2212"; }
+        summary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; border-radius: 4px; }
+
+        .table-wrap { overflow-x: auto; padding-bottom: 20px; }
+
+        table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
+
+        caption {
+            text-align: left;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            padding-bottom: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 7px 14px 7px 0;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        td.num, th.num {
+            font-family: var(--mono);
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            padding-right: 0;
+        }
+
+        td.term { font-family: var(--mono); color: var(--text-primary); }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: var(--c);
+            margin-right: 7px;
+        }
+
+        .method {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 8px;
+        }
+
+        .method code {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .post-container { padding: 24px 16px; }
+            .post-title { font-size: 1.7rem; }
+            .panel, details { padding-left: 16px; padding-right: 16px; }
+            .row { grid-template-columns: minmax(4.5rem, 6.5rem) 1fr auto; gap: 8px; }
+            .chart-phrase .row { grid-template-columns: minmax(5rem, 8rem) 1fr auto; }
+            .row-label { font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="post-container">
+        <a href="../posts.html" class="back-to-posts">
+            <i class="fas fa-arrow-left"></i>
+            포스트 목록으로 돌아가기
+        </a>
+
+        <div class="post-header">
+            <h1 class="post-title">Co-NavGPT 논문 키워드 빈도 분석</h1>
+            <div class="post-meta">
+                <span><i class="fas fa-calendar"></i> 2026년 7월 27일</span>
+                <span class="post-category">Research</span>
+                <span><i class="fas fa-clock"></i> 4분 읽기</span>
+            </div>
+        </div>
+
+        <div class="post-content viz">
+            <p class="paper-ref">
+                <strong>Co-NavGPT: Multirobot Cooperative Visual Semantic Navigation Using Vision Language Models</strong><br>
+                Bangguo Yu, Qihao Yuan, Kailai Li, Hamidreza Kasaei, Ming Cao ·
+                IEEE Robotics and Automation Letters, Vol. 11, No. 2, February 2026
+            </p>
+
+            <p>
+                세미나 준비하면서 이 논문의 본문 어휘 분포를 뽑아봤습니다. 논문이 실제로 무엇에 지면을 쓰는지는
+                초록의 주장보다 어휘 빈도가 더 정직하게 보여주는 경우가 있어서, 제목~결론 구간을 통째로 세어봤습니다.
+                참고문헌 목록과 페이지 워터마크는 제외했고, 단수/복수는 하나로 합쳤습니다.
+            </p>
+
+            <div class="runline">
+                <span>추출 원문 <b>6,581</b> 단어</span>
+                <span>본문 토큰 <b>5,137</b></span>
+                <span>불용어 제거 후 <b>3,011</b></span>
+                <span>고유어 <b>1,102</b></span>
+                <span>상위 5개 점유 <b>10.5%</b></span>
+            </div>
+
+            <h2>주제 클러스터별 어휘량</h2>
+
+            <div class="panel">
+                <h3>네 갈래로 묶어본 어휘 분포</h3>
+                <p class="panel-note">
+                    상위 어휘를 주제별로 묶은 해석적 분류입니다. 아래 순위 차트의 막대 색이 이 분류를 따르므로,
+                    이 줄이 곧 범례 역할을 합니다.
+                </p>
+                <div class="tiles" id="tiles"></div>
+            </div>
+
+            <h2>최다 빈출 키워드 20</h2>
+
+            <div class="panel">
+                <h3>단어 빈도 순위</h3>
+                <p class="panel-note">막대에 마우스를 올리면 점유율과 분류가 표시됩니다.</p>
+                <div class="chart" id="uniChart"></div>
+            </div>
+
+            <p>
+                상위권이 <strong>robot</strong>(멀티로봇)과 <strong>map · frontier</strong>(탐색),
+                <strong>navigation</strong>(과제)으로 갈리는 게 한눈에 보입니다.
+                특히 <strong>frontier</strong>가 4위라는 점이 방법론의 핵심 단서인데,
+                VLM이 자유롭게 좌표를 생성하는 게 아니라 <em>프론티어 후보를 로봇들에게 배분하는 global planner</em>
+                구조라는 뜻입니다. 반대로 training/learning 계열 용어는 상위 40위 안에 아예 없습니다 —
+                "task-specific training 없이 zero-shot으로 동작한다"는 논문의 주장과 어휘 분포가 일치합니다.
+            </p>
+
+            <h2>핵심 개념구</h2>
+
+            <div class="panel">
+                <h3>연속 2단어 빈도</h3>
+                <p class="panel-note">
+                    제목·초록이 반복되며 생긴 표제 조각(<code>cooperative visual</code> 등)은 뺐습니다.
+                </p>
+                <div class="chart chart-phrase" id="biChart"></div>
+            </div>
+
+            <p>
+                <code>point cloud</code>가 1위인 건 각 로봇의 sub-map을 통합한 전역 맵 표현이 시스템의 중심 축이기
+                때문이고, <code>visual prompt</code>는 VLM에 텍스트가 아니라 맵 이미지에 로봇 상태와 프론티어를
+                인코딩해 넣는 이 논문 특유의 입력 방식을 가리킵니다.
+            </p>
+
+            <details>
+                <summary>전체 수치 표로 보기</summary>
+                <div class="table-wrap">
+                    <table>
+                        <caption>불용어 제거·표제어 통합 후 상위 33개. 34위 이하는 모두 11회 이하이며 잔여 헤더 토큰이 섞여 있습니다.</caption>
+                        <thead>
+                            <tr>
+                                <th class="num">#</th>
+                                <th>키워드</th>
+                                <th>분류</th>
+                                <th class="num">빈도</th>
+                                <th class="num">점유율</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </details>
+
+            <p class="method">
+                <strong>산출 방법</strong><br>
+                <code>pdftotext -layout</code>으로 본문을 추출한 뒤 REFERENCES 이후를 잘라냈습니다.
+                줄바꿈 하이픈 결합, 인용 표기 <code>[12]</code> 제거, IEEE Xplore 다운로드 워터마크와 러닝 헤더 제거,
+                일반 영어 불용어 및 논문 상투어(<code>method</code>, <code>result</code>, <code>show</code> 등) 제외,
+                두 글자 이하 토큰 제외, 복수형&rarr;단수형 통합 순으로 처리했습니다.
+                클러스터 분류는 자동 산출이 아니라 논문 내용을 근거로 한 사람의 판단이며,
+                어느 갈래에도 속하지 않는 <code>task</code>·<code>framework</code>·<code>co-navgpt</code>는 기타로 묶었습니다.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
+    </script>
+
+    <script>
+        (function () {
+            const CL = {
+                nav:   { name: "내비게이션 과제",    c: "var(--c-nav)" },
+                map:   { name: "맵 · 프론티어 탐색", c: "var(--c-map)" },
+                robot: { name: "멀티로봇 협업",      c: "var(--c-robot)" },
+                vlm:   { name: "VLM · 추론",         c: "var(--c-vlm)" },
+                other: { name: "기타",               c: "var(--c-other)" }
+            };
+
+            const TOTAL = 3011;
+
+            const CLUSTERS = [
+                { k: "nav",   total: 254, terms: "navigation · target · visual · object · semantic · environment · goal · scene" },
+                { k: "map",   total: 228, terms: "map · frontier · global · exploration · point · local · cloud · explore" },
+                { k: "robot", total: 181, terms: "robot · multi-robot · cooperative · agent · assignment · multiple" },
+                { k: "vlm",   total: 122, terms: "vlm · model · prompt · planner · language · reasoning" }
+            ];
+
+            const UNI = [
+                ["robot", 98, "robot"], ["map", 63, "map"], ["navigation", 57, "nav"],
+                ["frontier", 54, "map"], ["vlm", 44, "vlm"], ["target", 42, "nav"],
+                ["visual", 37, "nav"], ["multi-robot", 36, "robot"], ["object", 30, "nav"],
+                ["global", 29, "map"], ["semantic", 28, "nav"], ["environment", 26, "nav"],
+                ["exploration", 26, "map"], ["model", 24, "vlm"], ["task", 24, "other"],
+                ["framework", 22, "other"], ["goal", 21, "nav"], ["co-navgpt", 19, "other"],
+                ["point", 18, "map"], ["prompt", 16, "vlm"]
+            ];
+
+            const TAIL = [
+                ["local", 15, "map"], ["planner", 14, "vlm"], ["search", 14, "other"],
+                ["cooperative", 13, "robot"], ["scene", 13, "nav"], ["performance", 13, "other"],
+                ["observation", 13, "other"], ["cloud", 13, "map"], ["language", 12, "vlm"],
+                ["reasoning", 12, "vlm"], ["experiment", 12, "other"], ["agent", 12, "robot"],
+                ["assignment", 12, "robot"]
+            ];
+
+            const BI = [
+                ["point cloud", 13], ["visual target", 12], ["target navigation", 11],
+                ["semantic navigation", 10], ["language model", 10], ["target object", 10],
+                ["visual semantic", 9], ["visual prompt", 9], ["global planner", 8],
+                ["vision language", 7], ["vision-language model", 7], ["cloud map", 7]
+            ];
+
+            const pct = n => (n / TOTAL * 100).toFixed(2);
+
+            document.getElementById("tiles").innerHTML = CLUSTERS.map(g => `
+                <div class="tile">
+                    <div class="tile-label"><span class="swatch" style="--c:${CL[g.k].c}"></span>${CL[g.k].name}</div>
+                    <div class="tile-value">${g.total}</div>
+                    <div class="tile-sub">전체의 ${pct(g.total)}%</div>
+                    <div class="tile-terms">${g.terms}</div>
+                </div>`).join("");
+
+            const maxUni = UNI[0][1];
+            document.getElementById("uniChart").innerHTML = UNI.map(([t, n, k], i) => `
+                <div class="row" tabindex="0">
+                    <span class="row-label">${t}</span>
+                    <span class="track">
+                        <span class="bar" style="--w:${(n / maxUni * 100).toFixed(1)}%;--c:${CL[k].c};--d:${i * 26}ms"></span>
+                    </span>
+                    <span class="row-value">${n}</span>
+                    <span class="tip">${t} — ${n}회 · 전체의 ${pct(n)}% · ${CL[k].name}</span>
+                </div>`).join("");
+
+            const maxBi = BI[0][1];
+            document.getElementById("biChart").innerHTML = BI.map(([t, n], i) => `
+                <div class="row" tabindex="0">
+                    <span class="row-label">${t}</span>
+                    <span class="track">
+                        <span class="bar" style="--w:${(n / maxBi * 100).toFixed(1)}%;--c:var(--c-phrase);--d:${i * 26}ms"></span>
+                    </span>
+                    <span class="row-value">${n}</span>
+                    <span class="tip">${t} — ${n}회</span>
+                </div>`).join("");
+
+            document.getElementById("tableBody").innerHTML = UNI.concat(TAIL).map(([t, n, k], i) => `
+                <tr>
+                    <td class="num">${i + 1}</td>
+                    <td class="term">${t}</td>
+                    <td><span class="dot" style="--c:${CL[k].c}"></span>${CL[k].name}</td>
+                    <td class="num">${n}</td>
+                    <td class="num">${pct(n)}%</td>
+                </tr>`).join("");
+        })();
+    </script>
+</body>
+</html>
