@@ -108,6 +108,19 @@
 
         .post-content li:last-child { margin-bottom: 0; }
 
+        /* quoted passages from the paper */
+        .post-content blockquote {
+            margin: 20px 0;
+            padding: 14px 20px;
+            max-width: 62rem;
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--text-muted);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
         .paper-ref {
             font-size: 0.95rem;
             color: var(--text-muted);
@@ -352,6 +365,73 @@
 
         @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
         .row:hover .tip, .row:focus-visible .tip { opacity: 1; }
+
+        /* ---------- table of contents ---------- */
+        .toc {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin: 28px 0;
+            background: var(--bg-secondary);
+            max-width: 62rem;
+        }
+
+        .toc-title {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .toc ol {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            counter-reset: toc;
+        }
+
+        .toc li {
+            display: grid;
+            grid-template-columns: 4.2rem 1fr;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            align-items: baseline;
+        }
+
+        .toc-num {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--primary-color);
+        }
+
+        .toc a {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .toc a:hover { border-bottom-color: var(--primary-color); }
+        .toc a:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; }
+
+        .toc-sub {
+            display: block;
+            font-weight: 400;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* anchor offset so headings aren't flush to the viewport top */
+        .part { scroll-margin-top: 24px; }
 
         /* ---------- part divider ---------- */
         .part {
@@ -748,7 +828,15 @@
         details[open] summary::before { content: "\2212"; }
         summary:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 3px; border-radius: 4px; }
 
-        .table-wrap { overflow-x: auto; padding-bottom: 20px; }
+        /* Tables read better at the prose measure — full container width pushes
+           right-aligned numbers far from their row labels. */
+        .table-wrap {
+            overflow-x: auto;
+            padding-bottom: 20px;
+            max-width: 62rem;
+        }
+
+        details .table-wrap { max-width: none; }
 
         table { border-collapse: collapse; width: 100%; font-size: 0.82rem; }
 
@@ -847,15 +935,55 @@
             </p>
             <p>
                 세어놓고 보니 상위 어휘가 네 갈래로 깔끔하게 갈렸고, 그 네 갈래가 논문의 파이프라인 순서와
-                그대로 맞아떨어졌습니다. 그래서 이 글은 통계에서 출발해 구현까지 내려갑니다.
-                <strong>빈도 통계 &rarr; 개요 &rarr; 방법론 상세 &rarr; 비판적 검토</strong> 네 부분입니다.
+                대체로 맞아떨어졌습니다. 그래서 이 글은 통계에서 출발해 구현까지 내려갑니다.
             </p>
             <p>
                 방법론 부분은 논문만 읽고 쓴 게 아니라 저자들이 공개한 구현
-                (<a href="https://github.com/BangguWu/Co-NavGPT" target="_blank" rel="noopener">Co-NavGPT2</a>)을
-                한 줄씩 대조하며 확인했습니다. 논문 서술만으로는 애매했던 부분이 코드에서 풀리기도 했고,
+                (<code>Co-NavGPT2</code>)을 한 줄씩 대조하며 확인했습니다.
+                논문 서술만으로는 애매했던 부분이 코드에서 풀리기도 했고,
                 반대로 <strong>논문에 없거나 어긋나는 구현 사실</strong>도 여럿 나왔습니다.
             </p>
+
+            <nav class="toc">
+                <div class="toc-title">읽는 순서</div>
+                <ol>
+                    <li>
+                        <span class="toc-num">PART 1</span>
+                        <span>
+                            <a href="#part1">논문은 어디에 지면을 쓰는가</a>
+                            <span class="toc-sub">본문 어휘를 세어 무게중심을 찾습니다</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="toc-num">PART 2</span>
+                        <span>
+                            <a href="#part2">개요 — 한 문장, 네 질문, 두 주기</a>
+                            <span class="toc-sub">전체 그림을 세 각도로 잡습니다</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="toc-num">PART 3</span>
+                        <span>
+                            <a href="#part3">상세 — 데이터가 거쳐 가는 아홉 단계</a>
+                            <span class="toc-sub">각 단계의 입력과 출력을 따라갑니다</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="toc-num">PART 4</span>
+                        <span>
+                            <a href="#part4">프롬프트는 무엇을 참고했나</a>
+                            <span class="toc-sub">CoT, 마크 기반 시각 프롬프팅, 구조화 출력의 계보</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="toc-num">PART 5</span>
+                        <span>
+                            <a href="#part5">비판적 검토</a>
+                            <span class="toc-sub">어블레이션 수치 재해석, 구조적 문제, 지표 편향, 재현성</span>
+                        </span>
+                    </li>
+                </ol>
+            </nav>
 
             <div class="runline">
                 <span>추출 원문 <b>6,581</b> 단어</span>
@@ -865,7 +993,7 @@
                 <span>상위 5개 점유 <b>10.5%</b></span>
             </div>
 
-            <div class="part">
+            <div class="part" id="part1">
                 <span class="part-num">PART 1</span>
                 <h2 class="part-title">논문은 어디에 지면을 쓰는가</h2>
                 <p class="part-lead">본문 어휘를 세어 논문의 무게중심을 찾습니다.</p>
@@ -920,7 +1048,7 @@
                 인코딩해 넣는 이 논문 특유의 입력 방식을 가리킵니다.
             </p>
 
-            <div class="part">
+            <div class="part" id="part2">
                 <span class="part-num">PART 2</span>
                 <h2 class="part-title">개요 — 한 문장, 네 질문, 두 주기</h2>
                 <p class="part-lead">상세로 들어가기 전에 전체 그림을 세 각도로 잡습니다.</p>
@@ -1043,7 +1171,7 @@
                 </p>
             </div>
 
-            <div class="part">
+            <div class="part" id="part3">
                 <span class="part-num">PART 3</span>
                 <h2 class="part-title">상세 — 데이터가 거쳐 가는 아홉 단계</h2>
                 <p class="part-lead">각 단계의 입력과 출력을 따라가면 시스템이 실제로 무엇을 주고받는지 보입니다.</p>
@@ -1365,22 +1493,48 @@ write_number(img, pose, i)                  # 로봇 검정 / ID 빨강</code>
                                 <span class="io-chip out" style="--c:var(--c-nav)">행동 1개</span>
                             </div>
                             <p>
-                                목표점은 프론티어 덩어리의 무게중심입니다. 여기까지 가는 경로를 FMM이 짜는데,
-                                <strong>그래프 탐색이 아닙니다.</strong> 노드도 엣지도 우선순위 큐도 없습니다.
+                                목표점은 프론티어 덩어리의 무게중심입니다. 논문은 여기까지 가는 경로를
+                                FMM이 짠다고 서술하는데, 코드를 보면 <strong>FMM이 주 경로가 아닙니다.</strong>
+                            </p>
+                            <code class="stage-code">plan_path = self.search_navigable_path(goal)   # ① 시뮬레이터 navmesh
+if len(plan_path) &gt; 1:
+    action = self.greedy_follower_act(plan_path)
+else:
+    self.stg, ... = self._get_stg(...)          # ② FMM — ①이 실패할 때만
+    action = self.ffm_act()</code>
+                            <p>
+                                ①을 따라가면 <code>_sim.get_straight_shortest_path_points()</code>,
+                                즉 <strong>Habitat 시뮬레이터의 navmesh</strong>를 직접 조회합니다.
+                                로봇이 만든 맵이 아니라 환경의 정답 기하입니다.
+                                게다가 실패하면 주변 8개 점을 더 시도해 총 9번 도전하고, 목표점은 자동으로
+                                통행 가능 지점에 붙습니다. <strong>시뮬레이션에서 FMM은 사실상 예비용</strong>입니다.
+                            </p>
+                            <p>
+                                반대로 실환경 코드에는 이 navmesh 경로가 아예 없습니다. 거기서는
+                                <strong>FMM만 돕니다.</strong> 시뮬과 실환경의 로컬 정책이 서로 다른 코드인 셈입니다.
+                            </p>
+                            <p>
+                                그 FMM은 <strong>그래프 탐색이 아닙니다.</strong> 노드도 엣지도 우선순위 큐도 없고,
+                                목표점에서 물이 퍼지듯 모든 칸에 "목표까지의 거리"를 한 번에 채운 뒤
+                                주변에서 가장 낮은 칸으로 한 걸음씩 내려갑니다. 결과물이 경로가 아니라
+                                <strong>스칼라 장(field)</strong>이라, 한 번 풀어두면 어느 지점까지의 거리든
+                                배열 인덱싱 한 번입니다.
                             </p>
                             <code class="stage-code">dd = skfmm.distance(traversible_ma, dx=1)   # 격자 전체에 거리값
 argmin(내 주변)                              # 경사 따라 한 걸음</code>
                             <p>
-                                목표점에서 물이 퍼지듯 <strong>모든 칸에 "목표까지의 거리"를 한 번에 채우고</strong>,
-                                로봇은 주변에서 값이 가장 낮은 칸으로 한 걸음씩 굴러 내려갑니다.
-                                A*가 노드 시퀀스를 만드는 것과 달리 결과물이 스칼라 장(field)이고,
-                                8방향 제약이 없어 벽을 돌아가는 매끄러운 경로가 나옵니다.
+                                어느 경로를 쓰든 마지막에는 <strong>이산 행동 하나</strong>로 바꿔야 합니다.
+                                Habitat이 받는 게 그것뿐이라서요. 다음 지점의 방위각과 현재 방향을 비교합니다.
                             </p>
+                            <code class="stage-code">relative_angle = 내_방향 - 다음지점_방향
+if   relative_angle &gt;  30:  action = 3   # 오른쪽
+elif relative_angle &lt; -30:  action = 2   # 왼쪽
+else:                       action = 1   # 전진</code>
                             <p>
-                                이 방식의 부수 효과가 하나 있습니다 &mdash; 장을 한 번 풀어두면
-                                어느 지점까지의 거리든 <strong>배열 인덱싱 한 번</strong>이라,
-                                후보마다 경로 탐색을 돌릴 필요가 없습니다.
-                                행동은 전진 25cm · 좌우 회전 30&deg; · 상하 시선 · 정지 여섯 가지입니다.
+                                여섯 가지 행동 중 <code>look_up</code>·<code>look_down</code>은 경로와 무관한
+                                <strong>별도 휴리스틱</strong>입니다. 앞쪽 25cm 지점이 미탐색이면 고개를 숙여
+                                가까운 바닥을 depth에 담고, 이미 본 곳이면 다시 올립니다.
+                                이동이 아니라 맵을 채우기 위한 시선 제어이고, 논문에는 설명이 없습니다.
                             </p>
                             <p>
                                 <strong>VLM은 여기 관여하지 않습니다.</strong> 논문이 이유를 명시합니다 — VLM은 고수준 계획엔 강하지만
@@ -1410,10 +1564,157 @@ argmin(내 주변)                              # 경사 따라 한 걸음</code
                 </div>
             </div>
 
-            <div class="part">
+            <div class="part" id="part4">
                 <span class="part-num">PART 4</span>
+                <h2 class="part-title">프롬프트는 무엇을 참고했나</h2>
+                <p class="part-lead">이 프레임워크의 프롬프트는 세 갈래 선행 연구 위에 서 있습니다.</p>
+            </div>
+
+            <p>
+                앞 파트에서 프롬프트가 어떻게 조립되는지 봤으니, 이번엔 <strong>왜 그런 모양인지</strong>를 봅니다.
+                시각 프롬프트, 텍스트 프롬프트, 출력 형식이 각각 다른 계보를 갖고 있습니다.
+            </p>
+
+            <h2>① 빨간 마크 — mark-based visual prompting</h2>
+
+            <p>
+                프론티어를 빨간 굵은 선으로 칠하는 것은 임의의 선택이 아닙니다. 논문이 관련연구에서 계보를 밝힙니다.
+            </p>
+
+            <blockquote>
+                Recent work by [28] showed that structured annotations can improve VLMs interaction,
+                motivating the adoption of <strong>mark-based visual prompting</strong> in both
+                manipulation [29] and navigation [30] tasks.
+            </blockquote>
+
+            <p>
+                [28]은 Shtedritski, Rupprecht, Vedaldi의
+                <em>"What does CLIP know about a red circle?"</em>(ICCV 2023)입니다.
+                <strong>이미지에 빨간 원을 그리면 CLIP이 그 안쪽을 가리키는 것으로 알아듣는다</strong>는 발견이고,
+                미세조정 없이 zero-shot으로 특정 대상을 지목할 수 있게 됩니다.
+            </p>
+
+            <p>
+                왜 통하냐면 <strong>학습 데이터 때문</strong>입니다. 웹에는 빨간 원·화살표로 뭔가를 강조한 이미지가
+                아주 많고(설명 자료, 뉴스 사진, 제품 사진), 거기 붙은 캡션은 대개 <em>동그라미 친 대상</em>을
+                설명합니다. 이 패턴이 반복되면서 모델이 "빨간 표시 = 지금 얘기하는 대상"을 학습해버립니다.
+                설계된 기능이 아니라 데이터에서 우연히 생긴 능력이라, 논문 제목이 "CLIP이 빨간 원에 대해 뭘 아는가"인 것입니다.
+            </p>
+
+            <p>
+                그 논문은 <strong>색과 형태를 모두 어블레이션</strong>했습니다 (CUB 데이터셋, 키포인트 지목).
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>Shtedritski et al. (2023) Table 2. 색보다 형태의 영향이 4배 이상 큽니다.</caption>
+                    <thead>
+                        <tr><th>색</th><th class="num">평균</th><th>형태</th><th class="num">평균</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>빨강</strong></td><td class="num"><strong>36.4</strong></td><td><strong>원</strong></td><td class="num"><strong>33.5</strong></td></tr>
+                        <tr><td>초록</td><td class="num">34.3</td><td>화살표</td><td class="num">28.3</td></tr>
+                        <tr><td>보라</td><td class="num">34.0</td><td>사각형</td><td class="num">24.1</td></tr>
+                        <tr><td>파랑</td><td class="num">32.7</td><td>십자</td><td class="num">21.5</td></tr>
+                        <tr><td>노랑</td><td class="num">32.4</td><td>&mdash;</td><td class="num">&mdash;</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                빨강이 1등이지만 2등과 <strong>2.1%p</strong> 차이이고 표준편차가 4~5%p입니다.
+                반면 원과 사각형은 <strong>9.4%p</strong> 차이입니다. <strong>색보다 형태가 훨씬 중요합니다.</strong>
+                Co-NavGPT는 색은 최적을 따랐지만 형태는 원이 아닌 선을 씁니다.
+            </p>
+
+            <h2>② Justify 요구 — Chain-of-Thought</h2>
+
+            <p>
+                텍스트 프롬프트의 네 단계 중 마지막 <code>Justify</code>, 그리고 출력의 <code>reason</code> 필드는
+                CoT 계열의 아이디어입니다.
+            </p>
+
+            <p>
+                <strong>Wei et al. (NeurIPS 2022)</strong>가 시작입니다. few-shot 예시에 답만 주지 말고
+                <strong>풀이 과정까지</strong> 써주면 모델이 그 형식을 흉내 내 새 문제도 풀이하며 답합니다.
+                GSM8K에서 PaLM 540B 기준 <strong>17.9% &rarr; 58.1%</strong>.
+            </p>
+
+            <p>
+                작동 원리는 생성 순서에 있습니다. LLM은 토큰을 앞에서부터 뽑으니,
+                <strong>중간 단계를 먼저 뱉어놓으면 그 토큰들이 뒤따르는 답의 조건</strong>이 됩니다.
+                자기가 쓴 계산을 보며 다음을 이어가는 셈입니다.
+            </p>
+
+            <p>
+                <strong>Kojima et al. (NeurIPS 2022)</strong>는 예시조차 필요 없다는 걸 보였습니다.
+                <code>Let's think step by step.</code> 한 줄이면 됩니다.
+                GSM8K에서 InstructGPT 기준 <strong>10.4% &rarr; 40.7%</strong>.
+                이 문장이 Co-NavGPT의 시스템 프롬프트에 그대로 들어 있습니다.
+            </p>
+
+            <p>
+                여기서 <strong>다른 CoT 계열이 쓰는 형식</strong>을 나란히 보면 뒤 파트의 논점이 선명해집니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>CoT 계열의 출력 형식. 공통점 하나가 뚜렷합니다.</caption>
+                    <thead>
+                        <tr><th>방법</th><th>형식</th><th>추론↔답 순서</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Wei (CoT)</td><td class="term">자유 텍스트</td><td>추론 &rarr; 답</td></tr>
+                        <tr><td>Kojima (zero-shot)</td><td class="term"><strong>2단계 호출</strong></td><td>추론 &rarr; 답</td></tr>
+                        <tr><td>ReAct</td><td class="term">Thought / Action / Obs 반복</td><td>추론 &rarr; 행동</td></tr>
+                        <tr><td>Least-to-Most</td><td class="term"><strong>2단계 호출</strong></td><td>분해 &rarr; 해결</td></tr>
+                        <tr><td>PAL / PoT</td><td class="term">코드</td><td>코드 = 추론</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                <strong>전부 추론이 답보다 먼저 나옵니다.</strong> Kojima와 Least-to-Most는 아예 호출을 둘로 나눠
+                추론과 형식 맞추기를 분리하고, ReAct는 Thought 없이 Action을 쓸 수 없도록 순서를 형식에 내장했습니다.
+            </p>
+
+            <h2>③ JSON 출력 — 구조화 생성</h2>
+
+            <p>
+                VLM의 응답은 사람이 읽는 게 아니라 <strong>코드가 받아 즉시 실행</strong>합니다.
+                그래서 형식이 고정돼야 합니다.
+            </p>
+
+            <code class="stage-code">"frontier_1" → split('_')[1] → 1
+             → target_point_list[1] → [237, 194]
+             → goal_map[237,194] = 1        # 로봇 출발</code>
+
+            <p>
+                "로봇 0은 부엌 쪽이 좋겠습니다" 같은 문장에서는 좌표를 뽑아낼 수 없습니다.
+                JSON을 쓰면 네 가지가 따라옵니다 &mdash; <strong>파싱이 안정적</strong>이고(서두·마크다운 펜스·표기 변주가 없음),
+                <strong>검증이 가능</strong>하며(키 개수와 ID 범위를 기계적으로 확인),
+                <strong>실패를 감지</strong>할 수 있고(조용히 틀리는 것보다 명시적 실패가 나음),
+                기계용(<code>robot_N</code>)과 사람용(<code>reason</code>)을 한 구조에 담습니다.
+            </p>
+
+            <p>
+                <code>response_format={"type":"json_object"}</code>가 부탁이 아니라 <strong>강제</strong>인 이유는
+                그 아래 기술이 있기 때문입니다. <strong>Willard &amp; Louf (2023)</strong>의
+                <em>"Efficient Guided Generation for Large Language Models"</em>는 자기회귀 생성을
+                <strong>유한 상태 기계의 상태 전이</strong>로 재정식화해, 매 스텝 문법에 맞지 않는 토큰을 마스킹합니다.
+                문법적으로 깨진 출력이 나올 수 없습니다.
+                <strong>Geng et al. (2023)</strong>은 미세조정 없이 문법 제약만으로 구조화 출력을 얻는 접근을 다뤘고,
+                JSON Schema가 이 분야의 사실상 표준 명세 언어가 됐습니다.
+            </p>
+
+            <p class="fact">
+                여기까지가 이 프레임워크가 딛고 선 토대입니다. 다음 파트에서는 그 토대를 실제로 활용했는지 봅니다.
+            </p>
+
+            <div class="part" id="part5">
+                <span class="part-num">PART 5</span>
                 <h2 class="part-title">비판적 검토</h2>
-                <p class="part-lead">논문과 코드의 간극, 프롬프트 설계의 근거, 그리고 남은 블랙박스.</p>
+                <p class="part-lead">어블레이션 수치 재해석, 구조적 문제, 지표 편향, 그리고 재현성.</p>
             </div>
 
             <h2>논문과 코드의 간극</h2>
@@ -1456,9 +1757,14 @@ argmin(내 주변)                              # 경사 따라 한 걸음</code
                             <td class="term">8셀</td>
                         </tr>
                         <tr>
+                            <td>로컬 경로</td>
+                            <td>FMM</td>
+                            <td class="term">시뮬레이터 <strong>정답 navmesh</strong>가 우선, FMM은 예비</td>
+                        </tr>
+                        <tr>
                             <td>재시도</td>
                             <td>"올바른 출력까지 재생성"</td>
-                            <td class="term">5회 상한 &rarr; 실패 시 전원 최근접</td>
+                            <td class="term">5회 상한 &rarr; 실패 시 전원 <code>frontier_0</code></td>
                         </tr>
                         <tr>
                             <td>프론티어 없을 때</td>
@@ -1480,40 +1786,135 @@ argmin(내 주변)                              # 경사 따라 한 걸음</code
                 아래 지적들도 그 전제 위에서 읽어야 합니다.
             </p>
 
-            <h2>프롬프트 설계의 비대칭</h2>
+            <h2>어블레이션 수치를 다시 보면</h2>
 
             <p>
-                시각 프롬프트와 텍스트 프롬프트가 논문에서 받는 대접이 크게 다릅니다.
+                논문의 핵심 주장은 VLM의 <strong>semantic prior</strong>가 성능에 기여한다는 것이고,
+                초록도 "Ablation studies further confirm the importance of semantic priors"라고 씁니다.
+                이를 직접 검증하는 행이 <code>Obs.</code>(의미 지도를 obstacle-only 맵으로 교체)입니다.
             </p>
 
             <div class="table-wrap">
                 <table>
-                    <caption>같은 프롬프트인데 근거 제시와 검증의 정도가 다릅니다.</caption>
+                    <caption>Table II (2로봇, HM3D). Full 대비 각 조건의 낙폭.</caption>
                     <thead>
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>선행 연구 인용</th>
-                            <th>어블레이션</th>
-                        </tr>
+                        <tr><th>조건</th><th class="num">SR</th><th class="num">Δ</th><th class="num">SPL</th><th class="num">Δ</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Visual Prompt</td>
-                            <td class="term">[28]~[30] 명시</td>
-                            <td class="term">Obs. / DownSam.</td>
-                        </tr>
-                        <tr>
-                            <td>Textual Prompt</td>
-                            <td class="term"><strong>없음</strong></td>
-                            <td class="term">reason 제거만</td>
-                        </tr>
+                        <tr><td><strong>Full</strong></td><td class="num"><strong>0.681</strong></td><td class="num">&mdash;</td><td class="num"><strong>0.369</strong></td><td class="num">&mdash;</td></tr>
+                        <tr><td>w/o Reason</td><td class="num">0.660</td><td class="num">−0.021</td><td class="num">0.337</td><td class="num">−0.032</td></tr>
+                        <tr><td>DownSam. (60&times;60)</td><td class="num">0.675</td><td class="num">−0.006</td><td class="num">0.346</td><td class="num">−0.023</td></tr>
+                        <tr><td><strong>Obs.</strong> (의미 제거)</td><td class="num">0.679</td><td class="num"><strong>−0.002</strong></td><td class="num">0.358</td><td class="num">−0.011</td></tr>
                     </tbody>
                 </table>
             </div>
 
             <p>
-                시각 쪽은 <em>"What does CLIP know about a red circle?"</em>부터 조작·내비게이션 응용까지
-                계보를 밝힙니다. 반면 텍스트 쪽은 <strong>인용이 하나도 없습니다.</strong>
+                <strong>의미 정보를 통째로 없앴는데 성공률이 0.2%p 떨어집니다.</strong>
+                더 결정적인 건 베이스라인과 나란히 놓았을 때입니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>Table I의 2로봇 결과에 Obs. 조건을 끼워 넣은 것.</caption>
+                    <thead>
+                        <tr><th>방법</th><th class="num">SR</th><th class="num">SPL</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Greedy</td><td class="num">0.611</td><td class="num">0.328</td></tr>
+                        <tr><td>Multi-SemExp</td><td class="num">0.612</td><td class="num">0.327</td></tr>
+                        <tr><td>Cost-Utility</td><td class="num">0.625</td><td class="num">0.323</td></tr>
+                        <tr><td><strong>Obs.</strong> — 의미 없는 Co-NavGPT</td><td class="num"><strong>0.679</strong></td><td class="num">0.358</td></tr>
+                        <tr><td>Full Co-NavGPT</td><td class="num">0.681</td><td class="num">0.369</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="fact">
+                의미 정보를 뺀 버전이 여전히 모든 베이스라인을 크게 이깁니다.
+                베이스라인 대비 우위의 <strong>거의 전부가 semantic 없이도 나옵니다.</strong>
+            </p>
+
+            <p>
+                통계적으로도 짚어둘 만합니다. 1,000 에피소드에서 SR&asymp;0.68이면 표준오차가 약 0.015입니다.
+                베이스라인을 이긴 것(+0.056)은 <strong>3.8&sigma;</strong>로 명확하지만,
+                <code>w/o Reason</code>(−0.021)은 1.4&sigma;, <code>Obs.</code>(−0.002)는 0.13&sigma;입니다.
+                <strong>내부 어블레이션은 어느 것도 유의하다고 보기 어렵습니다.</strong>
+                논문에 분산이나 유의성 검정은 보고되지 않았습니다.
+            </p>
+
+            <p>
+                공정하게 볼 점도 있습니다. SPL은 상대적으로 더 떨어지므로(−3%) 의미 정보가
+                <strong>성공 여부보다 경로 효율</strong>에 기여할 여지는 남습니다. 그리고 top-view가 담는 건
+                라벨이 아니라 위에서 본 RGB 색이며, 프론티어 <em>너머</em>는 미관측이라 색조차 없습니다.
+                VLM은 이미 본 영역의 색으로 못 본 영역을 추측해야 하니 애초에 신호가 약한 조건입니다.
+            </p>
+
+            <h2>CoT를 부르지만 작동하지 않는 구조</h2>
+
+            <p>
+                어블레이션 낙폭이 가장 큰 요소는 <code>reason</code>입니다. 그런데 코드를 보면
+                <strong>CoT가 작동할 수 있는 구조가 아닙니다.</strong> 세 가지가 겹칩니다.
+            </p>
+
+            <p>
+                <strong>첫째, JSON 모드가 사고 공간을 봉쇄합니다.</strong>
+                <code>response_format={"json_object"}</code>는 첫 토큰부터 JSON만 허용합니다.
+                프롬프트에 <code>Let's think step by step.</code>이 있어도 <strong>풀어놓을 자리가 없습니다.</strong>
+                PART 4에서 본 대로 Kojima와 Least-to-Most가 호출을 둘로 나눈 이유가 이것입니다.
+            </p>
+
+            <p>
+                <strong>둘째, <code>reason</code>이 결정 뒤에 옵니다.</strong>
+            </p>
+
+            <code class="stage-code">{
+    "robot_0": "frontier_1",     ① 생성
+    "robot_1": "frontier_0",     ② 생성
+    "reason":  "..."             ③ 생성 — ①②를 보고 씀
+}</code>
+
+            <p>
+                LLM은 앞에서부터 순차 생성하므로 배분을 확정한 뒤에 이유를 씁니다.
+                추론이 답을 만드는 게 아니라 <strong>답이 추론을 만듭니다.</strong>
+                ReAct가 Thought 없이 Action을 못 쓰게 형식에 순서를 내장한 것과 정반대입니다.
+            </p>
+
+            <p>
+                <strong>셋째, 분량이 100토큰입니다.</strong> JSON 구조와 배분 값이 30토큰쯤 먹으니
+                이유에 쓸 수 있는 건 70토큰 남짓, 한두 문장입니다.
+            </p>
+
+            <h2>그럼 왜 성능이 떨어졌을까</h2>
+
+            <p>
+                <code>reason</code>이 답 뒤에 생성된다면 제거해도 배분은 그대로여야 합니다.
+                그런데 낙폭이 가장 컸습니다. 가능한 설명이 넷인데, <strong>논문 정보만으로는 구분할 수 없습니다.</strong>
+            </p>
+
+            <ul>
+                <li><strong>노이즈</strong> &mdash; 1.4&sigma;라 유의하지 않습니다. 가장 단순한 설명입니다.</li>
+                <li><strong>검증 루프가 무너졌을 가능성</strong> &mdash; 공개된 검증은
+                    <code>len(json) == num_agents + 1</code>로, <code>reason</code>의 존재에 정합성이 묶여 있습니다.
+                    이 상태로 <code>reason</code>만 빼면 <strong>매번 검증 실패 &rarr; 재시도 5회 &rarr; fallback</strong>이 되어
+                    "두 로봇을 항상 <code>frontier_0</code>으로" 보내는 조건을 측정하게 됩니다.
+                    SPL 낙폭(−8.7%)이 SR 낙폭(−3.1%)보다 큰 패턴이 이와 일관됩니다.</li>
+                <li><strong>프롬프트 조건화</strong> &mdash; <code>Justify</code> 지시를 빼면 컨텍스트가 달라져
+                    첫 출력 토큰의 분포도 바뀝니다. 실제 효과지만 CoT의 기전은 아닙니다.</li>
+                <li><strong>모델이 <code>reason</code>을 먼저 쓸 수도</strong> &mdash; JSON 모드는 키 순서를 강제하지 않습니다.
+                    때때로 먼저 뱉는다면 그 경우엔 CoT가 실제로 작동합니다.</li>
+            </ul>
+
+            <p>
+                확인하려면 실행 로그에서 <strong><code>reason</code> 키의 실제 위치 분포</strong>와
+                <strong>fallback 발동 빈도</strong>만 보면 됩니다. 둘 다 기록만 하면 되는 값인데 보고되지 않았습니다.
+            </p>
+
+            <h2>텍스트 프롬프트에는 근거가 없습니다</h2>
+
+            <p>
+                PART 4에서 본 대로 시각 프롬프트는 [28]~[30]으로 계보를 밝힙니다.
+                반면 텍스트 프롬프트 문단에는 <strong>인용이 하나도 없습니다.</strong>
                 "이렇게 설계했다"만 있고 왜 그렇게 했는지가 없습니다.
             </p>
 
@@ -1587,7 +1988,7 @@ Please give the output based on the following input:</pre>
 
             <p>
                 정작 코드에는 출처가 분명한 기법이 들어 있습니다. <code>Let's think step by step.</code> &mdash;
-                예시 없이 이 한 줄만으로 추론 성능이 오른다는 Kojima et al.(2022)의 zero-shot CoT입니다.
+                PART 4에서 본 Kojima et al.(2022)의 zero-shot CoT입니다.
                 프롬프트 공학에서 가장 유명한 문장인데 <strong>인용도 없고, 논문에 실린 예시 프롬프트에는 아예 빠져 있습니다.</strong>
                 코드에만 있습니다.
             </p>
@@ -1599,9 +2000,82 @@ Please give the output based on the following input:</pre>
                 네 단계 구조 자체를 검증한 어블레이션도 없습니다.
             </p>
 
+            <p>
+                배분 기준이 놓인 자리도 이상합니다. 논문이 본문에서 강조하는 <strong>거리와 의미 관련성</strong>이
+                <code>### Your Task</code> 섹션이 아니라 <strong>출력 예시의 설명문 괄호 안</strong>에만 나옵니다.
+                가장 중요한 기준이 형식 안내에 묻혀 있는 셈입니다.
+            </p>
+
             <p class="fact">
-                어블레이션에서 성능 기여가 가장 컸던 요소(<code>reason</code> 제거 시 최대 하락)가
-                하필 설계 근거가 가장 얇은 쪽입니다.
+                어블레이션에서 성능 기여가 가장 컸던 요소가 하필 설계 근거가 가장 얇은 쪽입니다.
+            </p>
+
+            <h2>지표가 만든 인상</h2>
+
+            <p>
+                SPL 정의를 뜯어보면 멀티로봇 비교에 편향이 있습니다.
+            </p>
+
+            <blockquote>
+                p<sub>i</sub> stands for <strong>the shortest robot's</strong> trajectory length in the current episode i
+            </blockquote>
+
+            <p>
+                로봇이 여럿인데 <strong>그중 가장 짧게 움직인 하나만</strong> 셉니다. 나머지 로봇의 이동 거리는
+                계산에 안 들어갑니다. 성공 판정도 마찬가지로 <em>"한 로봇이라도 찾으면 성공"</em>입니다.
+                둘 다 로봇 수를 늘릴수록 유리해지는 방향입니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>Table I, Co-NavGPT. 로봇을 늘릴수록 SPL이 좋아집니다.</caption>
+                    <thead><tr><th>로봇 수</th><th class="num">SR</th><th class="num">SPL</th></tr></thead>
+                    <tbody>
+                        <tr><td>1대</td><td class="num">0.629</td><td class="num">0.236</td></tr>
+                        <tr><td>2대</td><td class="num">0.681</td><td class="num">0.369</td></tr>
+                        <tr><td>3대</td><td class="num">0.690</td><td class="num">0.406</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                <strong>전체 로봇의 이동 거리 합</strong>으로 쟀다면 3대는 3배 효율적이어야 본전입니다.
+                베이스라인도 같은 지표로 쟀으니 방법 간 비교는 유효하지만,
+                <strong>"로봇이 많을수록 효율적"이라는 인상은 상당 부분 지표 정의의 산물</strong>이라
+                자원 대비 효율 주장으로 읽으면 안 됩니다.
+            </p>
+
+            <p>
+                덧붙이면 논문은 <code>p<sub>i</sub></code>를 두 가지 뜻으로 씁니다 &mdash;
+                과제 정의(&sect;III-A)에서는 에피소드의 <em>시작 위치</em>(3D 좌표),
+                SPL 정의에서는 <em>경로 길이</em>(스칼라)입니다. 읽을 때 헷갈리기 쉬운 지점입니다.
+            </p>
+
+            <h2>재현성 — 어블레이션 코드가 없습니다</h2>
+
+            <p>
+                공개 저장소를 확인해보면 Table I·II를 재현할 수단이 없습니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>공개 저장소 확인 결과.</caption>
+                    <thead><tr><th>항목</th><th>상태</th></tr></thead>
+                    <tbody>
+                        <tr><td>어블레이션 인자</td><td class="term">없음 (<code>nav_mode</code> 하나뿐, 시뮬에선 로그 경로용)</td></tr>
+                        <tr><td>브랜치·태그</td><td class="term"><code>main</code> 하나</td></tr>
+                        <tr><td>베이스라인 구현</td><td class="term">Greedy·Cost-Utility·Multi-SemExp <strong>모두 없음</strong></td></tr>
+                        <tr><td>모델 교체</td><td class="term"><code>model='gpt-4o'</code> 하드코딩</td></tr>
+                        <tr><td>해상도 변경</td><td class="term">리사이즈 코드 없음</td></tr>
+                        <tr><td>obs 맵 변형</td><td class="term">함수는 있으나 어느 진입점에서도 미호출</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                즉 <strong>어블레이션 네 조건 중 하나도 공개 코드로 실행할 수 없습니다.</strong>
+                실험은 공개되지 않은 수정본으로 돌린 것이고, 앞서 제기한
+                "<code>w/o Reason</code>에서 검증이 무너졌는가"는 <strong>확인도 반증도 불가능</strong>합니다.
             </p>
 
             <h2>VLM은 무엇을 보고 고르는가</h2>
@@ -1609,23 +2083,15 @@ Please give the output based on the following input:</pre>
             <p>
                 <code>reason</code> 필드가 판단 근거를 보여주니 해석 가능해 보이지만,
                 <strong>LLM의 사후 설명이 실제 판단 근거라는 보장은 없습니다.</strong>
-                모델이 다른 이유로 답을 정해놓고 그럴듯한 설명을 덧붙이는 현상은 잘 알려져 있습니다.
-                즉 <code>reason</code>은 해석 가능성의 <em>외형</em>이지 검증이 아닙니다.
+                여기서는 가능성의 문제가 아니라 <strong>생성 순서가 그것을 보장</strong>합니다 &mdash;
+                답이 먼저 나오고 설명이 뒤따르니까요.
             </p>
 
             <p>
-                다만 완전한 블랙박스는 아닙니다. <strong><code>Obs.</code> 어블레이션이 인과적 증거를 줍니다.</strong>
-                의미 정보가 담긴 top-view를 obstacle-only 맵으로 바꿨더니 성능이 떨어졌습니다 &mdash;
-                순전히 번호나 위치 편향으로 골랐다면 배경을 바꿔도 결과가 같아야 합니다.
-                해상도를 480에서 60으로 줄여도 하락 폭이 작았다는 것도 단서입니다.
-                세밀한 디테일이 아니라 <strong>큰 색감 덩어리</strong>를 보고 판단한다는 뜻이니까요.
-            </p>
-
-            <p>
-                그래서 정리하면 &mdash; <strong>"의미를 본다"는 확인됐지만 "어떤 규칙으로 고르는지"는 모릅니다.</strong>
-                거리를 실제로 고려하는지, 면적 큰 쪽을 선호하는지, ID 번호나 이미지 순서에 끌리는지 모두 미확인입니다.
-                특히 후자가 걸리는데, ID 순서와 이미지 전달 순서와 실패 시 fallback이
-                <strong>모두 <code>frontier_0</code>을 향합니다.</strong>
+                남은 미확인 항목들도 같은 방향을 가리킵니다. 거리를 실제로 고려하는지,
+                면적 큰 쪽을 선호하는지, ID 번호나 이미지 순서에 끌리는지 모두 알 수 없습니다.
+                특히 마지막이 걸리는데 &mdash; <strong>ID 순서(면적 오름차순), 이미지 전달 순서, 실패 시 fallback이
+                모두 <code>frontier_0</code>을 향합니다.</strong>
                 서로 상쇄되지 않고 같은 방향으로 겹칩니다.
             </p>
 
@@ -1663,6 +2129,57 @@ Please give the output based on the following input:</pre>
                 (비교 대상 [18]은 0.5 FPS 미만). 반면 "VLM으로 프론티어 고르기"라는 아이디어 자체는
                 2026년 기준으로 이미 붐빈 공간이라, 저널본의 증분은 개념적 신규성보다
                 <strong>멀티로봇 확장과 실환경 배치</strong>에 있다고 보는 편이 정확합니다.
+            </p>
+
+            <h2>고치기는 어렵지 않습니다</h2>
+
+            <p>
+                여기까지의 지적 대부분이 <strong>작은 수정으로 검증 가능한 것</strong>들이라는 점을 덧붙여 둡니다.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>지적된 문제와 그에 대응하는 최소 수정.</caption>
+                    <thead><tr><th>문제</th><th>수정</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>CoT가 작동하지 않음</td>
+                            <td class="term"><code>reason</code>을 JSON <strong>첫 키</strong>로 &mdash; 추론이 답에 선행</td>
+                        </tr>
+                        <tr>
+                            <td>추론 공간 부족</td>
+                            <td class="term"><code>max_tokens</code> 상향, 또는 Kojima식 <strong>2단계 호출</strong></td>
+                        </tr>
+                        <tr>
+                            <td>검증이 <code>reason</code>에 묶임</td>
+                            <td class="term">키 개수 대신 <strong>키 이름 기반</strong> 검증 &mdash; 변형 실험 가능</td>
+                        </tr>
+                        <tr>
+                            <td>번호·순서 편향 미확인</td>
+                            <td class="term">ID 셔플 / 이미지 순서 셔플 어블레이션</td>
+                        </tr>
+                        <tr>
+                            <td>semantic 기여 불명확</td>
+                            <td class="term">선택 ID 분포와 Greedy <strong>일치율</strong> 보고</td>
+                        </tr>
+                        <tr>
+                            <td>마크 형태 미검증</td>
+                            <td class="term">선 대신 <strong>원</strong> &mdash; 원 논문에서 형태 차이가 색보다 4배 큼</td>
+                        </tr>
+                        <tr>
+                            <td>멀티로봇 지표 편향</td>
+                            <td class="term">전체 로봇 이동 거리 <strong>합</strong> 기준 SPL 병기</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                정리하면 &mdash; 이 논문의 실제 기여는 <strong>연속적인 기하 문제를 VLM이 다룰 수 있는
+                이산 선택 문제로 바꾼 인터페이스 설계</strong>이고, 그 위에서 실환경 실시간 동작까지 보인 것입니다.
+                다만 논문이 앞세운 <em>semantic prior</em>와 <em>reasoning</em>이라는 두 축은
+                자체 어블레이션 수치와 코드 구조 어느 쪽으로도 충분히 뒷받침되지 않습니다.
+                흥미로운 건 그 둘 다 <strong>검증하기 어려운 주장이 아니라는 점</strong>입니다.
             </p>
 
             <details>
