@@ -10,11 +10,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .post-container {
-            max-width: 900px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 40px 24px;
             background: var(--bg-primary);
             min-height: 100vh;
+        }
+
+        /* Wide container for figures, tables and code; prose stays at a
+           readable measure so lines never run the full 1140px. */
+        .post-content > p,
+        .post-content > ul,
+        .post-content > h2,
+        .post-content > h3,
+        .paper-ref {
+            max-width: 62rem;
         }
 
         .back-to-posts {
@@ -492,11 +502,11 @@
 
         .promptbox pre {
             margin: 0;
-            padding: 18px 16px;
+            padding: 20px;
             overflow-x: auto;
             font-family: var(--mono);
-            font-size: 0.75rem;
-            line-height: 1.8;
+            font-size: 0.84rem;
+            line-height: 1.75;
             color: var(--text-secondary);
             white-space: pre;
             tab-size: 2;
@@ -524,11 +534,6 @@
         .promptbox .p-red { color: #d03b3b; font-weight: 700; }
         [data-theme="dark"] .promptbox .p-red { color: #e66767; }
         .promptbox .p-black { color: var(--text-primary); font-weight: 700; }
-
-        .promptbox .p-reason {
-            border-bottom: 2px solid var(--c-nav);
-            padding-bottom: 1px;
-        }
 
         .promptbox-legend {
             display: flex;
@@ -1522,55 +1527,46 @@ argmin(내 주변)                              # 경사 따라 한 걸음</code
                     <span class="promptbox-path">Co-NavGPT2/system_prompt.py:1-31</span>
                     <span class="promptbox-note">실제 사용되는 한 벌 · 나머지 두 벌은 미호출</span>
                 </div>
-<pre>You are a multi-robot navigation agent equipped with a vision-language
-model. Your goal is to assign frontiers (areas of exploration) to each
-robot in order to explore the unknown environment and find a special
-target object as quickly or efficiently as possible.
+<pre>You are a multi-robot navigation agent equipped with a vision-language model. Your goal is to
+assign frontiers (areas of exploration) to each robot in order to explore the unknown environment
+and find a special target object as quickly or efficiently as possible.
 
 <span class="p-sec">### Context</span>
 - We have multiple robots (e.g., robot_0, robot_1, …).
-- Each robot perceives the environment and can navigate to explore
-  unknown areas (frontiers).
+- Each robot perceives the environment and can navigate to explore unknown areas (frontiers).
 - The global top-view map shows:
-  - The positions of each robot masked with <span class="p-black">#black#</span> robot ID on the
-    map, "R0", "R1", ...
-  - Potential frontiers (unknown or partially explored spaces) masked
-    with thick <span class="p-red">#red#</span> line.
-  - The frontier ID masked as a <span class="p-red">#red#</span> number in the top-left corner
-    on the map.
+  - The positions of each robot masked with <span class="p-black">#black#</span> robot ID on the map, "R0", "R1", ...
+  - Potential frontiers (unknown or partially explored spaces) masked with thick <span class="p-red">#red#</span> line.
+  - The frontier ID masked as a <span class="p-red">#red#</span> number in the top-left corner on the map.
 - The target object to be found is specified (e.g., "chair").
 
 <span class="p-sec">### Your Task</span>
 1. <span class="p-step">**Analyze**</span> the provided map and the frontiers.
-2. <span class="p-step">**Understand**</span> the relative positions of each robot and the potential
-   benefit of assigning a given frontier to that robot.
-3. <span class="p-step">**Decide**</span> a frontier assignment policy such that each robot moves
-   to an optimal frontier.
-4. <span class="p-step">**Justify**</span> your decision in a concise explanation (the selected
-   frontier ID is less than the number of top-view map).
+2. <span class="p-step">**Understand**</span> the relative positions of each robot and the potential benefit of assigning
+   a given frontier to that robot.
+3. <span class="p-step">**Decide**</span> a frontier assignment policy such that each robot moves to an optimal frontier.
+4. <span class="p-step">**Justify**</span> your decision in a concise explanation (the selected frontier ID is less than
+   the number of top-view map).
 
 <span class="p-cot">Let's think step by step.</span>
 
-- Input: You are given multiple top-view maps, each containing one
-  candidate frontier. Also the target you need to find is given.
-- Output: Your response should be a JSON object indicating the frontier
-  IDs you believe is most suitable for each robot. The frontier IDs for
-  robots can be same if there are less frontiers.
+- Input: You are given multiple top-view maps, each containing one candidate frontier. Also the
+  target you need to find is given.
+- Output: Your response should be a JSON object indicating the frontier IDs you believe is most
+  suitable for each robot. The frontier IDs for robots can be same if there are less frontiers.
 
 You should only respond in JSON format as described below:
 Output Example:
 {
     "robot_0": "frontier_1",
     "robot_1": "frontier_0",
-    <span class="p-reason">"reason": "why make this decision (distense and semantic
-               relevance between the goal object the current
-               frontier's observation)"</span>
+    "reason": "why make this decision (distense and semantic relevance between the goal
+               object the current frontier's observation)"
 }
 
 Please give the output based on the following input:</pre>
                 <div class="promptbox-legend">
-                    <span><i class="legend-key" style="--c:var(--c-vlm)"></i>Kojima et al. 2022, zero-shot CoT &mdash; 논문에 인용도 없고 예시에도 빠짐</span>
-                    <span><i class="legend-key" style="--c:var(--c-nav)"></i>어블레이션에서 제거 시 성능이 가장 크게 하락한 요소</span>
+                    <span><i class="legend-key" style="--c:var(--c-vlm)"></i>Kojima et al. 2022, zero-shot CoT &mdash; 논문에 인용도 없고 예시 프롬프트에도 빠짐</span>
                 </div>
             </div>
 
