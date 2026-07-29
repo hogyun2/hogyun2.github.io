@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co-NavGPT 뜯어보기 — 키워드 통계에서 공개 코드까지 - Hogyun Kim</title>
-    <meta name="description" content="Co-NavGPT (IEEE RA-L 2026)를 본문 어휘 통계로 시작해 방법론 아홉 단계까지 따라가고, 저자들의 공개 구현과 한 줄씩 대조했습니다.">
+    <title>Co-NavGPT 읽기 — 네 개의 질문으로 - Hogyun Kim</title>
+    <meta name="description" content="멀티로봇 시각 목표 내비게이션 논문(IEEE RA-L 2026)을 네 개의 질문으로 읽고, 공개 구현과 대조한 뒤 TARE 계보의 확장 방향과 이어봤습니다.">
     <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../stylesheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -903,9 +903,7 @@
             .chart-phrase .row { grid-template-columns: minmax(5rem, 8rem) 1fr auto; }
             .row-label { font-size: 0.72rem; }
         }
-    </style>
-</head>
-<body>
+    </style><body>
     <div class="post-container">
         <a href="../posts.html" class="back-to-posts">
             <i class="fas fa-arrow-left"></i>
@@ -913,11 +911,11 @@
         </a>
 
         <div class="post-header">
-            <h1 class="post-title">Co-NavGPT 뜯어보기 &mdash; 키워드 통계에서 공개 코드까지</h1>
+            <h1 class="post-title">Co-NavGPT 읽기 &mdash; 네 개의 질문으로</h1>
             <div class="post-meta">
-                <span><i class="fas fa-calendar"></i> 2026년 7월 27일</span>
+                <span><i class="fas fa-calendar"></i> 2026년 7월 29일</span>
                 <span class="post-category">Research</span>
-                <span><i class="fas fa-clock"></i> 20분 읽기</span>
+                <span><i class="fas fa-clock"></i> 15분 읽기</span>
             </div>
         </div>
 
@@ -929,61 +927,64 @@
             </p>
 
             <p>
-                세미나 준비하면서 이 논문의 본문 어휘 분포를 뽑아봤습니다. 논문이 실제로 무엇에 지면을 쓰는지는
-                초록의 주장보다 어휘 빈도가 더 정직하게 보여주는 경우가 있어서, 제목~결론 구간을 통째로 세어봤습니다.
-                참고문헌 목록과 페이지 워터마크는 제외했고, 단수/복수는 하나로 합쳤습니다.
+                연구실 세미나로 다룬 논문입니다. 여러 대의 로봇이 미지의 실내를 협력해 돌아다니며
+                목표 물체를 찾는데, 그 <strong>"어디로 갈지"를 Vision Language Model이 정하는</strong> 프레임워크입니다.
             </p>
+
             <p>
-                세어놓고 보니 상위 어휘가 네 갈래로 깔끔하게 갈렸고, 그 네 갈래가 논문의 파이프라인 순서와
-                대체로 맞아떨어졌습니다. 그래서 이 글은 통계에서 출발해 구현까지 내려갑니다.
-            </p>
-            <p>
-                방법론 부분은 논문만 읽고 쓴 게 아니라 저자들이 공개한 구현
-                (<code>Co-NavGPT2</code>)을 한 줄씩 대조하며 확인했습니다.
-                논문 서술만으로는 애매했던 부분이 코드에서 풀리기도 했고,
-                반대로 <strong>논문에 없거나 어긋나는 구현 사실</strong>도 여럿 나왔습니다.
+                읽기 전에 본문 어휘를 한 번 세어봤습니다. 논문이 실제로 무엇에 지면을 쓰는지는
+                초록의 주장보다 빈도가 더 정직하게 보여주는 경우가 있어서요.
+                그리고 방법론은 논문만이 아니라 <strong>저자들이 공개한 구현(<code>Co-NavGPT2</code>)을 함께 대조</strong>했습니다.
+                논문 서술로는 애매하던 부분이 코드에서 풀리기도 했고, 반대로 어긋나는 곳도 나왔습니다.
             </p>
 
             <nav class="toc">
                 <div class="toc-title">읽는 순서</div>
                 <ol>
                     <li>
-                        <span class="toc-num">PART 1</span>
+                        <span class="toc-num">Q1&ndash;Q4</span>
                         <span>
-                            <a href="#part1">논문은 어디에 지면을 쓰는가</a>
-                            <span class="toc-sub">본문 어휘를 세어 무게중심을 찾습니다</span>
+                            <a href="#questions">네 개의 질문</a>
+                            <span class="toc-sub">어휘 통계에서 뽑아낸 한 문장이 네 질문으로 갈라집니다</span>
                         </span>
                     </li>
                     <li>
-                        <span class="toc-num">PART 2</span>
+                        <span class="toc-num">S1&ndash;S4</span>
                         <span>
-                            <a href="#part2">개요 — 한 문장, 네 질문, 두 주기</a>
-                            <span class="toc-sub">전체 그림을 세 각도로 잡습니다</span>
+                            <a href="#solutions">네 개의 답</a>
+                            <span class="toc-sub">각 질문에 논문과 코드가 어떻게 답하는지</span>
                         </span>
                     </li>
                     <li>
-                        <span class="toc-num">PART 3</span>
+                        <span class="toc-num">RESULTS</span>
                         <span>
-                            <a href="#part3">상세 — 데이터가 거쳐 가는 아홉 단계</a>
-                            <span class="toc-sub">각 단계의 입력과 출력을 따라갑니다</span>
+                            <a href="#results">실험 결과</a>
+                            <span class="toc-sub">베이스라인 비교와 어블레이션</span>
                         </span>
                     </li>
                     <li>
-                        <span class="toc-num">PART 4</span>
+                        <span class="toc-num">D1&ndash;D5</span>
                         <span>
-                            <a href="#part4">프롬프트는 무엇을 참고했나</a>
-                            <span class="toc-sub">CoT, 마크 기반 시각 프롬프팅, 구조화 출력의 계보</span>
+                            <a href="#discussion">비판적 검토</a>
+                            <span class="toc-sub">코드를 보고 나서 남은 다섯 가지 물음</span>
                         </span>
                     </li>
                     <li>
-                        <span class="toc-num">PART 5</span>
+                        <span class="toc-num">F1</span>
                         <span>
-                            <a href="#part5">비판적 검토</a>
-                            <span class="toc-sub">어블레이션 수치 재해석, 구조적 문제, 지표 편향, 재현성</span>
+                            <a href="#future">확장 방향</a>
+                            <span class="toc-sub">TARE 계보가 먼저 간 길에서 배우기</span>
                         </span>
                     </li>
                 </ol>
             </nav>
+
+            <h2>먼저, 어휘를 세어보면</h2>
+
+            <p>
+                제목부터 결론까지를 통째로 세었습니다. 참고문헌 목록과 페이지 워터마크는 제외했고,
+                단수/복수는 하나로 합쳤습니다.
+            </p>
 
             <div class="runline">
                 <span>추출 원문 <b>6,581</b> 단어</span>
@@ -993,72 +994,29 @@
                 <span>상위 5개 점유 <b>10.5%</b></span>
             </div>
 
-            <div class="part" id="part1">
-                <span class="part-num">PART 1</span>
-                <h2 class="part-title">논문은 어디에 지면을 쓰는가</h2>
-                <p class="part-lead">본문 어휘를 세어 논문의 무게중심을 찾습니다.</p>
-            </div>
-
-            <h2>주제 클러스터별 어휘량</h2>
-
             <div class="panel">
-                <h3>네 갈래로 묶어본 어휘 분포</h3>
+                <h3>상위 어휘가 네 갈래로 갈립니다</h3>
                 <p class="panel-note">
-                    상위 어휘를 주제별로 묶은 해석적 분류입니다. 아래 순위 차트의 막대 색이 이 분류를 따르므로,
-                    이 줄이 곧 범례 역할을 합니다.
+                    주제별로 묶은 해석적 분류입니다. 아래 순위 차트의 막대 색이 이 분류를 따릅니다.
                 </p>
                 <div class="tiles" id="tiles"></div>
             </div>
 
-            <p>
-                재미있는 건 이 네 갈래가 서로 겹치지 않으면서 논문의 파이프라인 순서와 대체로 맞아떨어진다는
-                점입니다. 이 관찰이 다음 파트의 출발점이 됩니다.
-            </p>
-
-            <h2>최다 빈출 키워드 20</h2>
-
             <div class="panel">
-                <h3>단어 빈도 순위</h3>
+                <h3>최다 빈출 키워드 20</h3>
                 <p class="panel-note">막대에 마우스를 올리면 점유율과 분류가 표시됩니다.</p>
                 <div class="chart" id="uniChart"></div>
             </div>
 
             <p>
-                상위권이 <strong>robot</strong>(멀티로봇)과 <strong>map · frontier</strong>(탐색),
-                <strong>navigation</strong>(과제)으로 갈리는 게 한눈에 보입니다.
-                특히 <strong>frontier</strong>가 4위라는 점이 방법론의 핵심 단서인데,
-                VLM이 자유롭게 좌표를 생성하는 게 아니라 <em>프론티어 후보를 로봇들에게 배분하는 global planner</em>
-                구조라는 뜻입니다. 반대로 training/learning 계열 용어는 상위 40위 안에 아예 없습니다 —
-                "task-specific training 없이 zero-shot으로 동작한다"는 논문의 주장과 어휘 분포가 일치합니다.
+                <strong>frontier</strong>가 4위라는 게 방법론의 핵심 단서입니다.
+                VLM이 좌표를 자유롭게 생성하는 게 아니라 <em>프론티어 후보를 로봇들에게 배분하는</em> 구조라는 뜻이죠.
+                반대로 training/learning 계열은 상위 40위 안에 아예 없습니다 &mdash;
+                "과제별 학습 없이 zero-shot으로 동작한다"는 주장과 어휘 분포가 맞습니다.
             </p>
 
-            <h2>핵심 개념구</h2>
-
-            <div class="panel">
-                <h3>연속 2단어 빈도</h3>
-                <p class="panel-note">
-                    제목·초록이 반복되며 생긴 표제 조각(<code>cooperative visual</code> 등)은 뺐습니다.
-                </p>
-                <div class="chart chart-phrase" id="biChart"></div>
-            </div>
-
             <p>
-                <code>point cloud</code>가 1위인 건 각 로봇의 sub-map을 통합한 전역 맵 표현이 시스템의 중심 축이기
-                때문이고, <code>visual prompt</code>는 VLM에 텍스트가 아니라 맵 이미지에 로봇 상태와 프론티어를
-                인코딩해 넣는 이 논문 특유의 입력 방식을 가리킵니다.
-            </p>
-
-            <div class="part" id="part2">
-                <span class="part-num">PART 2</span>
-                <h2 class="part-title">개요 — 한 문장, 네 질문, 두 주기</h2>
-                <p class="part-lead">상세로 들어가기 전에 전체 그림을 세 각도로 잡습니다.</p>
-            </div>
-
-            <h2>네 갈래를 한 문장으로</h2>
-
-            <p>
-                앞서 센 네 갈래를 논문의 파이프라인 순서대로 이으면, 논문 한 편이 한 문장이 됩니다.
-                밑줄 색은 위 클러스터 색과 같습니다.
+                재미있는 건 이 네 갈래를 논문의 파이프라인 순서대로 이으면 <strong>논문 한 편이 한 문장</strong>이 된다는 점입니다.
             </p>
 
             <div class="thesis">
@@ -1070,146 +1028,76 @@
                     별도의 과제별 학습 없이
                     <mark style="--c:var(--c-nav)">미지 환경에서 목표 물체를 협력 탐색</mark>하도록 하는 프레임워크.
                 </p>
-                <p class="thesis-legend">
-                    멀티로봇 협업 &rarr; 맵·프론티어 탐색 &rarr; VLM·추론 &rarr; 내비게이션 과제
-                </p>
             </div>
 
-            <h2>네 개의 질문</h2>
-
-            <p>
-                이 한 문장은 곧바로 네 개의 질문으로 쪼개집니다. 각 구절이 "그래서 어떻게?"를 남기기 때문입니다.
-                아래 답은 <strong>논문이 아니라 코드로 확인한 것</strong>이라, 논문 서술과 어긋나는 대목이 섞여 있습니다.
-            </p>
+            <div class="part" id="questions">
+                <span class="part-num">Q1 &ndash; Q4</span>
+                <h2 class="part-title">네 개의 질문</h2>
+                <p class="part-lead">한 문장의 각 구절이 "그래서 어떻게?"를 남깁니다.</p>
+            </div>
 
             <div class="panel">
                 <div class="qa">
                     <div class="qa-row">
                         <span class="qa-tag" style="color:var(--c-robot)">Q1</span>
                         <div>
-                            <div class="qa-q">여러 로봇의 부분 맵을 어떻게 합치나?</div>
-                            <p class="qa-a">
-                                시뮬레이션에서는 <strong>합치기만 하고 정합은 하지 않습니다.</strong>
-                                모든 로봇이 같은 지점에서 출발하고 시뮬레이터가 정확한 자세를 주므로
-                                포인트 클라우드를 그냥 더합니다. G-ICP는 실환경에서만, 그것도 카메라가 아닌
-                                <strong>LiDAR 맵</strong>으로 <strong>탐색 시작 전 1회</strong>만 돕니다.
-                            </p>
+                            <div class="qa-q">여러 로봇이 각자 만든 부분 맵을 어떻게 합칠까?</div>
+                            <p class="qa-a">로봇은 각자의 local coordinate 위에 존재할 텐데, 어떻게 global coordinate으로 합칠까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
                         <span class="qa-tag" style="color:var(--c-map)">Q2</span>
                         <div>
-                            <div class="qa-q">맵에 무엇을 인코딩하나?</div>
-                            <p class="qa-a">
-                                3D 클라우드를 obstacle · explored · top-view 세 채널로 나누는데,
-                                <strong>VLM에게는 top-view 한 장만</strong> 갑니다. 나머지 둘은 프론티어를 계산하는
-                                내부 재료입니다. top-view 위에 로봇 위치(검정)와 프론티어(빨강)를 그려 넣고,
-                                <strong>후보 하나당 이미지 한 장씩</strong> 만듭니다.
-                            </p>
+                            <div class="qa-q">로봇 상태와 프론티어 영역을 어떻게 인코딩할까?</div>
+                            <p class="qa-a">어떤 "정보"를 맵에 담아 VLM에게 건넬까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
                         <span class="qa-tag" style="color:var(--c-vlm)">Q3</span>
                         <div>
-                            <div class="qa-q">VLM은 어떤 기준으로 배분하나?</div>
-                            <p class="qa-a">
-                                프롬프트가 요구하는 기준은 협력적 탐색과 의미적 관련성 둘입니다. 다만
-                                <strong>로봇별 거리를 시스템이 계산해 주지 않습니다.</strong> FMM이 이미 정확한
-                                측지거리를 갖고 있는데도 넘기지 않고, VLM이 이미지에서 눈대중으로 판단하게 둡니다.
-                            </p>
+                            <div class="qa-q">VLM이 전역 플래너로서 프론티어를 어떻게 배분할까?</div>
+                            <p class="qa-a">어떠한 "기준" 또는 "목적"으로 배분할까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
                         <span class="qa-tag" style="color:var(--c-nav)">Q4</span>
                         <div>
-                            <div class="qa-q">어떻게 "협력적"으로 탐색하나?</div>
-                            <p class="qa-a">
-                                협력이 성립하는 지점은 셋입니다 — 각자 본 것이 <strong>하나의 전역 맵</strong>으로 모이고,
-                                VLM이 <strong>서로 다른 프론티어</strong>를 줘 중복을 줄이며,
-                                <strong>한 로봇이라도</strong> 목표를 찾으면 에피소드 성공입니다.
-                            </p>
+                            <div class="qa-q">미지의 환경에서 목표 물체를 어떻게 협력 탐색할까?</div>
+                            <p class="qa-a">각 로봇은 어떻게 "협력적"으로 탐색하고 주행할까?</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h2>두 개의 주기</h2>
-
-            <p>
-                구조를 이해하는 열쇠는 <strong>루프가 두 박자로 돈다</strong>는 것입니다.
-                지각과 이동은 매 스텝, VLM 호출은 25스텝에 한 번입니다.
-                나머지 24스텝 동안 로봇은 이미 받은 목표를 향해 스스로 움직입니다.
-            </p>
-
-            <div class="panel">
-                <div class="loops">
-                    <div class="loop-row">
-                        <span class="loop-name">매 스텝</span>
-                        <div class="loop-cells">
-                            <span class="loop-cell on" style="--c:var(--c-nav)">① 지각 &rarr; 3D</span>
-                            <span class="loop-cell on" style="--c:var(--c-map)">② 3D &rarr; 2D 맵</span>
-                            <span class="loop-cell">&nbsp;</span>
-                            <span class="loop-cell">&nbsp;</span>
-                            <span class="loop-cell on" style="--c:var(--c-nav)">⑤ 주행</span>
-                        </div>
-                    </div>
-                    <div class="loop-row">
-                        <span class="loop-name">25 스텝마다</span>
-                        <div class="loop-cells">
-                            <span class="loop-cell">&nbsp;</span>
-                            <span class="loop-cell">&nbsp;</span>
-                            <span class="loop-cell on" style="--c:var(--c-map)">③ 프론티어 추출</span>
-                            <span class="loop-cell on" style="--c:var(--c-vlm)">④ VLM 배분</span>
-                            <span class="loop-cell">&nbsp;</span>
-                        </div>
-                    </div>
-                </div>
-                <p class="panel-note" style="margin:16px 0 0">
-                    VLM = "어디로" (global planner) · FMM = "어떻게" (local policy).
-                    논문이 밝힌 이유는 VLM이 고수준 계획엔 강하지만 세밀한 저수준 제어엔 신뢰도가 떨어진다는 것이고,
-                    이 분리가 실환경 5&nbsp;FPS의 근거이기도 합니다.
-                </p>
+            <div class="part" id="solutions">
+                <span class="part-num">S1 &ndash; S4</span>
+                <h2 class="part-title">네 개의 답</h2>
+                <p class="part-lead">각 답의 입력과 출력을 따라가면 시스템이 실제로 무엇을 주고받는지 보입니다.</p>
             </div>
-
-            <div class="part" id="part3">
-                <span class="part-num">PART 3</span>
-                <h2 class="part-title">상세 — 데이터가 거쳐 가는 아홉 단계</h2>
-                <p class="part-lead">각 단계의 입력과 출력을 따라가면 시스템이 실제로 무엇을 주고받는지 보입니다.</p>
-            </div>
-
-            <p>
-                단계 번호의 색은 앞의 클러스터 색과 같습니다 — 어느 갈래의 어휘가 그 단계를 설명하는지 표시한 것입니다.
-                순서대로 내려가면 네 색이 순환하는 게 보입니다.
-            </p>
 
             <div class="panel">
                 <div class="pipeline">
 
-                    <div class="loop-head">
-                        <span class="loop-tick">매 스텝 · 로봇별</span>
-                        <span class="loop-what">각 로봇이 독립적으로 보고 그린다</span>
-                    </div>
-
                     <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">1</div></div>
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-robot)">1</div></div>
                         <div class="stage-body">
-                            <h4>지각 · 검출 · 분할</h4>
+                            <h4>S1. G-ICP 기반 맵 병합</h4>
                             <div class="io">
-                                <span class="io-chip">RGB-D 이미지 + 자세</span>
+                                <span class="io-chip">Pose + RGB-D</span>
                                 <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-nav)">목표 물체 마스크</span>
+                                <span class="io-chip out" style="--c:var(--c-robot)">3D Merged Map</span>
                             </div>
                             <p>
-                                YOLO-World가 후보 박스를 찾고, Mobile-SAM이 클래스와 무관하게 마스크를 뜹니다.
-                                논문은 열린 어휘(open-vocabulary) 검출기라고 소개하지만,
-                                <strong>코드에는 6개 클래스가 하드코딩</strong>돼 있습니다.
+                                각 로봇이 자기 좌표계에서 포인트 클라우드를 만들고, G-ICP로 둘 사이의 변환을 구한 뒤
+                                한쪽 좌표계로 옮겨 붙입니다. 여기서부터 로봇들은 <strong>같은 지도를 봅니다.</strong>
+                                협력이 성립하는 출발점입니다.
                             </p>
-                            <code class="stage-code">self.classes = ["chair", "bed", "potted plant",
-                 "toilet", "tv_screen", "couch"]</code>
                             <p>
-                                여기에 <code>wall</code>도 <code>floor</code>도 없습니다.
-                                <strong>벽과 바닥에는 마스크가 붙지 않고</strong>, 따라서 시스템 어디에도
-                                "이건 벽이다"라는 정보가 존재하지 않습니다. 뒤에서 다시 중요해지는 사실입니다.
+                                다만 <em>어떻게</em> 합치는지는 환경에 따라 다릅니다.
+                                <strong>G-ICP는 실환경에서만</strong>, 그것도 카메라가 아닌 LiDAR 맵으로,
+                                탐색 시작 전 <strong>1회</strong>만 돕니다.
+                                시뮬레이션(HM3D)은 모든 로봇이 같은 지점에서 출발하고 시뮬레이터가 정확한 자세를 주므로
+                                정합 자체가 필요 없습니다. 이 차이는 <a href="#d1">D1</a>에서 다시 다룹니다.
                             </p>
                         </div>
                     </div>
@@ -1217,242 +1105,67 @@
                     <div class="stage">
                         <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">2</div></div>
                         <div class="stage-body">
-                            <h4>역투영 &mdash; 2.5D를 3D로</h4>
+                            <h4>S2. 2D Top-view 프론티어 이미지</h4>
                             <div class="io">
-                                <span class="io-chip">depth + 내부 파라미터 + 자세</span>
+                                <span class="io-chip">3D Merged Map</span>
                                 <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-map)">두 종류의 포인트 클라우드</span>
+                                <span class="io-chip out" style="--c:var(--c-map)">Frontier Candidate Maps</span>
                             </div>
                             <p>
-                                흔히 RGB-D를 3D라고 부르지만 <strong>정확히는 2.5D입니다.</strong>
-                                depth 이미지가 가진 건 화면 좌표(픽셀)와 거리뿐이고, 실제 공간에서 몇 미터 옆인지는
-                                아직 모릅니다. 카메라 내부 파라미터로 펴야 비로소 3D 점이 됩니다.
+                                3D 클라우드를 위에서 내려다본 2D 격자로 눌러 담습니다. 채널이 셋입니다.
                             </p>
-                            <code class="stage-code">x = (u - cx) * depth / fx     # 역투영: 픽셀 → 카메라 좌표
-y = (v - cy) * depth / fy
-z = depth
-pcd.transform(camera_matrix_T)  # pose로 전역 좌표계 이동</code>
-                            <p>
-                                초점거리 <code>fx</code>를 모르면 depth 이미지는 기하학적으로 무의미합니다.
-                                같은 픽셀이라도 화각이 넓은 카메라면 더 옆에 있는 점이 되기 때문입니다.
-                                자세를 곱하는 이유도 같습니다 &mdash; 카메라 기준 "앞 2m"가 방 안 어디인지는
-                                로봇이 어디서 어느 방향을 봤는지를 알아야 정해집니다.
-                            </p>
-                            <p>
-                                여기서 <strong>클라우드가 두 갈래로 갈립니다. 서로 독립입니다.</strong>
-                                하나는 마스크를 써서 목표 물체만 담고, 다른 하나는 마스크 없이 장면 전체를 담습니다.
-                                벽과 바닥은 후자에 들어갑니다 &mdash; 이들이 없으면 장애물 회피도 프론티어 추출도
-                                불가능해집니다.
-                            </p>
-                            <code class="stage-code">object_pcd  ← 마스크 O · 목표 클래스 일치 · 신뢰도 통과
-point_sum   ← 마스크 X · 조건 없음 · 장면 전체(벽·바닥 포함)</code>
-                            <p>
-                                이어서 DBSCAN이 <em>주변에 동료가 없는 점</em>을 버립니다. 물체 경계에서 앞뒤 depth가
-                                섞여 생기는 허공의 점, 유리·금속 반사로 튄 점이 여기서 걸러집니다.
-                            </p>
-                            <code class="stage-code">pcd.cluster_dbscan(eps=0.02, min_points=10)</code>
-                        </div>
-                    </div>
-
-                    <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-robot)">3</div></div>
-                        <div class="stage-body">
-                            <h4>전역 맵 병합</h4>
-                            <div class="io">
-                                <span class="io-chip">로봇별 클라우드 &times; n</span>
-                                <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-robot)">하나의 전역 클라우드</span>
-                            </div>
-                            <p>
-                                여기서부터 로봇들은 <strong>같은 지도를 봅니다.</strong> 협업이 성립하는 출발점입니다.
-                                그런데 <em>어떻게</em> 합치는지는 시뮬레이션과 실환경이 전혀 다릅니다.
-                            </p>
-                            <code class="stage-code">point_sum += agent[i].point_sum   # main.py — 이게 전부</code>
-                            <p>
-                                HM3D 실험에서는 <strong>정합(registration)을 하지 않습니다.</strong>
-                                모든 로봇이 같은 지점에서 출발하고(방향만 다름) 시뮬레이터가 정확한 자세를 주므로,
-                                처음부터 같은 좌표계 위에 있습니다. 합치기는 덧셈 한 줄입니다.
-                            </p>
-                            <p>
-                                멀티로봇 SLAM에서 어려운 부분은 원래 <em>정합</em>입니다 &mdash; 서로 어디 있는지 모르는
-                                로봇들의 상대 변환을 찾고 드리프트를 보정하는 것. 그 문제가 실험 설정에서
-                                발생하지 않습니다. G-ICP는 실환경에서만 등장하고, 대상도 카메라가 아닌 LiDAR 맵입니다.
-                            </p>
-                            <code class="stage-code">'/robot1/Laser_map'  ┐
-'/robot2/Laser_map'  ┴→ G-ICP → static TF (시작 전 1회)</code>
-                            <p>
-                                <code>StaticTransformBroadcaster</code>인 점이 결정적입니다 &mdash;
-                                한 번 계산해 고정하고 <strong>주행 중 재정렬하지 않습니다.</strong>
-                                LiDAR를 쓰는 이유는 정합 정확도 때문입니다. 360&deg; 맵은 구조가 뚜렷해
-                                시야 좁은 RGB-D보다 ICP가 안정적으로 수렴합니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">4</div></div>
-                        <div class="stage-body">
-                            <h4>2D 맵 3채널 생성</h4>
-                            <div class="io">
-                                <span class="io-chip">전역 3D 클라우드</span>
-                                <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-map)">obstacle · explored · top-view</span>
-                            </div>
-                            <p>
-                                24&times;24m를 5cm 격자로 나눈 480&times;480 맵입니다. 좌표 규약을 먼저 짚어야 하는데,
-                                Open3D/Habitat은 <strong>y축이 위쪽</strong>입니다. x와 z가 바닥 평면이고
-                                <code>points[:,1]</code>이 높이입니다.
-                            </p>
-                            <p>
-                                카메라 높이가 0.88m, 밴드 폭이 1.30m이므로 경계는 이렇게 정해집니다.
-                            </p>
-                            <code class="stage-code">z_min = 0.88 - 0.65 = 0.23 m
-z_max = 0.88 + 0.65 = 1.53 m
-
-obstacle ← 0.23 ~ 1.53m 밴드 안의 점
-explored ← 1.53m 이하 모든 점
-top-view ← 각 칸 최상단 점의 색 (z-buffer)</code>
+                            <code class="stage-code">obstacle  ← 카메라 높이 밴드(0.23~1.53m) 안의 점만
+explored  ← 그 아래 모든 점
+top-view  ← 각 칸에서 가장 높은 점의 색 (z-buffer)</code>
                             <p>
                                 <strong>obstacle은 의미 판단이 아니라 높이 검사입니다.</strong>
-                                벽이든 의자든 사람이든 커튼이든 밴드에 걸리면 똑같이 1이 됩니다.
-                                시스템은 그게 무엇인지 끝내 알지 못합니다 &mdash; 앞서 검출 어휘에 <code>wall</code>이
-                                없었던 것을 떠올리면, 어디에도 벽이라는 개념이 없습니다.
-                            </p>
-                            <p>
-                                그래서 오류가 생깁니다. 책상은 상판이 밴드에 걸려 <em>막힘</em>으로,
-                                낮은 문턱은 밴드 아래라 <em>비었음</em>으로, 유리문은 depth가 실패해
-                                <em>미탐색</em>으로 잡힙니다. 보정 장치가 두 개 붙는 이유입니다.
-                            </p>
-                            <code class="stage-code">obstacle_map[explored - obstacle == 1] = 0     # 다시 보니 비었네
-obstacle_map[dilate(visited_vis) == 1]  = 0     # 지나간 자리는 장애물 아님</code>
-                            <p>
-                                두 번째가 특히 재미있습니다 &mdash; <em>내가 이미 통과한 곳이 막혀 있을 리 없다</em>는
-                                규칙인데, 높이 검사가 틀릴 수 있다는 걸 전제한 처리입니다.
-                            </p>
-                            <p>
-                                top-view는 각 칸에서 <strong>가장 높은 점의 색</strong>만 남깁니다(z-buffer).
-                                위에서 내려다볼 때 실제로 보이는 표면이 그것이니까요. 여기 담기는 건
-                                <strong>의미 라벨이 아니라 원본 RGB 픽셀 색</strong>입니다.
-                                그래서 라벨 없는 벽과 바닥도 색으로는 남고, VLM이 "타일 바닥이니 주방이겠군"이라고
-                                추론할 재료가 됩니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="loop-head">
-                        <span class="loop-tick">25 스텝마다 · 전역 1회</span>
-                        <span class="loop-what">어디로 갈지 다시 정한다</span>
-                    </div>
-
-                    <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-map)">5</div></div>
-                        <div class="stage-body">
-                            <h4>프론티어 추출</h4>
-                            <div class="io">
-                                <span class="io-chip">obstacle + explored 맵</span>
-                                <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-map)">후보 프론티어 최대 6개</span>
-                            </div>
-                            <p>
-                                먼저 칸의 상태를 정확히 정리해야 합니다. 두 채널의 조합으로 세 가지가 나옵니다.
-                            </p>
-                            <code class="stage-code">explored=0, obstacle=0  →  unknown   한 번도 안 봄
-explored=1, obstacle=0  →  free      0.23m 아래에만 점 = 바닥만 보임
-explored=1, obstacle=1  →  occupied  밴드에 뭔가 있음</code>
-                            <p>
-                                두 번째 줄이 흥미롭습니다. <code>free</code>가 성립하려면 점이 있으면서
-                                0.23~1.53m 구간에는 없어야 하니, 결국 <strong>바닥만 보인 칸</strong>이라는 뜻입니다.
-                                그러면 프론티어의 정의가 아주 구체적으로 내려옵니다.
+                                벽이든 의자든 사람이든 밴드에 걸리면 똑같이 1이 됩니다.
+                                그래서 <code>explored=1, obstacle=0</code>인 칸은
+                                <em>0.23m 아래에만 점이 있는 칸</em> &mdash; 즉 <strong>바닥만 보인 칸</strong>입니다.
                             </p>
                             <p class="fact">
                                 프론티어 = 바닥이 보인 곳과 아무것도 못 본 곳의 경계
                             </p>
                             <p>
                                 거기까지는 갈 수 있고(바닥 확인됨) 그 너머는 모릅니다(미관측). 그래서 가면 새로 보입니다.
-                                주의할 점은 <strong>unknown이 뺄셈으로 만들어지지 않는다</strong>는 것입니다 &mdash;
-                                맵이 0으로 시작해 <em>한 번도 채워지지 않은 채 남은 칸</em>이 unknown입니다.
+                                계산은 뺄셈인데, <strong>빼는 대상이 면이 아니라 선</strong>입니다.
                             </p>
+                            <code class="stage-code">① findContours(explored)      → 탐색 영역의 윤곽선 (1픽셀)
+② ① − dilate(obstacle, 7×7)  → 벽에 닿지 않은 부분만 남음
+③ 붙어 있는 칸끼리 묶기       → 후보 하나 = 갈 수 있는 방향 하나</code>
                             <p>
-                                계산은 뺄셈인데, 빼는 대상이 <strong>면이 아니라 선</strong>입니다.
-                                탐색 영역의 윤곽선(1픽셀)에서 부풀린 장애물을 빼면 벽에 닿지 않은 부분만 남습니다.
                                 장애물 쪽을 굳이 부풀리는 건 두 채널의 픽셀이 정확히 맞지 않아,
                                 그냥 빼면 벽을 따라 실오라기 같은 가짜 프론티어가 남기 때문입니다.
                             </p>
-                            <code class="stage-code">obstacle_map = cv2.dilate(obstacle_map, 7x7)     # 벽 부풀리기
-contour     = max(contours, key=cv2.contourArea)   # 탐색영역 최대 윤곽
-drawContours(edge_map, contour, -1, 1, 1)          # 1픽셀 선
-target_edge = edge_map - obstacle_map              # 선 − 벽
-measure.label(target_edge, connectivity=2)         # 붙은 칸끼리 묶기</code>
                             <p>
-                                묶인 덩어리 하나가 "갈 수 있는 방향 하나"(문 하나, 복도 하나)가 됩니다.
-                                그 다음이 <strong>논문에 전혀 없는 부분</strong>입니다.
-                            </p>
-                            <code class="stage-code">if props[i].area > 8:                  # 임계값 8셀
-    dict_cost[i] = props[i].area       # ★ 면적으로 정렬
-sorted(dict_cost, key=lambda x: x[1], reverse=False)   # 오름차순
-Goal_point.append(props[key].centroid) # 무게중심 = waypoint
-if i == 5: break                       # 최대 6개</code>
-                            <p>
-                                <strong><code>frontier_0</code>은 가장 작은 클러스터입니다.</strong>
-                                거리와 무관합니다. 저장소에 거리로 정렬하는 함수(<code>detect_frontier</code>)가
-                                따로 있긴 한데 어느 진입점에서도 호출되지 않습니다 &mdash; 실제로 도는 건
-                                면적순인 <code>Frontier_Det</code>입니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-vlm)">6</div></div>
-                        <div class="stage-body">
-                            <h4>프롬프트 조립</h4>
-                            <div class="io">
-                                <span class="io-chip">top-view + 후보 + 로봇 자세</span>
-                                <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-vlm)">이미지 N장 + 텍스트 1벌</span>
-                            </div>
-                            <p>
-                                이 논문에서 가장 특이한 설계입니다. 후보가 5개면 <strong>지도 이미지를 5장 만듭니다.</strong>
+                                마지막으로 <strong>후보마다 지도 이미지를 한 장씩</strong> 만듭니다.
                                 배경과 로봇 표시는 모든 장에 동일하고, 빨간 마스크와 좌상단 번호만 장마다 바뀝니다.
-                                한 장에 후보를 전부 그리면 VLM이 "3번 프론티어"를 특정하지 못하므로,
-                                장 단위로 쪼개 식별 부담을 없앤 것입니다.
                             </p>
-                            <code class="stage-code">img = top_view_map.copy()                 # 배경·로봇 = 모든 장 동일
-img[dilate(frontier_i, 5x5)] = [255,0,0]    # 빨간 굵은 선
-img = np.flipud(img)                        # 상하 반전 (필수)
-write_number(img, pose, i)                  # 로봇 검정 / ID 빨강</code>
-                            <p>
-                                빨강은 임의로 고른 색이 아닙니다. 논문이 인용한
-                                <em>"What does CLIP know about a red circle?"</em> 계열의 발견 &mdash;
-                                이미지에 빨간 표시를 그리면 VLM이 그 영역에 주목한다는 것 &mdash; 을 따른
-                                <strong>mark-based visual prompting</strong>입니다.
-                                굵게 부풀리는 건 JPEG 압축과 VLM 내부 리사이즈를 거치며 1픽셀 선이 사라지는 걸 막기 위함이고,
-                                <code>flipud</code>는 배열 인덱스가 아래로 증가하는 반면 지도는 위가 북쪽이라 필요합니다.
-                            </p>
-                            <p>
-                                텍스트 프롬프트는 후보 수와 무관하게 한 벌이고, 코드에 통째로 하드코딩된 고정 템플릿입니다.
-                                사용자가 주는 건 찾을 물체 이름 하나뿐입니다.
-                            </p>
-                            <code class="stage-code">[{"role":"system", "content": system_prompt},          # 고정 템플릿
- {"role":"user", "content":[
-    {"type":"text", "text":"two robots need to find a chair"},
-    {"type":"image_url"} x N ]}]                        # 후보 이미지</code>
+                            <code class="stage-code">R0, R1     로봇의 고유 ID
+빨간 선     그 장의 프론티어 (5×5 dilate로 굵게)
+좌상단 숫자 후보 번호</code>
                         </div>
                     </div>
 
                     <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-vlm)">7</div></div>
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-vlm)">3</div></div>
                         <div class="stage-body">
-                            <h4>VLM 프론티어 배분</h4>
+                            <h4>S3. 멀티모달 프롬프팅</h4>
                             <div class="io">
-                                <span class="io-chip">이미지 N장 + 목표 물체</span>
+                                <span class="io-chip">Candidate Maps + Prompt</span>
                                 <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-vlm)">JSON 배분표 + 이유</span>
+                                <span class="io-chip out" style="--c:var(--c-vlm)">Assigned Frontier</span>
                             </div>
                             <p>
-                                판단 기준은 둘입니다. <strong>협력적 탐색</strong>(로봇들이 흩어져 커버리지를 넓히도록)과
-                                <strong>의미적 관련성</strong>(목표가 있을 법한 쪽으로). 두 번째가 VLM을 쓰는 이유 전부입니다 &mdash;
-                                "sink를 찾아라"면 침실 쪽보다 타일과 싱크대가 보이는 쪽을 고릅니다.
-                                가까운 프론티어부터 가는 기존 방식은 못 하는 판단입니다.
+                                시각 프롬프트(후보 이미지 N장)와 텍스트 프롬프트(고정 템플릿 한 벌)를 함께 넣습니다.
+                                후보를 한 장에 다 그리면 VLM이 "3번 프론티어"를 특정하지 못하므로,
+                                <strong>장 단위로 쪼개 식별 부담을 없앤</strong> 것이 이 논문의 핵심 트릭입니다.
+                            </p>
+                            <p>
+                                배분 기준은 둘입니다 &mdash; <strong>협력적 탐색</strong>(로봇들이 흩어져 커버리지를 넓히도록)과
+                                <strong>의미적 관련성</strong>(목표가 있을 법한 쪽으로).
+                                두 번째가 VLM을 쓰는 이유입니다. "sink를 찾아라"면 침실 쪽보다
+                                타일과 싱크대가 보이는 쪽을 고르는 판단이죠.
                             </p>
                             <p>
                                 <strong>출력이 JSON이어야 하는 이유는 그 답이 곧 좌표가 되기 때문입니다.</strong>
@@ -1461,102 +1174,37 @@ write_number(img, pose, i)                  # 로봇 검정 / ID 빨강</code>
                             <code class="stage-code">"frontier_1" → split('_')[1] → 1
              → target_point_list[1] → [237, 194]
              → goal_map[237,194] = 1   # 로봇 출발</code>
-                            <p>
-                                "로봇 0은 부엌 쪽이 좋겠습니다" 같은 문장에서는 좌표를 뽑아낼 수 없습니다.
-                                <code>response_format={"json_object"}</code>가 문법은 강제하지만
-                                <strong>의미는 보장하지 못하므로</strong>, 키 개수와 ID 범위를 따로 검증합니다.
-                                형식을 어기면 재시도하고 <strong>5회를 소진하면</strong> 전 로봇을 <code>frontier_0</code>으로 보냅니다.
-                            </p>
-                            <p>
-                                여기서 짚어둘 설계 판단이 하나 있습니다.
-                                <strong>로봇별 거리를 시스템이 계산해 주지 않습니다.</strong>
-                                다음 단계의 FMM이 이미 정확한 측지거리를 갖고 있는데도 프롬프트에 넣지 않고,
-                                VLM이 이미지에서 눈대중으로 판단하게 둡니다. 그래서 VLM이 볼 수 있는 건 직선거리뿐이고,
-                                벽을 돌아가야 하는 실제 경로 길이는 알 수 없습니다.
-                                비교 대상인 Greedy와 Cost-Utility는 둘 다 실제 거리를 씁니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="loop-head">
-                        <span class="loop-tick">매 스텝 · 로봇별</span>
-                        <span class="loop-what">받은 목표까지 알아서 간다</span>
-                    </div>
-
-                    <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">8</div></div>
-                        <div class="stage-body">
-                            <h4>로컬 정책</h4>
-                            <div class="io">
-                                <span class="io-chip">목표 좌표 + obstacle 맵</span>
-                                <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-nav)">행동 1개</span>
-                            </div>
-                            <p>
-                                목표점은 프론티어 덩어리의 무게중심입니다. 논문은 여기까지 가는 경로를
-                                FMM이 짠다고 서술하는데, 코드를 보면 <strong>FMM이 주 경로가 아닙니다.</strong>
-                            </p>
-                            <code class="stage-code">plan_path = self.search_navigable_path(goal)   # ① 시뮬레이터 navmesh
-if len(plan_path) &gt; 1:
-    action = self.greedy_follower_act(plan_path)
-else:
-    self.stg, ... = self._get_stg(...)          # ② FMM — ①이 실패할 때만
-    action = self.ffm_act()</code>
-                            <p>
-                                ①을 따라가면 <code>_sim.get_straight_shortest_path_points()</code>,
-                                즉 <strong>Habitat 시뮬레이터의 navmesh</strong>를 직접 조회합니다.
-                                로봇이 만든 맵이 아니라 환경의 정답 기하입니다.
-                                게다가 실패하면 주변 8개 점을 더 시도해 총 9번 도전하고, 목표점은 자동으로
-                                통행 가능 지점에 붙습니다. <strong>시뮬레이션에서 FMM은 사실상 예비용</strong>입니다.
-                            </p>
-                            <p>
-                                반대로 실환경 코드에는 이 navmesh 경로가 아예 없습니다. 거기서는
-                                <strong>FMM만 돕니다.</strong> 시뮬과 실환경의 로컬 정책이 서로 다른 코드인 셈입니다.
-                            </p>
-                            <p>
-                                그 FMM은 <strong>그래프 탐색이 아닙니다.</strong> 노드도 엣지도 우선순위 큐도 없고,
-                                목표점에서 물이 퍼지듯 모든 칸에 "목표까지의 거리"를 한 번에 채운 뒤
-                                주변에서 가장 낮은 칸으로 한 걸음씩 내려갑니다. 결과물이 경로가 아니라
-                                <strong>스칼라 장(field)</strong>이라, 한 번 풀어두면 어느 지점까지의 거리든
-                                배열 인덱싱 한 번입니다.
-                            </p>
-                            <code class="stage-code">dd = skfmm.distance(traversible_ma, dx=1)   # 격자 전체에 거리값
-argmin(내 주변)                              # 경사 따라 한 걸음</code>
-                            <p>
-                                어느 경로를 쓰든 마지막에는 <strong>이산 행동 하나</strong>로 바꿔야 합니다.
-                                Habitat이 받는 게 그것뿐이라서요. 다음 지점의 방위각과 현재 방향을 비교합니다.
-                            </p>
-                            <code class="stage-code">relative_angle = 내_방향 - 다음지점_방향
-if   relative_angle &gt;  30:  action = 3   # 오른쪽
-elif relative_angle &lt; -30:  action = 2   # 왼쪽
-else:                       action = 1   # 전진</code>
-                            <p>
-                                여섯 가지 행동 중 <code>look_up</code>·<code>look_down</code>은 경로와 무관한
-                                <strong>별도 휴리스틱</strong>입니다. 앞쪽 25cm 지점이 미탐색이면 고개를 숙여
-                                가까운 바닥을 depth에 담고, 이미 본 곳이면 다시 올립니다.
-                                이동이 아니라 맵을 채우기 위한 시선 제어이고, 논문에는 설명이 없습니다.
-                            </p>
-                            <p>
-                                <strong>VLM은 여기 관여하지 않습니다.</strong> 논문이 이유를 명시합니다 — VLM은 고수준 계획엔 강하지만
-                                세밀한 저수준 제어에는 신뢰도가 떨어지기 때문입니다. 이 역할 분리가 실환경에서 5 FPS를
-                                유지하는 근거이기도 합니다.
-                            </p>
                         </div>
                     </div>
 
                     <div class="stage">
-                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">9</div></div>
+                        <div class="stage-rail"><div class="stage-num" style="--c:var(--c-nav)">4</div></div>
                         <div class="stage-body">
-                            <h4>목표 발견 · 종료</h4>
+                            <h4>S4. Global &ndash; Local 정책</h4>
                             <div class="io">
-                                <span class="io-chip">목표 물체 포인트 클라우드</span>
+                                <span class="io-chip">Assigned Frontier</span>
                                 <span class="io-arrow">&rarr;</span>
-                                <span class="io-chip out" style="--c:var(--c-nav)">접근 후 정지</span>
+                                <span class="io-chip out" style="--c:var(--c-nav)">Action</span>
                             </div>
                             <p>
-                                목표가 검출되는 순간 흐름이 바뀝니다. 프론티어 목표를 덮어쓰고,
-                                <strong>VLM은 더 이상 호출되지 않습니다.</strong> 탐색 모드에서 접근 모드로 전환되어
-                                물체의 최근접점을 향해 직진합니다. 0.1m 안에서 정지하면 성공이고, 에피소드당 최대 500스텝입니다.
+                                <strong>VLM은 "어디로"만 정하고, 거기까지 가는 건 FMM이 맡습니다.</strong>
+                                논문이 이유를 명시합니다 &mdash; VLM은 고수준 계획엔 강하지만
+                                세밀한 저수준 제어에는 신뢰도가 떨어지기 때문입니다.
+                            </p>
+                            <p>
+                                FMM(Fast Marching Method)은 그래프 탐색이 아닙니다. 목표 지점에서 물결이 퍼지듯
+                                <strong>격자 전체에 "목표까지의 거리"를 채우고</strong>, 그 거리장의 기울기 방향
+                                &mdash; 즉 내리막 &mdash; 을 따라 한 걸음씩 내려갑니다.
+                            </p>
+                            <code class="stage-code">9 8 7 6 7 8      각 숫자 = 그 칸에서 목표까지의 거리
+8 7 6 5 6 7      ███ = 벽,  G = 목표
+7 6 5 4 5 6
+6 5 ███ 3 4      한 번 풀어두면 어느 지점까지의 거리든
+5 4 3 2 1 2      배열 인덱싱 한 번으로 조회 가능
+4 3 2 1 G 1</code>
+                            <p>
+                                마지막으로 이산 행동 하나로 바꿉니다. 다음 지점의 방위각과 현재 방향을 비교해
+                                많이 틀어져 있으면 회전, 방향이 맞으면 전진 25cm입니다.
                             </p>
                         </div>
                     </div>
@@ -1564,304 +1212,128 @@ else:                       action = 1   # 전진</code>
                 </div>
             </div>
 
-            <div class="part" id="part4">
-                <span class="part-num">PART 4</span>
-                <h2 class="part-title">프롬프트는 무엇을 참고했나</h2>
-                <p class="part-lead">이 프레임워크의 프롬프트는 세 갈래 선행 연구 위에 서 있습니다.</p>
+            <div class="panel">
+                <h3>정리 &mdash; 두 개의 주기</h3>
+                <p class="panel-note">
+                    구조를 이해하는 열쇠는 루프가 두 박자로 돈다는 것입니다. VLM 호출은 25스텝에 한 번뿐이고,
+                    나머지 24스텝 동안 로봇은 이미 받은 목표를 향해 스스로 움직입니다.
+                </p>
+                <div class="loops">
+                    <div class="loop-row">
+                        <span class="loop-name">매 스텝</span>
+                        <div class="loop-cells">
+                            <span class="loop-cell on" style="--c:var(--c-robot)">S1 지각 · 병합</span>
+                            <span class="loop-cell on" style="--c:var(--c-map)">S2 맵 생성</span>
+                            <span class="loop-cell">&nbsp;</span>
+                            <span class="loop-cell on" style="--c:var(--c-nav)">S4 주행</span>
+                        </div>
+                    </div>
+                    <div class="loop-row">
+                        <span class="loop-name">25 스텝마다</span>
+                        <div class="loop-cells">
+                            <span class="loop-cell">&nbsp;</span>
+                            <span class="loop-cell on" style="--c:var(--c-map)">S2 프론티어 추출</span>
+                            <span class="loop-cell on" style="--c:var(--c-vlm)">S3 VLM 배분</span>
+                            <span class="loop-cell">&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="part" id="results">
+                <span class="part-num">RESULTS</span>
+                <h2 class="part-title">실험 결과</h2>
+                <p class="part-lead">HM3D 1,000 에피소드, 그리고 4족 로봇 2대의 실환경 데모.</p>
             </div>
 
             <p>
-                앞 파트에서 프롬프트가 어떻게 조립되는지 봤으니, 이번엔 <strong>왜 그런 모양인지</strong>를 봅니다.
-                시각 프롬프트, 텍스트 프롬프트, 출력 형식이 각각 다른 계보를 갖고 있습니다.
-            </p>
-
-            <h2>① 빨간 마크 — mark-based visual prompting</h2>
-
-            <p>
-                프론티어를 빨간 굵은 선으로 칠하는 것은 임의의 선택이 아닙니다. 논문이 관련연구에서 계보를 밝힙니다.
-            </p>
-
-            <blockquote>
-                Recent work by [28] showed that structured annotations can improve VLMs interaction,
-                motivating the adoption of <strong>mark-based visual prompting</strong> in both
-                manipulation [29] and navigation [30] tasks.
-            </blockquote>
-
-            <p>
-                [28]은 Shtedritski, Rupprecht, Vedaldi의
-                <em>"What does CLIP know about a red circle?"</em>(ICCV 2023)입니다.
-                <strong>이미지에 빨간 원을 그리면 CLIP이 그 안쪽을 가리키는 것으로 알아듣는다</strong>는 발견이고,
-                미세조정 없이 zero-shot으로 특정 대상을 지목할 수 있게 됩니다.
+                베이스라인 셋과 비교합니다. <strong>Greedy</strong>는 가장 가까운 프론티어를 고르고,
+                <strong>Cost-Utility</strong>는 프론티어 크기와 거리를 함께 따집니다.
+                <strong>Multi-SemExp</strong>는 결이 다른데, 학습된 정책이 물체 간 배치 관계로부터
+                목표가 있을 법한 위치를 알려줍니다.
             </p>
 
             <p>
-                왜 통하냐면 <strong>학습 데이터 때문</strong>입니다. 웹에는 빨간 원·화살표로 뭔가를 강조한 이미지가
-                아주 많고(설명 자료, 뉴스 사진, 제품 사진), 거기 붙은 캡션은 대개 <em>동그라미 친 대상</em>을
-                설명합니다. 이 패턴이 반복되면서 모델이 "빨간 표시 = 지금 얘기하는 대상"을 학습해버립니다.
-                설계된 기능이 아니라 데이터에서 우연히 생긴 능력이라, 논문 제목이 "CLIP이 빨간 원에 대해 뭘 아는가"인 것입니다.
-            </p>
-
-            <p>
-                그 논문은 <strong>색과 형태를 모두 어블레이션</strong>했습니다 (CUB 데이터셋, 키포인트 지목).
+                지표는 셋입니다 &mdash; <strong>SR</strong>(성공률), <strong>SPL</strong>(경로 길이로 가중한 성공률),
+                <strong>DTG</strong>(종료 시점의 목표까지 거리).
             </p>
 
             <div class="table-wrap">
                 <table>
-                    <caption>Shtedritski et al. (2023) Table 2. 색보다 형태의 영향이 4배 이상 큽니다.</caption>
-                    <thead>
-                        <tr><th>색</th><th class="num">평균</th><th>형태</th><th class="num">평균</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>빨강</strong></td><td class="num"><strong>36.4</strong></td><td><strong>원</strong></td><td class="num"><strong>33.5</strong></td></tr>
-                        <tr><td>초록</td><td class="num">34.3</td><td>화살표</td><td class="num">28.3</td></tr>
-                        <tr><td>보라</td><td class="num">34.0</td><td>사각형</td><td class="num">24.1</td></tr>
-                        <tr><td>파랑</td><td class="num">32.7</td><td>십자</td><td class="num">21.5</td></tr>
-                        <tr><td>노랑</td><td class="num">32.4</td><td>&mdash;</td><td class="num">&mdash;</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>
-                빨강이 1등이지만 2등과 <strong>2.1%p</strong> 차이이고 표준편차가 4~5%p입니다.
-                반면 원과 사각형은 <strong>9.4%p</strong> 차이입니다. <strong>색보다 형태가 훨씬 중요합니다.</strong>
-                Co-NavGPT는 색은 최적을 따랐지만 형태는 원이 아닌 선을 씁니다.
-            </p>
-
-            <h2>② Justify 요구 — Chain-of-Thought</h2>
-
-            <p>
-                텍스트 프롬프트의 네 단계 중 마지막 <code>Justify</code>, 그리고 출력의 <code>reason</code> 필드는
-                CoT 계열의 아이디어입니다.
-            </p>
-
-            <p>
-                <strong>Wei et al. (NeurIPS 2022)</strong>가 시작입니다. few-shot 예시에 답만 주지 말고
-                <strong>풀이 과정까지</strong> 써주면 모델이 그 형식을 흉내 내 새 문제도 풀이하며 답합니다.
-                GSM8K에서 PaLM 540B 기준 <strong>17.9% &rarr; 58.1%</strong>.
-            </p>
-
-            <p>
-                작동 원리는 생성 순서에 있습니다. LLM은 토큰을 앞에서부터 뽑으니,
-                <strong>중간 단계를 먼저 뱉어놓으면 그 토큰들이 뒤따르는 답의 조건</strong>이 됩니다.
-                자기가 쓴 계산을 보며 다음을 이어가는 셈입니다.
-            </p>
-
-            <p>
-                <strong>Kojima et al. (NeurIPS 2022)</strong>는 예시조차 필요 없다는 걸 보였습니다.
-                <code>Let's think step by step.</code> 한 줄이면 됩니다.
-                GSM8K에서 InstructGPT 기준 <strong>10.4% &rarr; 40.7%</strong>.
-                이 문장이 Co-NavGPT의 시스템 프롬프트에 그대로 들어 있습니다.
-            </p>
-
-            <p>
-                여기서 <strong>다른 CoT 계열이 쓰는 형식</strong>을 나란히 보면 뒤 파트의 논점이 선명해집니다.
-            </p>
-
-            <div class="table-wrap">
-                <table>
-                    <caption>CoT 계열의 출력 형식. 공통점 하나가 뚜렷합니다.</caption>
-                    <thead>
-                        <tr><th>방법</th><th>형식</th><th>추론↔답 순서</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Wei (CoT)</td><td class="term">자유 텍스트</td><td>추론 &rarr; 답</td></tr>
-                        <tr><td>Kojima (zero-shot)</td><td class="term"><strong>2단계 호출</strong></td><td>추론 &rarr; 답</td></tr>
-                        <tr><td>ReAct</td><td class="term">Thought / Action / Obs 반복</td><td>추론 &rarr; 행동</td></tr>
-                        <tr><td>Least-to-Most</td><td class="term"><strong>2단계 호출</strong></td><td>분해 &rarr; 해결</td></tr>
-                        <tr><td>PAL / PoT</td><td class="term">코드</td><td>코드 = 추론</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>
-                <strong>전부 추론이 답보다 먼저 나옵니다.</strong> Kojima와 Least-to-Most는 아예 호출을 둘로 나눠
-                추론과 형식 맞추기를 분리하고, ReAct는 Thought 없이 Action을 쓸 수 없도록 순서를 형식에 내장했습니다.
-            </p>
-
-            <h2>③ JSON 출력 — 구조화 생성</h2>
-
-            <p>
-                VLM의 응답은 사람이 읽는 게 아니라 <strong>코드가 받아 즉시 실행</strong>합니다.
-                그래서 형식이 고정돼야 합니다.
-            </p>
-
-            <code class="stage-code">"frontier_1" → split('_')[1] → 1
-             → target_point_list[1] → [237, 194]
-             → goal_map[237,194] = 1        # 로봇 출발</code>
-
-            <p>
-                "로봇 0은 부엌 쪽이 좋겠습니다" 같은 문장에서는 좌표를 뽑아낼 수 없습니다.
-                JSON을 쓰면 네 가지가 따라옵니다 &mdash; <strong>파싱이 안정적</strong>이고(서두·마크다운 펜스·표기 변주가 없음),
-                <strong>검증이 가능</strong>하며(키 개수와 ID 범위를 기계적으로 확인),
-                <strong>실패를 감지</strong>할 수 있고(조용히 틀리는 것보다 명시적 실패가 나음),
-                기계용(<code>robot_N</code>)과 사람용(<code>reason</code>)을 한 구조에 담습니다.
-            </p>
-
-            <p>
-                <code>response_format={"type":"json_object"}</code>가 부탁이 아니라 <strong>강제</strong>인 이유는
-                그 아래 기술이 있기 때문입니다. <strong>Willard &amp; Louf (2023)</strong>의
-                <em>"Efficient Guided Generation for Large Language Models"</em>는 자기회귀 생성을
-                <strong>유한 상태 기계의 상태 전이</strong>로 재정식화해, 매 스텝 문법에 맞지 않는 토큰을 마스킹합니다.
-                문법적으로 깨진 출력이 나올 수 없습니다.
-                <strong>Geng et al. (2023)</strong>은 미세조정 없이 문법 제약만으로 구조화 출력을 얻는 접근을 다뤘고,
-                JSON Schema가 이 분야의 사실상 표준 명세 언어가 됐습니다.
-            </p>
-
-            <p class="fact">
-                여기까지가 이 프레임워크가 딛고 선 토대입니다. 다음 파트에서는 그 토대를 실제로 활용했는지 봅니다.
-            </p>
-
-            <div class="part" id="part5">
-                <span class="part-num">PART 5</span>
-                <h2 class="part-title">비판적 검토</h2>
-                <p class="part-lead">어블레이션 수치 재해석, 구조적 문제, 지표 편향, 그리고 재현성.</p>
-            </div>
-
-            <h2>논문과 코드의 간극</h2>
-
-            <p>
-                프론티어 추출은 논문 문장과 코드가 한 줄씩 정확히 대응했고,
-                애매했던 서술("explored area에서 뺀다")도 코드가 답을 줬습니다 &mdash; 면이 아니라 선에서 뺍니다.
-                다만 <strong>논문에 없는 구현 사실이 여럿</strong> 나왔습니다.
-            </p>
-
-            <div class="table-wrap">
-                <table>
-                    <caption>논문 서술과 공개 구현 대조. 마지막 두 항목은 서술과 어긋나는 부분입니다.</caption>
-                    <thead>
-                        <tr>
-                            <th>항목</th>
-                            <th>논문</th>
-                            <th>코드</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>프론티어 개수</td>
-                            <td>언급 없음</td>
-                            <td class="term">최대 6개 (<code>if i == 5: break</code>)</td>
-                        </tr>
-                        <tr>
-                            <td>프론티어 ID 순서</td>
-                            <td>언급 없음</td>
-                            <td class="term">클러스터 <strong>면적</strong> 오름차순 &mdash; <code>frontier_0</code>이 가장 작은 덩어리</td>
-                        </tr>
-                        <tr>
-                            <td>목표점 좌표</td>
-                            <td>언급 없음</td>
-                            <td class="term">클러스터 무게중심 <code>centroid</code></td>
-                        </tr>
-                        <tr>
-                            <td>작은 클러스터 임계값</td>
-                            <td>"small clusters"</td>
-                            <td class="term">8셀</td>
-                        </tr>
-                        <tr>
-                            <td>로컬 경로</td>
-                            <td>FMM</td>
-                            <td class="term">시뮬레이터 <strong>정답 navmesh</strong>가 우선, FMM은 예비</td>
-                        </tr>
-                        <tr>
-                            <td>재시도</td>
-                            <td>"올바른 출력까지 재생성"</td>
-                            <td class="term">5회 상한 &rarr; 실패 시 전원 <code>frontier_0</code></td>
-                        </tr>
-                        <tr>
-                            <td>프론티어 없을 때</td>
-                            <td>탐색된 공간 내 임의점</td>
-                            <td class="term">맵 전체에서 임의점 (탐색 여부 미확인)</td>
-                        </tr>
-                        <tr>
-                            <td>VLM 모델</td>
-                            <td>GPT-5</td>
-                            <td class="term">GPT-4o 하드코딩</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>
-                마지막 항목은 저장소 이력을 보면 설명됩니다. <strong>마지막 커밋이 2025년 7월 3일</strong>로,
-                논문 투고(2025년 9월 29일)보다 석 달 앞섭니다. 공개된 코드는 논문 최종본 이전 버전으로 보는 것이 자연스럽고,
-                아래 지적들도 그 전제 위에서 읽어야 합니다.
-            </p>
-
-            <h2>어블레이션 수치를 다시 보면</h2>
-
-            <p>
-                논문의 핵심 주장은 VLM의 <strong>semantic prior</strong>가 성능에 기여한다는 것이고,
-                초록도 "Ablation studies further confirm the importance of semantic priors"라고 씁니다.
-                이를 직접 검증하는 행이 <code>Obs.</code>(의미 지도를 obstacle-only 맵으로 교체)입니다.
-            </p>
-
-            <div class="table-wrap">
-                <table>
-                    <caption>Table II (2로봇, HM3D). Full 대비 각 조건의 낙폭.</caption>
-                    <thead>
-                        <tr><th>조건</th><th class="num">SR</th><th class="num">Δ</th><th class="num">SPL</th><th class="num">Δ</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Full</strong></td><td class="num"><strong>0.681</strong></td><td class="num">&mdash;</td><td class="num"><strong>0.369</strong></td><td class="num">&mdash;</td></tr>
-                        <tr><td>w/o Reason</td><td class="num">0.660</td><td class="num">−0.021</td><td class="num">0.337</td><td class="num">−0.032</td></tr>
-                        <tr><td>DownSam. (60&times;60)</td><td class="num">0.675</td><td class="num">−0.006</td><td class="num">0.346</td><td class="num">−0.023</td></tr>
-                        <tr><td><strong>Obs.</strong> (의미 제거)</td><td class="num">0.679</td><td class="num"><strong>−0.002</strong></td><td class="num">0.358</td><td class="num">−0.011</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>
-                <strong>의미 정보를 통째로 없앴는데 성공률이 0.2%p 떨어집니다.</strong>
-                더 결정적인 건 베이스라인과 나란히 놓았을 때입니다.
-            </p>
-
-            <div class="table-wrap">
-                <table>
-                    <caption>Table I의 2로봇 결과에 Obs. 조건을 끼워 넣은 것.</caption>
-                    <thead>
-                        <tr><th>방법</th><th class="num">SR</th><th class="num">SPL</th></tr>
-                    </thead>
+                    <caption>Table I, 2-agent 결과 발췌.</caption>
+                    <thead><tr><th>방법</th><th class="num">SR</th><th class="num">SPL</th></tr></thead>
                     <tbody>
                         <tr><td>Greedy</td><td class="num">0.611</td><td class="num">0.328</td></tr>
                         <tr><td>Multi-SemExp</td><td class="num">0.612</td><td class="num">0.327</td></tr>
                         <tr><td>Cost-Utility</td><td class="num">0.625</td><td class="num">0.323</td></tr>
-                        <tr><td><strong>Obs.</strong> — 의미 없는 Co-NavGPT</td><td class="num"><strong>0.679</strong></td><td class="num">0.358</td></tr>
-                        <tr><td>Full Co-NavGPT</td><td class="num">0.681</td><td class="num">0.369</td></tr>
+                        <tr><td><strong>Co-NavGPT</strong></td><td class="num"><strong>0.681</strong></td><td class="num"><strong>0.369</strong></td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <p class="fact">
-                의미 정보를 뺀 버전이 여전히 모든 베이스라인을 크게 이깁니다.
-                베이스라인 대비 우위의 <strong>거의 전부가 semantic 없이도 나옵니다.</strong>
+            <div class="table-wrap">
+                <table>
+                    <caption>Table II, 어블레이션 (2-agent, HM3D).</caption>
+                    <thead><tr><th>조건</th><th class="num">SR</th><th class="num">Δ</th><th class="num">SPL</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Full</strong></td><td class="num"><strong>0.681</strong></td><td class="num">&mdash;</td><td class="num">0.369</td></tr>
+                        <tr><td>w/o Reason</td><td class="num">0.660</td><td class="num">−0.021</td><td class="num">0.337</td></tr>
+                        <tr><td>DownSam. (60&times;60)</td><td class="num">0.675</td><td class="num">−0.006</td><td class="num">0.346</td></tr>
+                        <tr><td>Obs. (의미 제거)</td><td class="num">0.679</td><td class="num">−0.002</td><td class="num">0.358</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                성능을 가장 크게 떨어뜨리는 건 <code>reason</code> 필드 제거입니다.
+                그런데 이 표는 다시 볼 구석이 많습니다 &mdash; <a href="#d5">D5</a>에서 이어집니다.
+            </p>
+
+            <div class="part" id="discussion">
+                <span class="part-num">D1 &ndash; D5</span>
+                <h2 class="part-title">비판적 검토</h2>
+                <p class="part-lead">공개 코드를 함께 읽고 나서 남은 다섯 가지 물음.</p>
+            </div>
+
+            <h2 id="d1">D1. 실험에서는 맵 병합을 하지 않습니다</h2>
+
+            <p>
+                S1은 G-ICP 병합을 답으로 내놓지만, <strong>정량 실험(HM3D)에서는 그 절차가 실행되지 않습니다.</strong>
+            </p>
+
+            <code class="stage-code">point_sum += agent[i].point_sum   # main.py — 이게 전부</code>
+
+            <p>
+                모든 로봇이 같은 지점에서 출발하고(방향만 다름) 시뮬레이터가 정확한 자세를 주므로
+                처음부터 같은 좌표계 위에 있습니다. 합치기는 덧셈 한 줄입니다.
             </p>
 
             <p>
-                통계적으로도 짚어둘 만합니다. 1,000 에피소드에서 SR&asymp;0.68이면 표준오차가 약 0.015입니다.
-                베이스라인을 이긴 것(+0.056)은 <strong>3.8&sigma;</strong>로 명확하지만,
-                <code>w/o Reason</code>(−0.021)은 1.4&sigma;, <code>Obs.</code>(−0.002)는 0.13&sigma;입니다.
-                <strong>내부 어블레이션은 어느 것도 유의하다고 보기 어렵습니다.</strong>
-                논문에 분산이나 유의성 검정은 보고되지 않았습니다.
+                멀티로봇 SLAM에서 어려운 부분은 원래 <em>정합</em>입니다 &mdash;
+                서로 어디 있는지 모르는 로봇들의 상대 변환을 찾고 드리프트를 보정하는 것.
+                <strong>그 문제가 실험 설정에서 아예 발생하지 않습니다.</strong>
+                G-ICP는 실환경 데모에만 등장하고, 그것도 <code>StaticTransformBroadcaster</code>로
+                <strong>한 번 계산해 고정</strong>합니다. 주행 중 재정렬은 없습니다.
+            </p>
+
+            <h2 id="d2">D2. 추론을 시키지만 추론할 공간이 없습니다</h2>
+
+            <p>
+                텍스트 프롬프트에 <code>Let's think step by step.</code>이 들어 있습니다.
+                예시 없이 이 한 문장만으로 모델이 답보다 추론을 먼저 쓰게 만드는
+                zero-shot CoT(Kojima et al., NeurIPS 2022)입니다. GSM8K에서 10.4% → 40.7%를 낸 기법이죠.
             </p>
 
             <p>
-                공정하게 볼 점도 있습니다. SPL은 상대적으로 더 떨어지므로(−3%) 의미 정보가
-                <strong>성공 여부보다 경로 효율</strong>에 기여할 여지는 남습니다. 그리고 top-view가 담는 건
-                라벨이 아니라 위에서 본 RGB 색이며, 프론티어 <em>너머</em>는 미관측이라 색조차 없습니다.
-                VLM은 이미 본 영역의 색으로 못 본 영역을 추측해야 하니 애초에 신호가 약한 조건입니다.
-            </p>
-
-            <h2>CoT를 부르지만 작동하지 않는 구조</h2>
-
-            <p>
-                어블레이션 낙폭이 가장 큰 요소는 <code>reason</code>입니다. 그런데 코드를 보면
-                <strong>CoT가 작동할 수 있는 구조가 아닙니다.</strong> 세 가지가 겹칩니다.
+                작동 원리는 <strong>생성 순서</strong>에 있습니다. LLM은 토큰을 앞에서부터 뽑으니,
+                중간 단계를 먼저 뱉어놓으면 그 토큰들이 뒤따르는 답의 조건이 됩니다.
+                그런데 이 구현에서는 두 가지가 그것을 막습니다.
             </p>
 
             <p>
                 <strong>첫째, JSON 모드가 사고 공간을 봉쇄합니다.</strong>
-                <code>response_format={"json_object"}</code>는 첫 토큰부터 JSON만 허용합니다.
-                프롬프트에 <code>Let's think step by step.</code>이 있어도 <strong>풀어놓을 자리가 없습니다.</strong>
-                PART 4에서 본 대로 Kojima와 Least-to-Most가 호출을 둘로 나눈 이유가 이것입니다.
+                <code>response_format={"json_object"}</code>는 첫 토큰부터 JSON만 허용하므로,
+                <code>Let's think step by step.</code>이 있어도 <strong>풀어놓을 자리가 없습니다.</strong>
             </p>
 
             <p>
@@ -1875,318 +1347,275 @@ else:                       action = 1   # 전진</code>
 }</code>
 
             <p>
-                LLM은 앞에서부터 순차 생성하므로 배분을 확정한 뒤에 이유를 씁니다.
-                추론이 답을 만드는 게 아니라 <strong>답이 추론을 만듭니다.</strong>
-                ReAct가 Thought 없이 Action을 못 쓰게 형식에 순서를 내장한 것과 정반대입니다.
+                배분을 확정한 뒤에 이유를 씁니다. 추론이 답을 만드는 게 아니라 <strong>답이 추론을 만듭니다.</strong>
+                원조 CoT 계열은 반대입니다 &mdash; Kojima는 아예 호출을 둘로 나눠
+                추론 단계에서는 형식 제약을 걸지 않고, 답은 <code>"Therefore, the answer is"</code>로 따로 뽑습니다.
             </p>
 
             <p>
-                <strong>셋째, 분량이 100토큰입니다.</strong> JSON 구조와 배분 값이 30토큰쯤 먹으니
-                이유에 쓸 수 있는 건 70토큰 남짓, 한두 문장입니다.
-            </p>
-
-            <h2>그럼 왜 성능이 떨어졌을까</h2>
-
-            <p>
-                <code>reason</code>이 답 뒤에 생성된다면 제거해도 배분은 그대로여야 합니다.
-                그런데 낙폭이 가장 컸습니다. 가능한 설명이 넷인데, <strong>논문 정보만으로는 구분할 수 없습니다.</strong>
-            </p>
-
-            <ul>
-                <li><strong>노이즈</strong> &mdash; 1.4&sigma;라 유의하지 않습니다. 가장 단순한 설명입니다.</li>
-                <li><strong>검증 루프가 무너졌을 가능성</strong> &mdash; 공개된 검증은
-                    <code>len(json) == num_agents + 1</code>로, <code>reason</code>의 존재에 정합성이 묶여 있습니다.
-                    이 상태로 <code>reason</code>만 빼면 <strong>매번 검증 실패 &rarr; 재시도 5회 &rarr; fallback</strong>이 되어
-                    "두 로봇을 항상 <code>frontier_0</code>으로" 보내는 조건을 측정하게 됩니다.
-                    SPL 낙폭(−8.7%)이 SR 낙폭(−3.1%)보다 큰 패턴이 이와 일관됩니다.</li>
-                <li><strong>프롬프트 조건화</strong> &mdash; <code>Justify</code> 지시를 빼면 컨텍스트가 달라져
-                    첫 출력 토큰의 분포도 바뀝니다. 실제 효과지만 CoT의 기전은 아닙니다.</li>
-                <li><strong>모델이 <code>reason</code>을 먼저 쓸 수도</strong> &mdash; JSON 모드는 키 순서를 강제하지 않습니다.
-                    때때로 먼저 뱉는다면 그 경우엔 CoT가 실제로 작동합니다.</li>
-            </ul>
-
-            <p>
-                확인하려면 실행 로그에서 <strong><code>reason</code> 키의 실제 위치 분포</strong>와
-                <strong>fallback 발동 빈도</strong>만 보면 됩니다. 둘 다 기록만 하면 되는 값인데 보고되지 않았습니다.
-            </p>
-
-            <h2>텍스트 프롬프트에는 근거가 없습니다</h2>
-
-            <p>
-                PART 4에서 본 대로 시각 프롬프트는 [28]~[30]으로 계보를 밝힙니다.
-                반면 텍스트 프롬프트 문단에는 <strong>인용이 하나도 없습니다.</strong>
-                "이렇게 설계했다"만 있고 왜 그렇게 했는지가 없습니다.
+                그래서 <code>reason</code>은 해석 가능성의 <em>외형</em>이지 검증이 아닙니다.
+                여기서는 가능성의 문제가 아니라 <strong>생성 순서가 그것을 보장</strong>합니다.
             </p>
 
             <p>
-                판단은 직접 보고 하시는 편이 낫겠습니다. 실제로 GPT에 전달되는 텍스트 프롬프트 전문입니다 &mdash;
-                논문에 실린 요약본이 아니라 코드에 하드코딩된 원문입니다.
+                그런데 어블레이션에서는 이걸 제거했을 때 낙폭이 가장 컸습니다(−0.021).
+                답 뒤에 생성되는데 왜 영향을 줬을까요. 노이즈일 수도, 프롬프트가 달라져 첫 출력 토큰의 분포가
+                바뀐 것일 수도, 모델이 때때로 <code>reason</code>을 먼저 뱉은 것일 수도 있습니다.
+                <strong>논문 정보만으로는 구분할 수 없습니다.</strong>
             </p>
 
-            <div class="promptbox">
-                <div class="promptbox-head">
-                    <span class="promptbox-path">Co-NavGPT2/system_prompt.py:1-31</span>
-                    <span class="promptbox-note">실제 사용되는 한 벌 · 나머지 두 벌은 미호출</span>
-                </div>
-<pre>You are a multi-robot navigation agent equipped with a vision-language model. Your goal is to
-assign frontiers (areas of exploration) to each robot in order to explore the unknown environment
-and find a special target object as quickly or efficiently as possible.
-
-<span class="p-sec">### Context</span>
-- We have multiple robots (e.g., robot_0, robot_1, …).
-- Each robot perceives the environment and can navigate to explore unknown areas (frontiers).
-- The global top-view map shows:
-  - The positions of each robot masked with <span class="p-black">#black#</span> robot ID on the map, "R0", "R1", ...
-  - Potential frontiers (unknown or partially explored spaces) masked with thick <span class="p-red">#red#</span> line.
-  - The frontier ID masked as a <span class="p-red">#red#</span> number in the top-left corner on the map.
-- The target object to be found is specified (e.g., "chair").
-
-<span class="p-sec">### Your Task</span>
-1. <span class="p-step">**Analyze**</span> the provided map and the frontiers.
-2. <span class="p-step">**Understand**</span> the relative positions of each robot and the potential benefit of assigning
-   a given frontier to that robot.
-3. <span class="p-step">**Decide**</span> a frontier assignment policy such that each robot moves to an optimal frontier.
-4. <span class="p-step">**Justify**</span> your decision in a concise explanation (the selected frontier ID is less than
-   the number of top-view map).
-
-<span class="p-cot">Let's think step by step.</span>
-
-- Input: You are given multiple top-view maps, each containing one candidate frontier. Also the
-  target you need to find is given.
-- Output: Your response should be a JSON object indicating the frontier IDs you believe is most
-  suitable for each robot. The frontier IDs for robots can be same if there are less frontiers.
-
-You should only respond in JSON format as described below:
-Output Example:
-{
-    "robot_0": "frontier_1",
-    "robot_1": "frontier_0",
-    "reason": "why make this decision (distense and semantic relevance between the goal
-               object the current frontier's observation)"
-}
-
-Please give the output based on the following input:</pre>
-                <div class="promptbox-legend">
-                    <span><i class="legend-key" style="--c:var(--c-vlm)"></i>Kojima et al. 2022, zero-shot CoT &mdash; 논문에 인용도 없고 예시 프롬프트에도 빠짐</span>
-                </div>
-            </div>
+            <h2 id="d3">D3. 로컬 주행은 시뮬레이터의 정답 기하를 씁니다</h2>
 
             <p>
-                읽어보면 몇 가지가 눈에 들어옵니다. 우선 <code>#black#</code>, <code>#red#</code>처럼
-                <strong>색을 말로 다시 설명합니다.</strong> 그림에 이미 칠해져 있는데도 텍스트로 한 번 더 짚어주는 건,
-                VLM이 마크를 놓치지 않게 하려는 안전장치로 보입니다.
-                <code>"chair"</code>가 예시로 박혀 있는 것도 눈에 띄는데, 실제 목표는 별도 메시지로 들어가므로
-                여기 있는 건 형식 안내용입니다.
+                논문은 로컬 경로를 FMM이 짠다고 서술하는데, 코드를 보면 <strong>FMM이 주 경로가 아닙니다.</strong>
+            </p>
+
+            <code class="stage-code">plan_path = self.search_navigable_path(goal)   # ① 시뮬레이터 navmesh
+if len(plan_path) &gt; 1:
+    action = self.greedy_follower_act(plan_path)
+else:
+    self.stg, ... = self._get_stg(...)          # ② FMM — ①이 실패할 때만
+    action = self.ffm_act()</code>
+
+            <p>
+                ①을 따라가면 <code>_sim.get_straight_shortest_path_points()</code>,
+                즉 <strong>Habitat 시뮬레이터의 navmesh</strong>를 직접 조회합니다.
+                로봇이 만든 맵이 아니라 환경의 정답 기하입니다.
+                게다가 실패하면 주변 8개 점을 더 시도해 총 9번 도전하므로,
+                <strong>시뮬레이션에서 FMM은 사실상 예비용</strong>입니다.
             </p>
 
             <p>
-                오타도 그대로 남아 있습니다 &mdash; <code>distense</code>(distance),
-                <code>between the goal object the current frontier's observation</code>(<code>and</code> 누락).
-                이런 흔적은 이 템플릿이 여러 번 다듬어진 결과물이라기보다
-                <strong>한 번 써서 작동하니 그대로 둔 쪽</strong>에 가깝다는 인상을 줍니다.
+                목표(프론티어)는 여전히 VLM이 정하지만, 거기까지의 경로에는 특권 정보가 들어갑니다.
+                절대 성능(SR 0.68)은 그 위에서 나온 값입니다.
             </p>
 
             <p>
-                정작 코드에는 출처가 분명한 기법이 들어 있습니다. <code>Let's think step by step.</code> &mdash;
-                PART 4에서 본 Kojima et al.(2022)의 zero-shot CoT입니다.
-                프롬프트 공학에서 가장 유명한 문장인데 <strong>인용도 없고, 논문에 실린 예시 프롬프트에는 아예 빠져 있습니다.</strong>
-                코드에만 있습니다.
+                반대로 실환경 코드에는 이 navmesh 경로가 없습니다. 거기서는 <strong>FMM만 돕니다.</strong>
+                <strong>시뮬과 실환경의 로컬 정책이 서로 다른 코드</strong>인 셈이라,
+                시뮬 결과가 실환경에서 실제로 도는 경로를 검증하지 못합니다.
+            </p>
+
+            <h2 id="d4">D4. 실환경 5 FPS는 VLM을 자주 안 부르기 때문입니다</h2>
+
+            <p>
+                실환경 데모에서 5 FPS가 나옵니다. 비교 대상인 Shen et al.의 방법은
+                multimodal CoT 기반 점수 협의 구조라 시뮬레이션에서도 <strong>0.5 FPS 미만</strong>입니다.
+                차이의 원인은 <strong>VLM 호출 빈도</strong>입니다.
+            </p>
+
+            <code class="stage-code">VLM  25 스텝에 1회   "어디로"   ← 전체 스텝의 4%
+FMM  매 스텝         "어떻게"   ← 나머지 96%, 전부 해석적 계산
+
+시간 예산:  5 FPS × 25 스텝 = VLM 한 번에 5초</code>
+
+            <p>
+                매 스텝 불렀다면 0.2초 안에 끝나야 하는데, 원격 API로는 불가능합니다.
+                <strong>최적화해서 빨라진 게 아니라 안 부르니까 빨라진 것</strong>이고,
+                그 판단의 근거도 속도가 아니라 "VLM은 저수준 제어에 신뢰도가 떨어진다"였습니다.
+                실시간성은 역할 분리의 부산물인 셈입니다.
             </p>
 
             <p>
-                <code>Understand → Analyze → Decide → Justify</code> 네 단계도 무출처입니다.
-                그리고 <strong>논문과 코드에서 순서가 다릅니다</strong> &mdash; 코드는 Analyze가 먼저입니다.
-                출처가 있거나 순서에 원리가 있었다면 이렇게 어긋나기 어렵습니다.
-                네 단계 구조 자체를 검증한 어블레이션도 없습니다.
+                대신 대가가 있습니다 &mdash; 프론티어가 잘못 배분되면
+                <strong>다음 호출까지 25스텝 동안 대처할 방법이 없습니다.</strong>
             </p>
+
+            <h2 id="d5">D5. Semantic prior가 정말 기여했을까</h2>
 
             <p>
-                배분 기준이 놓인 자리도 이상합니다. 논문이 본문에서 강조하는 <strong>거리와 의미 관련성</strong>이
-                <code>### Your Task</code> 섹션이 아니라 <strong>출력 예시의 설명문 괄호 안</strong>에만 나옵니다.
-                가장 중요한 기준이 형식 안내에 묻혀 있는 셈입니다.
-            </p>
-
-            <p class="fact">
-                어블레이션에서 성능 기여가 가장 컸던 요소가 하필 설계 근거가 가장 얇은 쪽입니다.
-            </p>
-
-            <h2>지표가 만든 인상</h2>
-
-            <p>
-                SPL 정의를 뜯어보면 멀티로봇 비교에 편향이 있습니다.
+                논문의 핵심 주장은 VLM의 semantic prior가 성능에 기여한다는 것이고,
+                초록도 이렇게 씁니다.
             </p>
 
             <blockquote>
-                p<sub>i</sub> stands for <strong>the shortest robot's</strong> trajectory length in the current episode i
+                Ablation studies further confirm the importance of <strong>semantic priors</strong> from the VLM
             </blockquote>
 
             <p>
-                로봇이 여럿인데 <strong>그중 가장 짧게 움직인 하나만</strong> 셉니다. 나머지 로봇의 이동 거리는
-                계산에 안 들어갑니다. 성공 판정도 마찬가지로 <em>"한 로봇이라도 찾으면 성공"</em>입니다.
-                둘 다 로봇 수를 늘릴수록 유리해지는 방향입니다.
+                이를 직접 검증하는 조건이 <code>Obs.</code>(의미 지도를 obstacle-only 맵으로 교체)입니다.
+                결과는 <strong>SR 0.681 → 0.679</strong>. 의미 정보를 통째로 없앴는데 0.2%p 떨어집니다.
+            </p>
+
+            <p>
+                더 결정적인 건 베이스라인과 나란히 놓았을 때입니다.
             </p>
 
             <div class="table-wrap">
                 <table>
-                    <caption>Table I, Co-NavGPT. 로봇을 늘릴수록 SPL이 좋아집니다.</caption>
-                    <thead><tr><th>로봇 수</th><th class="num">SR</th><th class="num">SPL</th></tr></thead>
+                    <caption>Table I의 2-agent 결과에 Obs. 조건을 끼워 넣은 것.</caption>
+                    <thead><tr><th>방법</th><th class="num">SR</th></tr></thead>
                     <tbody>
-                        <tr><td>1대</td><td class="num">0.629</td><td class="num">0.236</td></tr>
-                        <tr><td>2대</td><td class="num">0.681</td><td class="num">0.369</td></tr>
-                        <tr><td>3대</td><td class="num">0.690</td><td class="num">0.406</td></tr>
+                        <tr><td>Greedy</td><td class="num">0.611</td></tr>
+                        <tr><td>Multi-SemExp</td><td class="num">0.612</td></tr>
+                        <tr><td>Cost-Utility</td><td class="num">0.625</td></tr>
+                        <tr><td><strong>Obs.</strong> — 의미 없는 Co-NavGPT</td><td class="num"><strong>0.679</strong></td></tr>
+                        <tr><td>Full Co-NavGPT</td><td class="num">0.681</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <p>
-                <strong>전체 로봇의 이동 거리 합</strong>으로 쟀다면 3대는 3배 효율적이어야 본전입니다.
-                베이스라인도 같은 지표로 쟀으니 방법 간 비교는 유효하지만,
-                <strong>"로봇이 많을수록 효율적"이라는 인상은 상당 부분 지표 정의의 산물</strong>이라
-                자원 대비 효율 주장으로 읽으면 안 됩니다.
+            <p class="fact">
+                의미 정보를 뺀 버전이 여전히 모든 베이스라인을 크게 이깁니다.
+                베이스라인 대비 우위의 거의 전부가 semantic 없이도 나옵니다.
             </p>
 
             <p>
-                덧붙이면 논문은 <code>p<sub>i</sub></code>를 두 가지 뜻으로 씁니다 &mdash;
-                과제 정의(&sect;III-A)에서는 에피소드의 <em>시작 위치</em>(3D 좌표),
-                SPL 정의에서는 <em>경로 길이</em>(스칼라)입니다. 읽을 때 헷갈리기 쉬운 지점입니다.
+                통계적으로도 짚을 만합니다. 1,000 에피소드에서 SR&asymp;0.68이면 표준오차가 약 0.015입니다.
+                베이스라인을 이긴 것(+0.056)은 <strong>3.8&sigma;</strong>로 명확하지만,
+                <code>w/o Reason</code>(−0.021)은 1.4&sigma;, <code>Obs.</code>(−0.002)는 0.13&sigma;입니다.
+                <strong>내부 어블레이션은 어느 것도 유의하다고 보기 어렵고</strong>,
+                논문에 분산이나 유의성 검정은 보고되지 않았습니다.
             </p>
-
-            <h2>재현성 — 어블레이션 코드가 없습니다</h2>
 
             <p>
-                공개 저장소를 확인해보면 Table I·II를 재현할 수단이 없습니다.
+                공정하게 볼 점도 있습니다. SPL은 상대적으로 더 떨어지므로(−3%)
+                의미 정보가 <strong>성공 여부보다 경로 효율</strong>에 기여할 여지는 남습니다.
+                그리고 top-view가 담는 건 라벨이 아니라 위에서 본 RGB 색이며,
+                프론티어 <em>너머</em>는 미관측이라 색조차 없습니다.
+                VLM은 이미 본 영역의 색으로 못 본 영역을 추측해야 하니 애초에 신호가 약한 조건입니다.
             </p>
 
-            <div class="table-wrap">
-                <table>
-                    <caption>공개 저장소 확인 결과.</caption>
-                    <thead><tr><th>항목</th><th>상태</th></tr></thead>
-                    <tbody>
-                        <tr><td>어블레이션 인자</td><td class="term">없음 (<code>nav_mode</code> 하나뿐, 시뮬에선 로그 경로용)</td></tr>
-                        <tr><td>브랜치·태그</td><td class="term"><code>main</code> 하나</td></tr>
-                        <tr><td>베이스라인 구현</td><td class="term">Greedy·Cost-Utility·Multi-SemExp <strong>모두 없음</strong></td></tr>
-                        <tr><td>모델 교체</td><td class="term"><code>model='gpt-4o'</code> 하드코딩</td></tr>
-                        <tr><td>해상도 변경</td><td class="term">리사이즈 코드 없음</td></tr>
-                        <tr><td>obs 맵 변형</td><td class="term">함수는 있으나 어느 진입점에서도 미호출</td></tr>
-                    </tbody>
-                </table>
+            <div class="part" id="future">
+                <span class="part-num">F1</span>
+                <h2 class="part-title">확장 방향 &mdash; TARE 계보에서 배우기</h2>
+                <p class="part-lead">전통 탐색 플래너들이 먼저 간 길에, Multi-Robot VLN이 갈 방향이 있습니다.</p>
             </div>
 
             <p>
-                즉 <strong>어블레이션 네 조건 중 하나도 공개 코드로 실행할 수 없습니다.</strong>
-                실험은 공개되지 않은 수정본으로 돌린 것이고, 앞서 제기한
-                "<code>w/o Reason</code>에서 검증이 무너졌는가"는 <strong>확인도 반증도 불가능</strong>합니다.
-            </p>
-
-            <h2>VLM은 무엇을 보고 고르는가</h2>
-
-            <p>
-                <code>reason</code> 필드가 판단 근거를 보여주니 해석 가능해 보이지만,
-                <strong>LLM의 사후 설명이 실제 판단 근거라는 보장은 없습니다.</strong>
-                여기서는 가능성의 문제가 아니라 <strong>생성 순서가 그것을 보장</strong>합니다 &mdash;
-                답이 먼저 나오고 설명이 뒤따르니까요.
-            </p>
-
-            <p>
-                남은 미확인 항목들도 같은 방향을 가리킵니다. 거리를 실제로 고려하는지,
-                면적 큰 쪽을 선호하는지, ID 번호나 이미지 순서에 끌리는지 모두 알 수 없습니다.
-                특히 마지막이 걸리는데 &mdash; <strong>ID 순서(면적 오름차순), 이미지 전달 순서, 실패 시 fallback이
-                모두 <code>frontier_0</code>을 향합니다.</strong>
-                서로 상쇄되지 않고 같은 방향으로 겹칩니다.
-            </p>
-
-            <p>
-                코드 몇 줄이면 되는 실험 세 가지가 이를 상당 부분 해소합니다 &mdash;
-                <strong>ID 무작위 셔플</strong>(번호 편향), <strong>이미지 순서 셔플</strong>(위치 편향),
-                <strong>선택 ID 분포와 Greedy 일치율</strong>(실제 거리 고려 여부).
-                셋 다 논문에 없습니다.
-            </p>
-
-            <h2>그래서 기여는 무엇인가</h2>
-
-            <p>
-                "프롬프트를 잘 쓴 것"이 기여냐는 질문이 자연스럽게 나옵니다.
-                논문의 기여 목록에 프롬프트 설계는 없습니다 &mdash; 프레임워크, VLM 전역 플래너, 실험 셋입니다.
-                프롬프팅은 기여로 청구되지 않고 구현 수단으로 들어가 있습니다.
-            </p>
-
-            <p>
-                실제 기여는 프롬프트 문구가 아니라 <strong>인터페이스 설계</strong>에 있습니다. 셋입니다.
-            </p>
-
-            <ul>
-                <li><strong>생성이 아니라 선택으로 제한</strong> &mdash; VLM이 좌표를 자유롭게 뱉으면 벽 속이나
-                    미탐색 영역을 지목할 수 있습니다. 기하학적으로 유효한 후보만 만들어놓고 고르게 하면
-                    그 실패가 원천 차단됩니다. 프롬프트 문구가 아니라 아키텍처 속성입니다.</li>
-                <li><strong>후보당 이미지 한 장</strong> &mdash; 구체적 실패 모드(VLM이 "3번"을 특정하지 못함)에 대한
-                    구체적 해법입니다.</li>
-                <li><strong>프론티어를 기하-언어의 접점으로</strong> &mdash; 연속 공간을 VLM이 다룰 수 있는
-                    이산 선택지로 바꾸는 추상화. 이게 논문의 실제 아이디어입니다.</li>
-            </ul>
-
-            <p>
-                RA-L 기준에서 실질적 성과는 <strong>4족 로봇 2대에서 5&nbsp;FPS로 돌렸다는 것</strong>입니다
-                (비교 대상 [18]은 0.5 FPS 미만). 반면 "VLM으로 프론티어 고르기"라는 아이디어 자체는
-                2026년 기준으로 이미 붐빈 공간이라, 저널본의 증분은 개념적 신규성보다
-                <strong>멀티로봇 확장과 실환경 배치</strong>에 있다고 보는 편이 정확합니다.
-            </p>
-
-            <h2>고치기는 어렵지 않습니다</h2>
-
-            <p>
-                여기까지의 지적 대부분이 <strong>작은 수정으로 검증 가능한 것</strong>들이라는 점을 덧붙여 둡니다.
+                TARE(RSS 2021)에서 출발한 계보가 멀티로봇으로 확장되며 세 갈래로 갈라졌습니다.
+                흥미로운 건 <strong>세 축 모두 Co-NavGPT가 가정으로 치워둔 것</strong>이라는 점입니다.
             </p>
 
             <div class="table-wrap">
                 <table>
-                    <caption>지적된 문제와 그에 대응하는 최소 수정.</caption>
-                    <thead><tr><th>문제</th><th>수정</th></tr></thead>
+                    <caption>TARE 계보의 세 확장과 Co-NavGPT의 대응 상태.</caption>
+                    <thead><tr><th>축</th><th>논문</th><th>푼 문제</th><th>Co-NavGPT</th></tr></thead>
                     <tbody>
                         <tr>
-                            <td>CoT가 작동하지 않음</td>
-                            <td class="term"><code>reason</code>을 JSON <strong>첫 키</strong>로 &mdash; 추론이 답에 선행</td>
+                            <td>통신</td>
+                            <td class="term">M-TARE<br><span class="toc-sub">Sci. Robotics 2023</span></td>
+                            <td>대규모 환경 + <strong>제한된 통신</strong></td>
+                            <td>통신 제약 없음</td>
                         </tr>
                         <tr>
-                            <td>추론 공간 부족</td>
-                            <td class="term"><code>max_tokens</code> 상향, 또는 Kojima식 <strong>2단계 호출</strong></td>
+                            <td>상대 위치</td>
+                            <td class="term">MUI-TARE<br><span class="toc-sub">RA-L 2023</span></td>
+                            <td><strong>초기 위치 미지</strong> 상태의 맵 병합</td>
+                            <td>같은 위치에서 시작</td>
                         </tr>
                         <tr>
-                            <td>검증이 <code>reason</code>에 묶임</td>
-                            <td class="term">키 개수 대신 <strong>키 이름 기반</strong> 검증 &mdash; 변형 실험 가능</td>
-                        </tr>
-                        <tr>
-                            <td>번호·순서 편향 미확인</td>
-                            <td class="term">ID 셔플 / 이미지 순서 셔플 어블레이션</td>
-                        </tr>
-                        <tr>
-                            <td>semantic 기여 불명확</td>
-                            <td class="term">선택 ID 분포와 Greedy <strong>일치율</strong> 보고</td>
-                        </tr>
-                        <tr>
-                            <td>마크 형태 미검증</td>
-                            <td class="term">선 대신 <strong>원</strong> &mdash; 원 논문에서 형태 차이가 색보다 4배 큼</td>
-                        </tr>
-                        <tr>
-                            <td>멀티로봇 지표 편향</td>
-                            <td class="term">전체 로봇 이동 거리 <strong>합</strong> 기준 SPL 병기</td>
+                            <td>이질성</td>
+                            <td class="term">HEHA<br><span class="toc-sub">2025</span></td>
+                            <td>로봇마다 <strong>주행 능력이 다름</strong></td>
+                            <td>동일 로봇 가정</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
+            <h2>F1-(b) 제한된 통신</h2>
+
             <p>
-                정리하면 &mdash; 이 논문의 실제 기여는 <strong>연속적인 기하 문제를 VLM이 다룰 수 있는
-                이산 선택 문제로 바꾼 인터페이스 설계</strong>이고, 그 위에서 실환경 실시간 동작까지 보인 것입니다.
-                다만 논문이 앞세운 <em>semantic prior</em>와 <em>reasoning</em>이라는 두 축은
-                자체 어블레이션 수치와 코드 구조 어느 쪽으로도 충분히 뒷받침되지 않습니다.
-                흥미로운 건 그 둘 다 <strong>검증하기 어려운 주장이 아니라는 점</strong>입니다.
+                M-TARE의 핵심은 <strong>표현 해상도를 둘로 나눈 것</strong>입니다.
+                근거리는 고해상도로 정밀하게, 원거리는 저해상도로 가볍게 유지합니다.
+                <strong>저해상도 전역 맵이 통신 비용을 낮춘다</strong>는 게 멀티로봇 확장의 열쇠였습니다.
+            </p>
+
+            <p>
+                통신 범위 밖으로 나간 로봇을 다시 잇는 방법으로는 <strong>"pursuit"</strong> 전략을 제안합니다.
+                미리 약속한 장소에서 만나는 rendezvous 방식과 달리,
+                <em>정보 교환이 탐색을 빠르게 할 때만</em> 기회주의적으로 서로 접근합니다.
+                로봇 20대, 통신 범위 10~300m로 1,400회 이상 실험해 rendezvous 계열보다 우수함을 보였습니다.
+            </p>
+
+            <p>
+                VLN으로 옮기면 &mdash; top-view를 압축해 공유하고,
+                <strong>"지금 만날 가치가 있는가"를 VLM이 판단</strong>하게 하는 방향이 자연스럽습니다.
+            </p>
+
+            <h2>F1-(c) 초기 위치를 모를 때</h2>
+
+            <p>
+                MUI-TARE는 <a href="#d1">D1</a>에서 본 가정을 정면으로 없앱니다.
+                로봇들이 서로 어디 있는지 모르는 상태에서 시작하죠.
+            </p>
+
+            <p>
+                기존 방식에는 딜레마가 있었습니다. 단일 프레임 매칭은 빠르지만 오정합 위험이 크고,
+                시퀀스 매칭은 견고하지만 한 로봇이 다른 로봇의 궤적을 길게 되짚어야 해서 중복 탐색이 생깁니다.
+                MUI-TARE는 <strong>병합 품질 점수</strong>를 두고 임계값에 못 미칠 때만 더 되짚게 합니다.
+            </p>
+
+            <p>
+                또 하나 배울 점은 <strong>협력을 단계적으로 켠다</strong>는 것입니다.
+                병합 전에는 각 로봇이 독립적으로 계획하고, 병합 후에야 협력합니다.
+                공통 좌표계가 확립돼야 협력이 의미를 갖기 때문입니다.
+            </p>
+
+            <h2>F1-(d) 이종 로봇</h2>
+
+            <p>
+                바퀴 로봇은 계단을 못 오르고 다리 로봇과 드론은 오릅니다.
+                HEHA의 예시가 좋은데 &mdash; <strong>계단을 먼저 발견한 건 지상 로봇인데 갈 수 있는 건 다리 로봇</strong>입니다.
+            </p>
+
+            <p>
+                가장 중요한 통찰은 <strong>목적함수를 바꾼 것</strong>입니다.
+            </p>
+
+            <code class="stage-code">기존 (min-sum):  Σ 모든 로봇의 경로 길이   → 총 이동량 최소화
+HEHA (min-max):  max 로봇별 경로 길이     → 가장 늦게 끝나는 로봇 기준</code>
+
+            <p>
+                <strong>탐색 완료 시각은 마지막 로봇이 결정합니다.</strong>
+                그러니 최소화할 대상은 합이 아니라 최댓값(makespan)이어야 한다는 것이죠.
+                여기에 주행가능성 제약까지 붙으면 NP-hard가 되어, 빠른 근사해를 내는
+                PEAF라는 알고리즘을 새로 만들었습니다.
+            </p>
+
+            <p>
+                VLN으로 옮길 때 <strong>이 축이 가장 유망해 보입니다.</strong>
+                HEHA는 주행가능성을 제약 조건으로 수식화해야 했지만, VLM에게는 텍스트로 그냥 주면 됩니다.
+            </p>
+
+            <code class="stage-code">robot_0: 바퀴형, 계단 불가, 배터리 40%
+robot_1: 4족,   계단 가능, 배터리 90%</code>
+
+            <p>
+                조합 최적화 없이 상식으로 배분할 수 있는 영역입니다.
+                <strong>전통 플래너가 어려워하는 걸 VLM이 쉽게 하는</strong> 지점이죠.
+                다만 그 반대도 성립합니다 &mdash; min-max 최적화는 정확한 거리 계산이 필요해 VLM이 잘 못 합니다.
+                결국 <strong>이종 로봇이 함께 이해할 수 있는 context를 어떻게 만드느냐</strong>가 관건이 될 것 같습니다.
+            </p>
+
+            <h2>마무리</h2>
+
+            <p>
+                이 논문의 실제 기여는 <strong>연속적인 기하 문제를 VLM이 다룰 수 있는 이산 선택 문제로 바꾼
+                인터페이스 설계</strong>에 있습니다. VLM이 좌표를 자유롭게 뱉으면 벽 속을 지목할 수 있는데,
+                기하학적으로 유효한 후보만 만들어놓고 고르게 하면 그 실패가 원천 차단됩니다.
+                후보마다 이미지를 따로 만든 것도 구체적 실패 모드에 대한 구체적 해법이고요.
+            </p>
+
+            <p>
+                RA-L 기준에서 실질적 성과는 <strong>4족 로봇 2대에서 5 FPS로 돌렸다는 것</strong>입니다.
+                D1~D5에서 본 미해결 과제들이 분명 있지만,
+                <strong>Multi-Robot VLN을 실환경에서 데모했다는 데 의의</strong>가 있다고 봅니다.
+            </p>
+
+            <p>
+                그리고 남은 과제들은 대부분 <strong>이미 답이 나와 있는 방향</strong>입니다.
+                통신 제약, 초기 위치 미지, 이종 로봇 &mdash;
+                전통 탐색 플래너들이 지난 몇 년간 하나씩 풀어온 문제들이니까요.
+                그 해법들을 VLM 문맥으로 옮기는 것이 다음 걸음일 것 같습니다.
             </p>
 
             <details>
-                <summary>전체 수치 표로 보기</summary>
+                <summary>키워드 빈도 전체 표</summary>
                 <div class="table-wrap">
                     <table>
-                        <caption>불용어 제거·표제어 통합 후 상위 33개. 34위 이하는 모두 11회 이하이며 잔여 헤더 토큰이 섞여 있습니다.</caption>
+                        <caption>불용어 제거·표제어 통합 후 상위 33개.</caption>
                         <thead>
                             <tr>
                                 <th class="num">#</th>
@@ -2204,11 +1633,10 @@ Please give the output based on the following input:</pre>
             <p class="method">
                 <strong>산출 방법</strong><br>
                 <code>pdftotext -layout</code>으로 본문을 추출한 뒤 REFERENCES 이후를 잘라냈습니다.
-                줄바꿈 하이픈 결합, 인용 표기 <code>[12]</code> 제거, IEEE Xplore 다운로드 워터마크와 러닝 헤더 제거,
+                줄바꿈 하이픈 결합, 인용 표기 <code>[12]</code> 제거, IEEE Xplore 워터마크와 러닝 헤더 제거,
                 일반 영어 불용어 및 논문 상투어(<code>method</code>, <code>result</code>, <code>show</code> 등) 제외,
                 두 글자 이하 토큰 제외, 복수형&rarr;단수형 통합 순으로 처리했습니다.
-                클러스터 분류는 자동 산출이 아니라 논문 내용을 근거로 한 사람의 판단이며,
-                어느 갈래에도 속하지 않는 <code>task</code>·<code>framework</code>·<code>co-navgpt</code>는 기타로 묶었습니다.
+                클러스터 분류는 자동 산출이 아니라 논문 내용을 근거로 한 사람의 판단입니다.
             </p>
         </div>
     </div>
@@ -2260,13 +1688,6 @@ Please give the output based on the following input:</pre>
                 ["assignment", 12, "robot"]
             ];
 
-            const BI = [
-                ["point cloud", 13], ["visual target", 12], ["target navigation", 11],
-                ["semantic navigation", 10], ["language model", 10], ["target object", 10],
-                ["visual semantic", 9], ["visual prompt", 9], ["global planner", 8],
-                ["vision language", 7], ["vision-language model", 7], ["cloud map", 7]
-            ];
-
             const pct = n => (n / TOTAL * 100).toFixed(2);
 
             document.getElementById("tiles").innerHTML = CLUSTERS.map(g => `
@@ -2286,17 +1707,6 @@ Please give the output based on the following input:</pre>
                     </span>
                     <span class="row-value">${n}</span>
                     <span class="tip">${t} — ${n}회 · 전체의 ${pct(n)}% · ${CL[k].name}</span>
-                </div>`).join("");
-
-            const maxBi = BI[0][1];
-            document.getElementById("biChart").innerHTML = BI.map(([t, n], i) => `
-                <div class="row" tabindex="0">
-                    <span class="row-label">${t}</span>
-                    <span class="track">
-                        <span class="bar" style="--w:${(n / maxBi * 100).toFixed(1)}%;--c:var(--c-phrase);--d:${i * 26}ms"></span>
-                    </span>
-                    <span class="row-value">${n}</span>
-                    <span class="tip">${t} — ${n}회</span>
                 </div>`).join("");
 
             document.getElementById("tableBody").innerHTML = UNI.concat(TAIL).map(([t, n, k], i) => `
