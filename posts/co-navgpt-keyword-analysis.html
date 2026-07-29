@@ -963,10 +963,10 @@
                         </span>
                     </li>
                     <li>
-                        <span class="toc-num">D1&ndash;D5</span>
+                        <span class="toc-num">D1&ndash;D4</span>
                         <span>
                             <a href="#discussion">비판적 검토</a>
-                            <span class="toc-sub">코드를 보고 나서 남은 다섯 가지 물음</span>
+                            <span class="toc-sub">코드를 보고 나서 남은 네 가지 물음</span>
                         </span>
                     </li>
                     <li>
@@ -1286,13 +1286,13 @@ top-view  ← 각 칸에서 가장 높은 점의 색 (z-buffer)</code>
 
             <p>
                 성능을 가장 크게 떨어뜨리는 건 <code>reason</code> 필드 제거입니다.
-                그런데 이 표는 다시 볼 구석이 많습니다 &mdash; <a href="#d5">D5</a>에서 이어집니다.
+                이 부분은 뒤의 <a href="#d2">D2</a>에서 다시 짚습니다.
             </p>
 
             <div class="part" id="discussion">
-                <span class="part-num">D1 &ndash; D5</span>
+                <span class="part-num">D1 &ndash; D4</span>
                 <h2 class="part-title">비판적 검토</h2>
-                <p class="part-lead">공개 코드를 함께 읽고 나서 남은 다섯 가지 물음.</p>
+                <p class="part-lead">공개 코드를 함께 읽고 나서 남은 네 가지 물음.</p>
             </div>
 
             <h2 id="d1">D1. 실험에서는 맵 병합을 하지 않습니다</h2>
@@ -1421,60 +1421,6 @@ FMM  매 스텝         "어떻게"   ← 나머지 96%, 전부 해석적 계산
                 <strong>다음 호출까지 25스텝 동안 대처할 방법이 없습니다.</strong>
             </p>
 
-            <h2 id="d5">D5. Semantic prior가 정말 기여했을까</h2>
-
-            <p>
-                논문의 핵심 주장은 VLM의 semantic prior가 성능에 기여한다는 것이고,
-                초록도 이렇게 씁니다.
-            </p>
-
-            <blockquote>
-                Ablation studies further confirm the importance of <strong>semantic priors</strong> from the VLM
-            </blockquote>
-
-            <p>
-                이를 직접 검증하는 조건이 <code>Obs.</code>(의미 지도를 obstacle-only 맵으로 교체)입니다.
-                결과는 <strong>SR 0.681 → 0.679</strong>. 의미 정보를 통째로 없앴는데 0.2%p 떨어집니다.
-            </p>
-
-            <p>
-                더 결정적인 건 베이스라인과 나란히 놓았을 때입니다.
-            </p>
-
-            <div class="table-wrap">
-                <table>
-                    <caption>Table I의 2-agent 결과에 Obs. 조건을 끼워 넣은 것.</caption>
-                    <thead><tr><th>방법</th><th class="num">SR</th></tr></thead>
-                    <tbody>
-                        <tr><td>Greedy</td><td class="num">0.611</td></tr>
-                        <tr><td>Multi-SemExp</td><td class="num">0.612</td></tr>
-                        <tr><td>Cost-Utility</td><td class="num">0.625</td></tr>
-                        <tr><td><strong>Obs.</strong> — 의미 없는 Co-NavGPT</td><td class="num"><strong>0.679</strong></td></tr>
-                        <tr><td>Full Co-NavGPT</td><td class="num">0.681</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p class="fact">
-                의미 정보를 뺀 버전이 여전히 모든 베이스라인을 크게 이깁니다.
-                베이스라인 대비 우위의 거의 전부가 semantic 없이도 나옵니다.
-            </p>
-
-            <p>
-                통계적으로도 짚을 만합니다. 1,000 에피소드에서 SR&asymp;0.68이면 표준오차가 약 0.015입니다.
-                베이스라인을 이긴 것(+0.056)은 <strong>3.8&sigma;</strong>로 명확하지만,
-                <code>w/o Reason</code>(−0.021)은 1.4&sigma;, <code>Obs.</code>(−0.002)는 0.13&sigma;입니다.
-                <strong>내부 어블레이션은 어느 것도 유의하다고 보기 어렵고</strong>,
-                논문에 분산이나 유의성 검정은 보고되지 않았습니다.
-            </p>
-
-            <p>
-                공정하게 볼 점도 있습니다. SPL은 상대적으로 더 떨어지므로(−3%)
-                의미 정보가 <strong>성공 여부보다 경로 효율</strong>에 기여할 여지는 남습니다.
-                그리고 top-view가 담는 건 라벨이 아니라 위에서 본 RGB 색이며,
-                프론티어 <em>너머</em>는 미관측이라 색조차 없습니다.
-                VLM은 이미 본 영역의 색으로 못 본 영역을 추측해야 하니 애초에 신호가 약한 조건입니다.
-            </p>
 
             <div class="part" id="future">
                 <span class="part-num">F1</span>
@@ -1600,7 +1546,7 @@ robot_1: 4족,   계단 가능, 배터리 90%</code>
 
             <p>
                 RA-L 기준에서 실질적 성과는 <strong>4족 로봇 2대에서 5 FPS로 돌렸다는 것</strong>입니다.
-                D1~D5에서 본 미해결 과제들이 분명 있지만,
+                D1~D4에서 본 미해결 과제들이 분명 있지만,
                 <strong>Multi-Robot VLN을 실환경에서 데모했다는 데 의의</strong>가 있다고 봅니다.
             </p>
 
