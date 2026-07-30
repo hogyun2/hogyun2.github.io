@@ -503,6 +503,26 @@
             margin: 0;
         }
 
+        /* our inference (R) line under each question */
+        .qa-r {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin: 8px 0 0;
+        }
+
+        .qa-r strong { color: var(--primary-color); }
+
+        /* hand-grading marks for R1-R4 */
+        td.mark {
+            color: #d03b3b;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-align: center;
+            padding-right: 14px;
+        }
+
+        [data-theme="dark"] td.mark { color: #e66767; }
+
         /* ---------- loop rhythm diagram ---------- */
         .loops {
             display: flex;
@@ -915,7 +935,7 @@
             <div class="post-meta">
                 <span><i class="fas fa-calendar"></i> 2026년 7월 29일</span>
                 <span class="post-category">Research</span>
-                <span><i class="fas fa-clock"></i> 15분 읽기</span>
+                <span><i class="fas fa-clock"></i> 18분 읽기</span>
             </div>
         </div>
 
@@ -934,6 +954,7 @@
             <p>
                 읽기 전에 본문 어휘를 한 번 세어봤습니다. 논문이 실제로 무엇에 지면을 쓰는지는
                 초록의 주장보다 빈도가 더 정직하게 보여주는 경우가 있어서요.
+                그리고 주제가 VLM이니만큼 글의 진행도 같은 방식입니다 — <strong>추론을 먼저 내놓고, 답을 확인하고, 채점합니다.</strong>
                 그리고 방법론은 논문만이 아니라 <strong>저자들이 공개한 구현(<code>Co-NavGPT2</code>)을 함께 대조</strong>했습니다.
                 논문 서술로는 애매하던 부분이 코드에서 풀리기도 했고, 반대로 어긋나는 곳도 나왔습니다.
             </p>
@@ -944,8 +965,8 @@
                     <li>
                         <span class="toc-num">Q1&ndash;Q4</span>
                         <span>
-                            <a href="#questions">네 개의 질문</a>
-                            <span class="toc-sub">어휘 통계에서 뽑아낸 한 문장이 네 질문으로 갈라집니다</span>
+                            <a href="#questions">네 개의 질문, 네 개의 추론</a>
+                            <span class="toc-sub">한 문장이 네 질문으로 갈라지고, 질문마다 추론 R1~R4를 답니다</span>
                         </span>
                     </li>
                     <li>
@@ -966,7 +987,7 @@
                         <span class="toc-num">D1&ndash;D4</span>
                         <span>
                             <a href="#discussion">비판적 검토</a>
-                            <span class="toc-sub">코드를 보고 나서 남은 네 가지 물음</span>
+                            <span class="toc-sub">네 가지 물음 — 그리고 키 순서 하나를 바꿔 직접 돌린 실험</span>
                         </span>
                     </li>
                     <li>
@@ -1032,8 +1053,11 @@
 
             <div class="part" id="questions">
                 <span class="part-num">Q1 &ndash; Q4</span>
-                <h2 class="part-title">네 개의 질문</h2>
-                <p class="part-lead">한 문장의 각 구절이 "그래서 어떻게?"를 남깁니다.</p>
+                <h2 class="part-title">네 개의 질문, 네 개의 추론</h2>
+                <p class="part-lead">
+                    주제가 VLM이니만큼, 이 글도 같은 방식으로 갑니다 &mdash;
+                    답을 보기 전에 추론(R)부터 내놓고, 뒤에서 채점합니다.
+                </p>
             </div>
 
             <div class="panel">
@@ -1043,6 +1067,7 @@
                         <div>
                             <div class="qa-q">여러 로봇이 각자 만든 부분 맵을 어떻게 합칠까?</div>
                             <p class="qa-a">로봇은 각자의 local coordinate 위에 존재할 텐데, 어떻게 global coordinate으로 합칠까?</p>
+                            <p class="qa-r"><strong>R1.</strong> ICP 같은 registration으로 transformation을 구하지 않을까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
@@ -1050,6 +1075,7 @@
                         <div>
                             <div class="qa-q">로봇 상태와 프론티어 영역을 어떻게 인코딩할까?</div>
                             <p class="qa-a">어떤 "정보"를 맵에 담아 VLM에게 건넬까?</p>
+                            <p class="qa-r"><strong>R2.</strong> VLM이 잘 이해하는 이미지를 사용해서 인코딩하지 않을까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
@@ -1057,6 +1083,7 @@
                         <div>
                             <div class="qa-q">VLM이 전역 플래너로서 프론티어를 어떻게 배분할까?</div>
                             <p class="qa-a">어떠한 "기준" 또는 "목적"으로 배분할까?</p>
+                            <p class="qa-r"><strong>R3.</strong> 거리나 의미적 단서를 사용하지 않을까?</p>
                         </div>
                     </div>
                     <div class="qa-row">
@@ -1064,6 +1091,7 @@
                         <div>
                             <div class="qa-q">미지의 환경에서 목표 물체를 어떻게 협력 탐색할까?</div>
                             <p class="qa-a">각 로봇은 어떻게 "협력적"으로 탐색하고 주행할까?</p>
+                            <p class="qa-r"><strong>R4.</strong> 역할을 나눠서 협력적으로 navigation 하지 않을까?</p>
                         </div>
                     </div>
                 </div>
@@ -1240,6 +1268,42 @@ top-view  ← 각 칸에서 가장 높은 점의 색 (z-buffer)</code>
                 </div>
             </div>
 
+            <div class="panel">
+                <h3>채점 &mdash; 네 추론은 얼마나 맞았나</h3>
+                <p class="panel-note">답을 다 확인했으니, 처음의 R1~R4를 채점해봅니다.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>추론</th><th>채점</th><th>근거</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td class="term">R1. registration으로 변환을 구할 것</td>
+                                <td class="mark">◯</td>
+                                <td>맞음 &mdash; G-ICP였습니다 (단, 시뮬레이션은 <a href="#d1">D1</a>)</td>
+                            </tr>
+                            <tr>
+                                <td class="term">R2. VLM이 잘 이해하는 이미지로 인코딩</td>
+                                <td class="mark">◯</td>
+                                <td>맞음 &mdash; top-view 이미지 + 빨간 마크</td>
+                            </tr>
+                            <tr>
+                                <td class="term">R3. 거리·의미 단서로 배분</td>
+                                <td class="mark">╱</td>
+                                <td>빗나감 &mdash; 기준은 프롬프트 속 한 줄뿐, 거리는 시스템이 계산해 주지 않습니다</td>
+                            </tr>
+                            <tr>
+                                <td class="term">R4. 역할을 나눠 협력 주행</td>
+                                <td class="mark">△</td>
+                                <td>절반 &mdash; Global·Local 분리는 맞지만, 그 Local의 실체는 <a href="#d3">D3</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="panel-note" style="margin:14px 0 0">
+                    중요한 건 채점 결과보다 과정입니다. 추론을 내놓고 답과 비교하며 틀린 곳을 확인하는 것 &mdash;
+                    이 방식이 뒤의 <a href="#d2">D2</a>에서 예상 못 한 방식으로 다시 등장합니다.
+                </p>
+            </div>
+
             <div class="part" id="results">
                 <span class="part-num">RESULTS</span>
                 <h2 class="part-title">실험 결과</h2>
@@ -1359,9 +1423,76 @@ top-view  ← 각 칸에서 가장 높은 점의 색 (z-buffer)</code>
 
             <p>
                 그런데 어블레이션에서는 이걸 제거했을 때 낙폭이 가장 컸습니다(−0.021).
-                답 뒤에 생성되는데 왜 영향을 줬을까요. 노이즈일 수도, 프롬프트가 달라져 첫 출력 토큰의 분포가
-                바뀐 것일 수도, 모델이 때때로 <code>reason</code>을 먼저 뱉은 것일 수도 있습니다.
+                답 뒤에 생성되는데 왜 영향을 줬을까요.
                 <strong>논문 정보만으로는 구분할 수 없습니다.</strong>
+                다만 이건 확인 가능한 질문입니다 &mdash; <em>reason을 앞으로 올리면 정말 좋아질까?</em>
+                논문에 이 실험이 없어서, 직접 돌려봤습니다.
+            </p>
+
+            <h2 id="d2exp">D2-실험. JSON 키 순서 하나를 바꿔봤습니다</h2>
+
+            <p>
+                설계는 최대한 단순하게 &mdash; 원래 코드 그대로 gpt-4o(temperature 0.1, json_object),
+                HM3D에서 chair와 tv_monitor 에피소드를 고정해 각 10회씩. 조건은 둘입니다.
+            </p>
+
+            <code class="stage-code">A. 정답 뒤 (원래 코드)   {robot_0, robot_1, reason}   = 사후 정당화
+B. 정답 앞 (CoT)        {reason, robot_0, robot_1}   = 추론이 답에 선행
+
+유일한 차이 = JSON 안 토큰 순서.  프롬프트·모델·씬 완전 동일.</code>
+
+            <div class="table-wrap">
+                <table>
+                    <caption>키 순서만 바꾼 A/B 결과. 20 에피소드 파일럿입니다.</caption>
+                    <thead>
+                        <tr><th>에피소드</th><th>조건</th><th class="num">success ↑</th><th class="num">SPL ↑</th><th class="num">DTG (m) ↓</th><th class="num">fallback ↓</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>chair</td><td>정답 뒤 (post-hoc)</td><td class="num">2/10</td><td class="num">0.073</td><td class="num">2.65</td><td class="num">26%</td></tr>
+                        <tr><td>chair</td><td><strong>정답 앞 (CoT)</strong></td><td class="num">2/10</td><td class="num">0.088</td><td class="num">1.94</td><td class="num">13%</td></tr>
+                        <tr><td>tv_monitor</td><td>정답 뒤 (post-hoc)</td><td class="num">7/10</td><td class="num">0.638</td><td class="num">3.93</td><td class="num">62%</td></tr>
+                        <tr><td>tv_monitor</td><td><strong>정답 앞 (CoT)</strong></td><td class="num">8/10</td><td class="num">0.690</td><td class="num">2.67</td><td class="num">30%</td></tr>
+                        <tr><td><strong>종합 (20ep)</strong></td><td>정답 뒤 (post-hoc)</td><td class="num">9/20</td><td class="num">0.356</td><td class="num">3.29</td><td class="num">37%</td></tr>
+                        <tr><td><strong>종합 (20ep)</strong></td><td><strong>정답 앞 (CoT)</strong></td><td class="num"><strong>10/20</strong></td><td class="num"><strong>0.389</strong></td><td class="num"><strong>2.31</strong></td><td class="num"><strong>18%</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>
+                성공률 차이는 1판이라 유의하지 않습니다. 주 신호는 나머지 두 지표입니다 &mdash;
+                <strong>DTG</strong>(종료 시점 목표까지 남은 거리)가 3.29m에서 2.31m로 1m 가까이 줄었고,
+                <strong>fallback</strong>(무효 JSON으로 기본값에 떨어진 비율)이 37%에서 18%로 절반이 됐습니다.
+                reason을 먼저 쓰게 했더니 형식 오류 자체가 줄어든 겁니다.
+            </p>
+
+            <p>
+                <strong>왜 좋아졌을까.</strong> reason 텍스트를 뜯어보면, 길이도 어휘도 거의 동일합니다 &mdash;
+                "말을 더 많이 해서"가 아닙니다. 유일하게 갈린 건 하나,
+                <strong>안 고른 후보까지 3개 이상 비교하는 비율이 0% vs 31%</strong>였습니다.
+            </p>
+
+            <code class="stage-code">정답 뒤:  "Robot_0 is closer to frontier_2 ..."           ← 이미 고른 2개만 서술
+정답 앞:  "Robot_0 is closer to frontiers 3 and 4,
+           while Robot_1 is closer to 0, 1, 2, 5 ..."     ← 고르기 전이라 후보 전체를 비교</code>
+
+            <p>
+                사후 정당화와 진짜 추론의 차이가 텍스트에 그대로 드러납니다.
+            </p>
+
+            <p>
+                <strong>반증도 하나 얻었습니다.</strong> 처음 가설은 "비교를 하면 두 로봇을 다른 구역으로
+                분업시켜 중복 배정이 줄 것"이었는데, 데이터는 정반대였습니다 &mdash;
+                같은 프론티어에 두 로봇을 보내는 중복 배정이 <strong>3.4% → 19.7%로 오히려 6배</strong>.
+                그런데도 DTG와 SPL은 CoT가 더 좋습니다. 커버리지 분업은 성능 향상의 이유가 아닙니다.
+            </p>
+
+            <p>
+                남는 열린 질문 &mdash; 후보를 '비교'하는 것이 왜 성능이 되는가.
+                저희 가설은 이렇습니다. 배분은 결국 argmax 문제인데,
+                <strong>비교 없이 고르면 '최선'이 아니라 '그럴듯한 것'을 고르게 됩니다.</strong>
+                다만 비교 &rarr; 더 나은 배분의 인과 고리는 직접 검증하지 못했고
+                (비교를 강제/금지하는 조건을 나눠 돌리면 분리할 수 있을 겁니다),
+                20 에피소드는 방향을 보여주는 파일럿입니다.
             </p>
 
             <h2 id="d3">D3. 로컬 주행은 시뮬레이터의 정답 기하를 씁니다</h2>
@@ -1548,6 +1679,18 @@ robot_1: 4족,   계단 가능, 배터리 90%</code>
                 RA-L 기준에서 실질적 성과는 <strong>4족 로봇 2대에서 5 FPS로 돌렸다는 것</strong>입니다.
                 D1~D4에서 본 미해결 과제들이 분명 있지만,
                 <strong>Multi-Robot VLN을 실환경에서 데모했다는 데 의의</strong>가 있다고 봅니다.
+            </p>
+
+            <p>
+                특히 D2를 한 번 더 짚고 싶습니다. 이 글은 추론 R1~R4를 먼저 내놓고
+                답과 비교하며 채점하는 방식으로 썼습니다. 맞은 것도(◯), 절반만 맞은 것도(△),
+                틀린 것도(╱) 있었죠. 그 비교가 없었다면 "그럴듯한 이해"에 머물렀을 겁니다 &mdash;
+                틀린 추론을 틀렸다고 확인하는 순간에 이해가 생기니까요.
+                그런데 정작 이 논문의 VLM은 답을 먼저 확정하고 추론을 뒤에 씁니다.
+                키 순서만 바꿔 실험해보니 전 지표가 같거나 개선됐고, 달라진 유일한 단서는
+                "후보를 비교하는가"였습니다.
+                <strong>추론은 비교할 때 비로소 작동합니다</strong> &mdash;
+                글이든 VLM이든 마찬가지인 것 같습니다.
             </p>
 
             <p>
