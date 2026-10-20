@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity-Aware Certifiable Distributed Radar SLAM - Hogyun Kim</title>
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        .post-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        .back-to-posts {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        .post-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .post-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.35;
+            margin-bottom: 16px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .post-category {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        [data-theme="dark"] .post-category {
+            background: #1b5e20;
+            color: #a5d6a7;
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.85;
+            font-size: 1.03rem;
+        }
+
+        .post-content h2 {
+            color: var(--text-primary);
+            font-size: 1.55rem;
+            font-weight: 650;
+            margin: 42px 0 18px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 16px;
+        }
+
+        .post-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 30px 0 12px;
+        }
+
+        .post-content p {
+            margin-bottom: 18px;
+        }
+
+        .post-content ul,
+        .post-content ol {
+            margin: 14px 0 22px;
+            padding-left: 26px;
+        }
+
+        .post-content li {
+            margin-bottom: 8px;
+        }
+
+        .post-content code {
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .post-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 22px 0 28px;
+            font-size: 0.94rem;
+        }
+
+        .post-content th,
+        .post-content td {
+            padding: 11px 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .post-content th {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .highlight-box {
+            background: var(--highlight-bg);
+            padding: 20px 22px;
+            border-radius: 8px;
+            margin: 26px 0;
+            border-left: 4px solid #f59e0b;
+            color: var(--text-primary);
+        }
+
+        .equation-note {
+            padding: 18px 20px;
+            margin: 24px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            overflow-x: auto;
+        }
+
+        .references a {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .post-container { padding: 24px 16px 60px; }
+            .post-title { font-size: 1.75rem; }
+            .post-content table { display: block; overflow-x: auto; }
+        }
+        /* --- metric dashboard (RadLoc-style) --- */
+        .metric-dashboard {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin: 26px 0;
+            padding: 18px 20px;
+        }
+        .chart-kicker {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+            background: var(--primary-color);
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        .metric-dashboard h3 { margin: 4px 0 6px; font-size: 1.1rem; color: var(--text-primary); }
+        .tau-note { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 14px; }
+        .metric-bars { display: flex; flex-direction: column; gap: 9px; }
+        .metric-row {
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr) 74px;
+            gap: 10px;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .metric-label { color: var(--text-secondary); }
+        .metric-row.best .metric-label,
+        .metric-row.best .metric-value { font-weight: 700; color: var(--text-primary); }
+        .bar-track {
+            display: block; height: 13px; border-radius: 7px;
+            background: var(--border-color); overflow: hidden;
+        }
+        .bar-fill {
+            display: block; height: 100%; border-radius: inherit;
+            background: var(--method-color); width: var(--bar-target);
+        }
+        .metric-value { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+        @media (max-width: 768px) {
+            .metric-row { grid-template-columns: 130px minmax(0, 1fr) 60px; font-size: 0.82rem; }
+        }
+        .flow-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+        .flow-diagram pre {
+            margin: 0; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+            font-size: 0.84rem; line-height: 1.6; color: var(--text-primary); white-space: pre;
+        }
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 6px;
+            padding: 14px 16px; margin: 18px 0; overflow-x: auto;
+        }
+        .code-block pre { margin: 0; font-size: 0.85rem; line-height: 1.55; white-space: pre; }
+        .code-caption { font-size: 0.83rem; color: var(--text-muted); margin: -10px 0 20px; }
+        .claim-card {
+            border: 1px solid var(--border-color); border-left: 4px solid #10b981;
+            border-radius: 8px; padding: 16px 18px; margin: 18px 0; background: var(--bg-secondary);
+        }
+        .claim-card h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.02rem; }
+        .caveat { border-left-color: #ef4444; }
+        .refuted td:first-child { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <main class="post-container">
+        <a href="../posts.html" class="back-to-posts">
+            <i class="fas fa-arrow-left"></i>
+            포스트 목록으로 돌아가기
+        </a>
+
+        <header class="post-header">
+            <h1 class="post-title">속도를 아는 인증 가능한 분산 레이더 SLAM: SGal(2) chordal 완화</h1>
+            <div class="post-meta">
+                <span><i class="fas fa-calendar"></i> 2026년 8월 14일</span>
+                <span class="post-category">Technical</span>
+                <span><i class="fas fa-clock"></i> 20분 읽기</span>
+            </div>
+        </header>
+
+        <article class="post-content">
+            <p>
+                Boreas-RT 레이더로 멀티로봇 SLAM을 만들면서, 백엔드를 SE(2)에서 속도를 포함한
+                SGal(2)로 확장하려 했다. 처음 의도는 단순했다. Doppler 속도를 factor로 넣으면
+                정확도가 오르지 않을까. 그런데 실제로 부딪힌 문제는 정확도가 아니라
+                <strong>최적화기의 급</strong>이었고, 그것을 파고들다 이 연구의 핵심이 된 항등식을 얻었다.
+            </p>
+
+            <div class="highlight-box">
+                <strong>한 줄 요약.</strong> SGal(2)의 arc-exact 연속시간 결합은 lifted 변수에 대해
+                <em>정확히 선형</em>이다. 따라서 속도를 포함한 PGO가 SE-Sync/DPGO의 이차 완화 안에
+                그대로 들어가고, rank lifting과 <strong>최적성 인증서</strong>를 물려받는다.
+            </div>
+
+            <h2>1. 시스템 전체 흐름과 ROS 노드 구성</h2>
+            <p>
+                파이프라인은 프론트엔드(레이더 → 후보 → 검증 → 필터)와 백엔드(분산 최적화)로 나뉜다.
+                각 로봇마다 아래 노드가 하나씩 뜬다.
+            </p>
+
+            <div class="flow-diagram">
+<pre>Boreas-RT polar radar (400 x 6859 bins, 0.0438 m/bin)
+        │
+        ▼
+┌───────────────────────────────┐   dr_multi_dro / generic_player.py
+│  generic_player               │   PNG metadata column 10 = up/down chirp
+│  → /boreas/radar_image        │   (이 값을 버리면 180° yaw flip이 생긴다)
+│  → /boreas/radar_info         │
+│  → /boreas/imu                │
+└───────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────┐   dro_node
+│  DRO Doppler odometry         │   scan-to-local-map + Doppler 속도
+│  → dro_local_map_image        │   → dro_doppler_velocity (독립 DR 적분용)
+│  → dro_local_map_descriptor   │   → SonarContext descriptor (80x100)
+└───────────────────────────────┘
+        │
+        ▼
+┌───────────────────────────────┐   dr_multi_frontend
+│  distributed_loop_closure     │   SubmapAtlas → PolarKey top-k
+│  ├ /radar_context (peer 교환) │   → SonarContext column shift
+│  ├ LightGlue + Dr-BA 검증     │   → PCM (odom ∩ doppler)
+│  └ srv: request_pose_graph    │   → srv: request_velocity_states
+└───────────────────────────────┘
+        │  PoseGraph(nodes, ODOM/LOOPCLOSE edges) + VelocityState[]
+        ▼
+┌───────────────────────────────┐   dr_multi_dpgo
+│  chordal_agent_node  (per robot)
+│  ├ sub /chordal_round         │   leader가 실행 로봇/iteration 지정
+│  ├ pub /chordal_public_states │   LiftedStates: public 노드만
+│  └ /dr_multi/finalize barrier │   재생 완료 후 한 번만 최적화 시작
+└───────────────────────────────┘
+        │
+        ▼   r{i}_opt.csv → eval_boreas3.py (JOINT rigid SE(2) RMSE)</pre>
+            </div>
+
+            <p>
+                백엔드는 세 가지가 공존한다. <code>pgo_agent_node</code>는 libDPGO SE(2)+GNC(비교 기준),
+                <code>velocity_agent_node</code>는 SE₂(2)/SGal(2) LM block solver(1세대),
+                <code>chordal_agent_node</code>가 이 글의 주인공이다. 셋 다 동일한 frozen dump를
+                <code>frozen_graph_replay.py</code>로 재생받으므로 비교가 <em>정확히 같은 입력</em>에서 이뤄진다.
+            </p>
+
+
+            <h2>2. 프론트엔드 수식 전개: 레이더 한 장에서 pose graph까지</h2>
+            <p>
+                백엔드로 넘어가기 전에, 각 단계가 무엇을 계산하는지 수식으로 적어둔다.
+                각 소절 끝에 대응하는 코드 위치를 붙였다.
+            </p>
+
+            <h3>2.1 DRO — Doppler를 이용한 레이더 오도메트리</h3>
+            <p>
+                FMCW 레이더에서 표적의 시선속도(radial velocity)는 <strong>거리 측정을 편향</strong>시킨다.
+                chirp 기울기 \(df/dt\), 중심주파수 \(f_t + \Delta f/2\)에 대해 결합 계수는
+            </p>
+            <div class="equation-note">
+                \[ \beta \;=\; \beta_{\text{corr}}\,\frac{f_t + \Delta f/2}{\,df/dt\,}, \qquad
+                   \Delta r(\theta_k) \;=\; s_k\,\beta\, \bigl(v_{\text{body}}^{\top} d(\theta_k)\bigr),
+                   \quad d(\theta_k)=\begin{bmatrix}\cos\theta_k\\ \sin\theta_k\end{bmatrix} \]
+            </div>
+            <p>
+                여기서 \(s_k \in \{+1,-1\}\)는 그 azimuth가 <strong>up-chirp인지 down-chirp인지</strong>이고,
+                Boreas-RT는 이를 PNG metadata column 10에 기록한다. 이 부호를 모르면 편향의 방향을 모르므로
+                전진/후진이 뒤집힌다 — 실제로 이 값을 버리고 <code>zeros</code>를 보내던 시절
+                industrial r3의 backward fraction이 0.862, yaw-vs-motion이 175°였다가,
+                기록된 chirp를 전달하자 0.061 / 2.30°로 정상화됐다(raw RMSE 7.89 → 4.72 m).
+            </p>
+            <div class="code-block"><pre># dro.py — 속도에서 per-azimuth Doppler bin shift
+self.vel_to_bin = 2 * self.radar_beta / res
+self.vel_to_bin_vec = self.vel_to_bin * dirs          # dirs[k] = [cos θ_k, sin θ_k]
+shift = (vel_body.reshape((-1,1,2)) @ self.vel_to_bin_vec.reshape((-1,2,1))).squeeze()
+per_line_shift = shift / 2.0
+if not self.prev_chirp_up: per_line_shift = -per_line_shift
+if self.use_doppler:       per_line_shift[1::2] *= -1   # up/down 교대</pre></div>
+
+            <p>
+                한 스캔은 순간이 아니라 azimuth마다 다른 시각 \(t_k\)에 측정되므로
+                <strong>motion distortion</strong>이 생긴다. 스캔 내부를 등속으로 두면 상태
+                \(\xi = (v_x, v_y, \omega)\)에 대해
+            </p>
+            <div class="equation-note">
+                \[ \theta(t_k) = \omega\,t_k, \qquad p(t_k) = \begin{bmatrix}v_x t_k\\ v_y t_k\end{bmatrix},
+                   \qquad v_{\text{body}}(t_k) = R(-\omega t_k)\begin{bmatrix}v_x\\ v_y\end{bmatrix} \]
+            </div>
+            <p>
+                따라서 극좌표 \((r_{kj}, \theta_k)\)의 셀은 Doppler 보정과 왜곡 보정을 함께 거쳐
+                직교좌표로 투영된다.
+            </p>
+            <div class="equation-note">
+                \[ \pi(\xi;\,r_{kj},\theta_k) \;=\; R\bigl(\theta(t_k)\bigr)
+                   \Bigl[\bigl(r_{kj} - s_k\,\Delta r(\theta_k)\bigr) d(\theta_k)\Bigr] + p(t_k) \]
+            </div>
+            <p>
+                DRO는 이 투영된 스캔과 누적 local map \(M\)의 <strong>상관을 최대화</strong>해 \(\xi\)를 얻는다
+                (feature 추출 없이 intensity를 직접 쓰는 direct 방식).
+            </p>
+            <div class="equation-note">
+                \[ \xi^{*} \;=\; \arg\max_{\xi} \sum_{k,j} I_{kj}\; M\bigl(\pi(\xi;\,r_{kj},\theta_k)\bigr),
+                   \qquad T_{k+1,k} = \exp\bigl(\xi^{*}\,\Delta t\bigr)\in SE(2) \]
+            </div>
+            <p>
+                동시에 \(v_{\text{body}}\)는 <strong>독립 Doppler DR</strong>로 적분되어
+                <code>dro_doppler_velocity</code>로 발행된다. 이것이 뒤에서 PCM의 두 번째 leg가 되고,
+                백엔드의 Doppler factor 측정값이 된다 — <em>레지스트레이션 오도메트리와 독립</em>이라는 점이 핵심이다.
+            </p>
+
+            <h3>2.2 SubmapAtlas — 키프레임을 submap으로 묶기</h3>
+            <p>
+                키프레임 \(\mathcal{K}_m\)이 submap \(s\)에 속할 때 submap 원점은 그 첫 키프레임의 pose이고,
+                내부 상대 pose는
+            </p>
+            <div class="equation-note">
+                \[ T^{s}_{\;m} \;=\; \bigl(T^{o}_{\;s}\bigr)^{-1} T^{o}_{\;m}, \qquad
+                   Z_{s,s+1} \;=\; \bigl(T^{o}_{\;s}\bigr)^{-1} T^{o}_{\;s+1} \]
+            </div>
+            <p>
+                새 submap은 키프레임 수가 한계를 넘거나 누적 이동거리가 임계를 넘을 때 생성된다
+                (기본 10 keyframe / 15 m). \(Z_{s,s+1}\)이 백엔드의 odometry edge가 된다.
+                <em>(<code>submap_atlas.py</code>)</em>
+            </p>
+
+            <h3>2.3 PolarKey와 SonarContext — 장소 후보 제안</h3>
+            <p>
+                raw polar 스캔 \(P \in \mathbb{R}^{A \times R}\)(azimuth × range)을 transpose 후
+                블록 max-pooling해 descriptor \(D \in \mathbb{R}^{n_r \times n_s}\)를 만든다
+                (Boreas-RT 승자 설정: raw, \(80 \times 100\)).
+            </p>
+            <div class="equation-note">
+                \[ D[i,j] \;=\; \max_{(u,v)\,\in\,\mathcal{B}_{ij}} P^{\top}[u,v] \]
+            </div>
+            <p>
+                열(column)이 azimuth이므로 <strong>열 순환 이동이 곧 yaw 회전</strong>이다.
+                shortlist용 1-D PolarKey는 azimuth 방향 평균이다.
+            </p>
+            <div class="equation-note">
+                \[ k[i] \;=\; \frac{1}{n_s}\sum_{j} D[i,j] \qquad\Longrightarrow\qquad
+                   \text{KD-tree }\; \mathcal{N}(k_q) = \text{top-}K \]
+            </div>
+            <p>
+                shortlist 안에서는 모든 순환 이동 \(n\)에 대해 <strong>열별 cosine 거리</strong>의 평균을 최소화한다.
+                (전체를 한 벡터로 편 cosine보다 훨씬 판별력이 높다 — 모든 azimuth sector가 각각 맞아야 하기 때문이다.)
+            </p>
+            <div class="equation-note">
+                \[ d(D_q, D_c) \;=\; \min_{n}\ \frac{1}{|V_n|}\sum_{j \in V_n}
+                   \left(1 - \frac{\langle D_q[:,j],\ \sigma_n(D_c)[:,j]\rangle}
+                                  {\|D_q[:,j]\|\,\|\sigma_n(D_c)[:,j]\|}\right),
+                   \qquad \psi_0 = \frac{2\pi n^{*}}{n_s} \]
+            </div>
+            <p>
+                \(\sigma_n\)은 열 순환 이동, \(V_n\)은 양쪽 모두 에너지가 있는 열이다.
+                \(\psi_0\)가 다음 단계의 <strong>초기 yaw</strong>가 된다. 과거에 이 나눗셈에
+                실제 열 수(100) 대신 고정값 120을 쓰던 버그가 있었고, 큰 회전 loop에서 yaw가 최대 60°까지 틀어졌다.
+                <em>(<code>sonar_context.py</code>)</em>
+            </p>
+
+            <h3>2.4 기하 검증 — LightGlue와 Dr-BA, 그리고 방향</h3>
+            <p>
+                후보가 나오면 두 개의 <strong>독립적인</strong> 모달리티로 검증한다.
+                먼저 SuperPoint/LightGlue 대응에 RANSAC으로 부분 affine을 맞추고,
+                강체·단위 스케일을 요구한다.
+            </p>
+            <div class="equation-note">
+                \[ A^{*} = \arg\min_{A}\sum_{(u,v)\in\mathcal{M}} \rho\bigl(\|A u - v\|\bigr),
+                   \qquad \bigl|\,\|A_{:,1:2}\|-1\,\bigr| < 0.05,\quad |\mathcal{M}| \ge 500 \]
+            </div>
+            <p>
+                다음으로 Dr-BA dense가 최종 상대 pose를 추정한다. 이미지 상관을 직접 최대화하며,
+                게이트는 feature inlier 수가 아니라 <strong>정규화된 registration score</strong>다.
+            </p>
+            <div class="equation-note">
+                \[ x^{*} = \arg\max_{x \in SE(2)} \sum_{u,v} T\bigl(w(u,v;x)\bigr)\,S(u,v),
+                   \qquad
+                   \text{score} = \frac{\sum_{u,v} T(w(u,v;x^{*}))\,S(u,v)}{\sum_{u,v} T(u,v)^2} > \gamma \]
+            </div>
+            <p>
+                여기에 <strong>양방향 cycle</strong> 게이트를 더한다. 정방향 \(z\)와 역방향 \(z'\)를 각각 풀어
+            </p>
+            <div class="equation-note">
+                \[ c \;=\; z \circ z', \qquad \|c_{t}\| < 1.5\,\text{m}, \quad |c_{\theta}| < 3^{\circ} \]
+            </div>
+            <div class="highlight-box">
+                <strong>부호 하나가 8 m였다.</strong> 두 registration 구현 모두 query 좌표를 candidate로
+                보내는 warp \(T_{cq}\)를 반환한다. 그런데 pose-graph edge는 <em>query 프레임에서 본
+                candidate의 pose</em>, 즉 \(T_{qc} = T_{cq}^{-1}\)를 요구한다. warp를 그대로 edge로 쓰면
+                translation 방향이 뒤집힌다. 이 수정 후 Industrial의 GT-true loop translation 오차 중앙값이
+                <strong>10.40 m → 1.25 m</strong>, P90이 21.46 → 2.14 m로 떨어졌다.
+            </div>
+            <p>
+                마지막으로 키프레임 단위 측정을 submap 단위로 합성한다.
+            </p>
+            <div class="equation-note">
+                \[ Z_{s_q s_m} \;=\; T^{s_q}_{\;q}\;\cdot\; T_{qc} \;\cdot\; \bigl(T^{s_m}_{\;m}\bigr)^{-1} \]
+            </div>
+            <div class="code-block"><pre># distributed_loop_closure_node.py — 방향 수정과 submap 합성
+return True, se2.inverse(z), score, nmatch, True     # T_qc = inv(T_cq)
+...
+t = se2.compose(query['kf'].pose_in_submap,
+                se2.compose(z, se2.inverse(cand['pose_in_submap'])))</pre></div>
+
+            <h3>2.5 PCM — 쌍별 일관성으로 거짓 loop 걸러내기</h3>
+            <p>
+                로봇 \(i,j\) 사이의 loop \(e_a = (i{:}a \leftrightarrow j{:}a')\)는 각각
+                <strong>로봇 간 변환</strong>을 하나씩 함의한다.
+            </p>
+            <div class="equation-note">
+                \[ \widehat{T}^{(a)}_{ij} \;=\; P_i(a)\; z_a\; P_j(a')^{-1} \]
+            </div>
+            <p>
+                \(P\)는 odometry(<code>odom</code>) 또는 <strong>독립 Doppler DR</strong>(<code>doppler</code>)이다.
+                두 loop이 서로 일관적이려면
+            </p>
+            <div class="equation-note">
+                \[ d_{ab} = \bigl(\widehat{T}^{(a)}_{ij}\bigr)^{-1}\widehat{T}^{(b)}_{ij}, \qquad
+                   \|d_{ab,t}\| < \tau_t + f\,\|P_i(a) - P_i(b)\|, \qquad |d_{ab,\theta}| < \tau_\theta \]
+            </div>
+            <p>
+                이 관계로 그래프를 만들어 <strong>최대 일관 집합</strong>을 취한다. <code>both</code> 모드는
+                odom과 Doppler 두 leg의 <em>교집합</em>이다. 다만 이 데이터에서 확인된 사실은,
+                남은 거짓 loop이 gross outlier가 아니라 <strong>15.3 m 떨어진 near-alias</strong>이고
+                그 상대 pose 자체가 기하적으로 일관(1.65 m)하다는 점이다 —
+                그래서 PCM만으로는 precision이 0.61에서 움직이지 않는다. 최종 방어선은 백엔드의 robust kernel이다.
+            </p>
+
+            <h3>2.6 GT-free 로봇 프레임 초기화</h3>
+            <p>
+                각 selected loop이 프레임 후보를 하나씩 주므로, 성분별 median으로 강건 평균을 낸다
+                (GT는 전혀 쓰지 않는다).
+            </p>
+            <div class="equation-note">
+                \[ F_j \;=\; \Bigl(\operatorname{med}_a\{x^{(a)}\},\;
+                                   \operatorname{med}_a\{y^{(a)}\},\;
+                                   \operatorname{atan2}\bigl(\operatorname{med}_a \sin\phi^{(a)},\,
+                                                             \operatorname{med}_a \cos\phi^{(a)}\bigr)\Bigr),
+                   \quad \widehat{T}^{(a)}_{ij} \to (x,y,\phi)^{(a)} \]
+            </div>
+            <p>
+                Industrial에서 이 초기화 하나가 rigid SE(2) RMSE를 <strong>12.10 → 7.14 m</strong>로 낮췄다.
+                이후 모든 백엔드 비교는 이 초기화를 공유한다.
+            </p>
+
+            <h2>3. 문제: 왜 SE(2) baseline을 못 이겼나</h2>
+            <p>
+                1세대 LM 백엔드는 같은 그래프에서 8.66 m였고 libDPGO SE(2)는 7.01 m였다.
+                이 1.16 m를 설명하려고 가설을 하나씩 controlled test로 죽였다.
+            </p>
+
+            <table class="refuted">
+                <thead><tr><th>가설</th><th>실험</th><th>결과</th></tr></thead>
+                <tbody>
+                    <tr><td>PCM을 통과한 outlier가 남아 있다</td><td>GM-GNC + reset 스케줄</td><td>−0.08 m (무효)</td></tr>
+                    <tr><td>초기값이 병목이다</td><td>velocity-augmented chordal init</td><td>오히려 악화</td></tr>
+                    <tr><td>수렴이 덜 됐다</td><td>INNER 2 / 10 / 25</td><td>8.75 / 8.66 / <strong>8.66</strong> (포화)</td></tr>
+                    <tr><td>Jacobian이 부정확하다</td><td>analytic vs 수치미분</td><td>7e-7 이내 동일</td></tr>
+                    <tr><td>cost parameterization 문제</td><td>chordal vs tangent residual</td><td>−0.02 m</td></tr>
+                </tbody>
+            </table>
+
+            <p>
+                전부 죽고 남은 것은 <strong>최적화기 자체의 급</strong>이었다. libDPGO는
+                <em>이차형식</em> \( f(X)=\langle Q, X^\top X\rangle \)을 Stiefel×Euclidean 위에서 풀고,
+                <strong>rank lifting</strong>으로 local minimum을 탈출한다. 실측으로도 rank 3(7.01)이
+                rank 2(7.50)보다 0.49 m 좋았다. 문제는 lifting이
+                <em>비용이 lifted 변수에 대해 이차일 때만</em> 가능하다는 점이다.
+                그래서 질문이 바뀌었다. <strong>속도 factor를 이차형식으로 쓸 수 있는가?</strong>
+            </p>
+
+            <h2>4. 핵심 항등식: arc-exact 결합은 정확히 chordal이다</h2>
+            <p>
+                SGal(2)의 constant-velocity factor는 위치를 연속시간 호(arc)를 따라 전진시킨다.
+            </p>
+            <div class="equation-note">
+                \[ p_b - p_a \;=\; \Delta t \, R_a \, V(\Delta\theta)\, v_{\text{body}},
+                \qquad V(w)=\frac{1}{w}\begin{bmatrix}\sin w & -(1-\cos w)\\ 1-\cos w & \sin w\end{bmatrix} \]
+            </div>
+            <p>
+                \(V\)가 \(\Delta\theta\)에 의존하므로 회전에 대해 비선형으로 보인다.
+                그런데 평면 기하의 두 항등식이 이를 완전히 무너뜨린다.
+            </p>
+            <div class="equation-note">
+                \[ \text{(1)}\quad V(w) \;=\; \frac{1}{w}\, J\,\bigl(I - R(w)\bigr), \qquad J=\begin{bmatrix}0&-1\\1&0\end{bmatrix} \]
+                \[ \text{(2)}\quad R\,J \;=\; J\,R \quad (\text{평면 회전 고유 성질}) \]
+            </div>
+            <p>
+                \(R_b = R_a R(\Delta\theta)\)를 대입하면
+                \(R_a V(\Delta\theta) = \tfrac{1}{\Delta\theta} J (R_a - R_b)\)이고, 따라서
+            </p>
+            <div class="equation-note">
+                \[ \boxed{\; p_b - p_a \;=\; \frac{\Delta t}{\Delta\theta}\,\bigl(R_a - R_b\bigr)\,\bigl(J\, v_{\text{body}}\bigr) \;} \]
+            </div>
+            <p>
+                이 식은 \((R_a, R_b, p_a, p_b)\)에 대해 <strong>선형</strong>이다. 측정값은 상수
+                \(\Delta t,\ \Delta\theta,\ v_{\text{body}}\)로만 들어간다. 제곱하면 정확히 DPGO의 \(Q\)이고,
+                \(\Delta\theta \to 0\)에서 forward Euler로 환원되므로 <strong>SE₂(2)는 같은 코드의 극한</strong>이다.
+                \(\Delta\theta\)는 같은 쌍의 odometry <em>측정값</em>(상수)을 쓰는데, 이는 DPGO가 relative
+                translation을 다루는 방식과 동일한 모델링 선택이다.
+            </p>
+
+            <div class="code-block"><pre>// velocity_factors.cpp — 항등식이 코드가 되는 지점
+if (std::abs(dtheta) &lt; 1e-6) {
+  // Euler 극한: (dt/dtheta)(R_i - R_j) J v_body -&gt; dt R_i v_body
+  for (unsigned m = 0; m &lt; d_; ++m) a.emplace_back(ci + m, -dt * v_body(m));
+} else {
+  const Eigen::VectorXd jv = planarJ(d_) * v_body;   // J v_body
+  const double s = dt / dtheta;
+  for (unsigned m = 0; m &lt; d_; ++m) {
+    a.emplace_back(ci + m, -s * jv(m));              // -(dt/dth) R_i
+    a.emplace_back(cj + m,  s * jv(m));              // +(dt/dth) R_j
+  }
+}</pre></div>
+            <p class="code-caption">
+                계수 벡터 <code>a</code> 하나가 곧 잔차 \(Xa\)다. 회귀 테스트
+                <code>test_chordal_velocity_identity</code>가 (1) 오차 1.1e-16, (2) 0,
+                박스 식 1.1e-13, 그리고 <strong>실제 구현된 <code>sgal2ConstantVelocityResidual</code>과의
+                일치 3.4e-13</strong>까지 고정한다.
+            </p>
+
+            <h3>Doppler factor도 같은 방식으로 들어간다</h3>
+            <p>
+                \(\|R_i^\top v_i - v_{\text{body}}\|\)로 쓰면 쌍선형이라 제곱 시 4차가 되어 구조가 깨진다.
+                전역 속도 변수로 두고 \(\|v_i - R_i v_{\text{body}}\|\)로 쓰면 선형이다.
+                DPGO가 translation을 다루는 방식과 정확히 같다.
+            </p>
+
+            <h2>5. 완화 정식화와 놀랍도록 싼 solver</h2>
+            <div class="equation-note">
+                \[ X = [\,Y_0 \cdots Y_{n-1}\,], \quad Y_i = [\,R_i \mid t_i \mid v_i\,] \in \mathbb{R}^{r\times(d+2)}, \quad R_i \in \mathrm{St}(d,r) \]
+                \[ f(X) = \langle Q,\ X^\top X\rangle, \qquad Q = \sum_k w_k\, a_k a_k^\top \]
+            </div>
+            <p>여기서 세 종류의 factor가 모두 \(Xa\) 형태다.</p>
+            <div class="equation-note">
+                \[ \text{pose}\quad \kappa\|R_i Z_R - R_j\|_F^2 + \tau\|R_i t_{ij} + t_i - t_j\|^2 \]
+                \[ \text{Doppler}\quad \lambda_d \|v_i - R_i v_{\text{body}}\|^2 \]
+                \[ \text{const-vel}\quad \lambda_{cv}\Bigl\|\,t_j - t_i - \tfrac{\Delta t}{\Delta\theta}(R_i - R_j)(J v_{\text{body}})\Bigr\|^2 \]
+            </div>
+            <p>
+                구현하면서 알게 된 두 구조적 사실이 solver를 거의 공짜로 만든다.
+                첫째, Stiefel 위에서 \(\mathrm{tr}(R\,Q_{RR}R^\top) = \mathrm{tr}(Q_{RR})\)는
+                <strong>상수</strong>다. 따라서 노드별 회전 부분문제는 순수 Procrustes 문제이고 SVD 폐형해를 가진다.
+                둘째, 병진/속도 부분문제는 2×2 선형해다. 결국
+                <strong>블록별로 정확해(exact)이고 단조인 block-coordinate descent</strong>가 된다 —
+                trust region 없이 시작할 수 있다.
+            </p>
+            <p>
+                구체적으로, 노드 \(i\)의 블록만 남기고 나머지를 상수로 두면 비용은
+            </p>
+            <div class="equation-note">
+                \[ f(X_i) \;=\; \operatorname{tr}\bigl(X_i\,Q_{ii}\,X_i^{\top}\bigr)
+                   \;+\; 2\,\operatorname{tr}\bigl(X_i B^{\top}\bigr) + \text{const},
+                   \qquad B \;=\; X_{\setminus i}\,Q_{\setminus i,\,i} \]
+            </div>
+            <p>
+                회전 블록은 Stiefel 제약을 받는데, \(R^{\top}R = I_d\)이므로
+                \(\operatorname{tr}(R\,Q^{RR}_{ii}R^{\top}) = \operatorname{tr}(Q^{RR}_{ii})\)가
+                <strong>상수</strong>다. 이차항이 사라지고 선형항만 남으므로 Procrustes 문제가 된다.
+            </p>
+            <div class="equation-note">
+                \[ R_i^{*} = \arg\min_{R^{\top}R=I_d} \langle R,\,C\rangle
+                   \;=\; -\,U V^{\top}, \qquad C = U\Sigma V^{\top}\ \ (\text{thin SVD}) \]
+            </div>
+            <p>
+                병진과 속도는 제약이 없으므로 \(2\times 2\) 정규방정식이다
+                (\(M\)이 특이할 수 있어 유사역행렬을 쓴다 — 속도가 제약되지 않은 노드가 있기 때문이다).
+            </p>
+            <div class="equation-note">
+                \[ \begin{bmatrix} t_i & v_i\end{bmatrix}^{*} \;=\; -\,N\,M^{\dagger},
+                   \qquad M = \text{sym}\bigl(Q_{ii}^{[t,v]}\bigr),\quad
+                   N = B^{[t,v]} + X_i^{R}\,Q_{ii}^{R,[t,v]} \]
+            </div>
+            <p>
+                두 갱신 모두 <strong>닫힌 해</strong>이므로 블록별로 정확하고 비용은 단조 감소한다.
+                게이지는 노드 0의 회전 <em>그리고 병진</em>을 고정한다 — 전역 병진이 비용의 null direction이라
+                rank d에서는 무해하지만 lifted rank에서는 rounding을 오염시킨다.
+            </p>
+
+            <div class="code-block"><pre>// chordal_velocity_problem.cpp — 회전 갱신은 닫힌 해
+// tr(R Qii^RR R^T) = tr(Qii^RR) 는 Stiefel 위에서 상수이므로
+// min &lt;R, C&gt; s.t. R^T R = I  →  R* = -U V^T
+const Eigen::MatrixXd C = *X * Q.middleCols(c0, d_) -
+    X-&gt;middleCols(c0, d_) * Qii.topLeftCorner(d_, d_);
+Eigen::JacobiSVD&lt;Eigen::MatrixXd&gt; svd(C, ComputeThinU | ComputeThinV);
+Eigen::MatrixXd Rn = -svd.matrixU().leftCols(d_) * svd.matrixV().transpose();
+if (r == (int)d_ &amp;&amp; Rn.determinant() &lt; 0.0) { /* SO(d)로 제한 */ }</pre></div>
+
+            <h2>6. 분산화: 무엇을 주고받는가</h2>
+            <p>
+                노드 소유권을 선언하면 <code>solve()</code>는 자기 로봇 열만 갱신하고, 이웃 열은
+                마지막으로 수신한 snapshot으로 고정된다. 교차항은 자동으로 local subproblem의
+                선형항이 되므로 DPGO의 \(G\)와 같은 역할을 한다.
+            </p>
+            <p>
+                로봇 \(\alpha\)가 소유한 노드 집합을 \(\mathcal{V}_\alpha\)라 하면, 라운드 \(\ell\)에서
+                실행 로봇은 자기 블록만 갱신하고 이웃 열은 마지막 스냅샷 \(\bar{X}\)로 고정된다.
+            </p>
+            <div class="equation-note">
+                \[ X^{(\ell+1)}_{\mathcal{V}_\alpha} \;=\; \arg\min_{X_{\mathcal{V}_\alpha}}
+                   \Bigl\langle Q,\ \bigl[X_{\mathcal{V}_\alpha};\ \bar{X}_{\setminus \mathcal{V}_\alpha}\bigr]^{\top}
+                   \bigl[X_{\mathcal{V}_\alpha};\ \bar{X}_{\setminus \mathcal{V}_\alpha}\bigr]\Bigr\rangle,
+                   \qquad X^{(\ell+1)}_{\setminus \mathcal{V}_\alpha} = \bar{X}_{\setminus \mathcal{V}_\alpha} \]
+            </div>
+            <p>
+                이웃 열은 위 \(B = X_{\setminus i} Q_{\setminus i,i}\) 항으로만 들어오므로,
+                DPGO의 선형항 \(G\)와 정확히 같은 역할을 한다. 갱신이 블록별 정확해이고 이웃이 고정이므로
+                각 라운드에서 팀 비용은 증가하지 않는다.
+            </p>
+            <p>
+                robust 가중치도 분산 가능하다. GNC-TLS 가중치는 잔차만의 함수이므로
+            </p>
+            <div class="equation-note">
+                \[ w(r) = \begin{cases}
+                     0, & r^2 \ge \frac{\mu+1}{\mu}\bar{c}^2 \\[4pt]
+                     1, & r^2 \le \frac{\mu}{\mu+1}\bar{c}^2 \\[4pt]
+                     \sqrt{\dfrac{\bar{c}^2\mu(\mu+1)}{r^2}} - \mu, & \text{otherwise}
+                   \end{cases}
+                   \qquad \mu \leftarrow \rho\,\mu \ \ (\rho>1) \]
+            </div>
+            <p>
+                교환 직후 모든 로봇은 inter-robot loop이 닿는 <em>모든</em> 열에 대해 동일한 값을 가지므로
+                \(r\)이 같고 따라서 \(w\)도 정확히 같다 — <strong>가중치 합의에 별도 메시지가 필요 없다</strong>.
+                실측에서도 분산 거부 수 13/231이 중앙식 14/231과 사실상 같았다.
+            </p>
+            <p>
+                결정적인 절약은 <strong>public 노드만 교환</strong>한다는 점이다. 이웃의 factor가 참조할 수
+                있는 것은 inter-robot loop이 닿는 노드뿐이므로 나머지는 보낼 필요가 없다. 이 그래프에서는
+                881개 중 <strong>186개</strong>이고, 따라서 <em>payload가 궤적 길이와 무관</em>하다.
+            </p>
+            <div class="code-block"><pre>// chordal_agent_node.cpp — 교환 대상은 public 노드뿐
+for (unsigned node : public_) {
+  if (problem_.nodeOwner(node) != id_) continue;
+  m.keys.push_back(node);
+  const unsigned c = problem_.nodeColumn(node);
+  for (int col = 0; col &lt; 4; ++col)                 // [R | t | v] = 4 열
+    for (int row = 0; row &lt; X_.rows(); ++row)
+      m.values.push_back(X_(row, c + col));
+}</pre></div>
+            <p class="code-caption">
+                GNC 가중치 합의에는 별도 메시지가 필요 없다. 교환 직후 모든 로봇이 inter-robot loop이
+                닿는 모든 열에 대해 동일한 값을 보유하므로 잔차와 가중치가 정확히 일치한다.
+                실측으로도 분산 거부 수 13/231이 중앙식 14/231과 사실상 같았다.
+            </p>
+
+            <h2>7. 결과</h2>
+            <p>
+                아래 모든 수치는 동일한 frozen Industrial 그래프(881 노드, 231 PCM-selected
+                inter-robot loop), 동일한 GT-free 초기화, JOINT rigid SE(2) 정렬 기준이다.
+            </p>
+
+            <div class="metric-dashboard">
+                <span class="chart-kicker">Accuracy</span>
+                <h3>JOINT rigid SE(2) RMSE ↓</h3>
+                <p class="tau-note">낮을수록 좋음. 모두 같은 그래프·같은 초기화. 막대는 상대 길이.</p>
+                <div class="metric-bars">
+                    <div class="metric-row" style="--method-color:#8a98a4; --bar-target:100%;"><span class="metric-label">SE₂(2)/SGal(2) LM (1세대)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">8.66</span></div>
+                    <div class="metric-row" style="--method-color:#8a98a4; --bar-target:87%;"><span class="metric-label">libDPGO SE(2), rank 2</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">7.50</span></div>
+                    <div class="metric-row" style="--method-color:#6b7f8c; --bar-target:81%;"><span class="metric-label">libDPGO SE(2), rank 3 (기준)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">7.01</span></div>
+                    <div class="metric-row" style="--method-color:#6b7f8c; --bar-target:81%;"><span class="metric-label">chordal SGal(2), 중앙식</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">7.02</span></div>
+                    <div class="metric-row best" style="--method-color:#010042; --bar-target:80%;"><span class="metric-label">chordal SGal(2), 실제 ROS2 분산</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">6.90</span></div>
+                </div>
+            </div>
+
+            <div class="metric-dashboard">
+                <span class="chart-kicker">Compute</span>
+                <h3>같은 정확도를 얻는 데 드는 local 계산 시간 ↓</h3>
+                <p class="tau-note">동일 서버, 실제 ROS2 노드, local optimize 시간만(통신·기동 제외).</p>
+                <div class="metric-bars">
+                    <div class="metric-row" style="--method-color:#8a98a4; --bar-target:100%;"><span class="metric-label">libDPGO SE(2) (RMSE 7.01)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">25.8 s</span></div>
+                    <div class="metric-row" style="--method-color:#8a98a4; --bar-target:26%;"><span class="metric-label">chordal, INNER=50 (7.45)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">6.59 s</span></div>
+                    <div class="metric-row best" style="--method-color:#010042; --bar-target:4%;"><span class="metric-label">chordal, INNER=5 (<strong>6.90</strong>)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">1.09 s</span></div>
+                    <div class="metric-row best" style="--method-color:#010042; --bar-target:1%;"><span class="metric-label">chordal, INNER=1 (6.99)</span><span class="bar-track"><span class="bar-fill"></span></span><span class="metric-value">0.26 s</span></div>
+                </div>
+            </div>
+
+            <p>
+                여기서 예상 밖의 사실이 하나 나왔다. <strong>inner sweep을 늘리면 오히려 나빠진다</strong>
+                (INNER=50에서 7.45). stale한 이웃 snapshot에 대해 local block을 과도하게 풀면 다음 교환
+                전에 팀 최적점에서 멀어지기 때문이다. 분산 block-coordinate 방법의 알려진 거동인데,
+                우리 설정에서는 <em>계산을 적게 쓸수록 정확도도 좋아지는</em> 유리한 방향으로 작용한다.
+            </p>
+
+            <div class="metric-dashboard">
+                <span class="chart-kicker">Communication</span>
+                <h3>통신 라운드당 RMSE (낮을수록 좋음)</h3>
+                <p class="tau-note">1 라운드 = 한 로봇의 local update + broadcast. 양쪽 정의 동일.</p>
+                <div class="metric-bars">
+                    <div class="metric-row"><span class="metric-label">round 2 &nbsp;— libDPGO</span><span class="bar-track"><span class="bar-fill" style="--method-color:#c05555; --bar-target:100%;"></span></span><span class="metric-value">32.25</span></div>
+                    <div class="metric-row best"><span class="metric-label">round 2 &nbsp;— chordal</span><span class="bar-track"><span class="bar-fill" style="--method-color:#010042; --bar-target:24%;"></span></span><span class="metric-value">7.82</span></div>
+                    <div class="metric-row"><span class="metric-label">round 5 &nbsp;— libDPGO</span><span class="bar-track"><span class="bar-fill" style="--method-color:#c05555; --bar-target:35%;"></span></span><span class="metric-value">11.26</span></div>
+                    <div class="metric-row best"><span class="metric-label">round 5 &nbsp;— chordal</span><span class="bar-track"><span class="bar-fill" style="--method-color:#010042; --bar-target:24%;"></span></span><span class="metric-value">7.85</span></div>
+                    <div class="metric-row"><span class="metric-label">round 10 — libDPGO</span><span class="bar-track"><span class="bar-fill" style="--method-color:#c05555; --bar-target:30%;"></span></span><span class="metric-value">9.69</span></div>
+                    <div class="metric-row best"><span class="metric-label">round 10 — chordal</span><span class="bar-track"><span class="bar-fill" style="--method-color:#010042; --bar-target:25%;"></span></span><span class="metric-value">7.93</span></div>
+                    <div class="metric-row"><span class="metric-label">round 20 — libDPGO</span><span class="bar-track"><span class="bar-fill" style="--method-color:#c05555; --bar-target:22%;"></span></span><span class="metric-value">7.14</span></div>
+                    <div class="metric-row"><span class="metric-label">round 20 — chordal</span><span class="bar-track"><span class="bar-fill" style="--method-color:#010042; --bar-target:24%;"></span></span><span class="metric-value">7.77</span></div>
+                    <div class="metric-row"><span class="metric-label">round 78 — libDPGO</span><span class="bar-track"><span class="bar-fill" style="--method-color:#c05555; --bar-target:22%;"></span></span><span class="metric-value">7.01</span></div>
+                    <div class="metric-row"><span class="metric-label">round 78 — chordal</span><span class="bar-track"><span class="bar-fill" style="--method-color:#010042; --bar-target:24%;"></span></span><span class="metric-value">7.62</span></div>
+                </div>
+            </div>
+
+            <p>
+                <strong>1 라운드부터 최종값 근처</strong>(7.73)에 도달해 그대로 유지한다. libDPGO는 초기에
+                크게 진동하며(round 2에 32.25) 7.8 아래로 내려오는 데 약 20 라운드가 걸린다. 교차점은
+                round ~20이고, 그 아래 구간에서는 우리가 압도적이다. 통신량은 120 라운드에 0.71 MB,
+                실제 ROS2 60 라운드 실행에서 828 KB로 계측됐다.
+            </p>
+
+            <h2>8. 최적성 인증서</h2>
+            <p>
+                \(S = Q - \Lambda\), Stiefel 승수 \(\Lambda_i = R_i^\top (XQ)_i\)이다. Euclidean 블록은
+                gradient가 이미 0이어야 하므로 승수를 갖지 않는다. \(S \succeq 0\)이면 완화 문제의
+                전역 최적이다.
+            </p>
+            <p>
+                임계점에서 Euclidean 블록의 gradient는 0이어야 하고, 회전 블록은 Stiefel 승수를 가진다.
+            </p>
+            <div class="equation-note">
+                \[ (XQ)_{[t,v]} = 0, \qquad (XQ)_{R_i} = R_i\,\Lambda_i
+                   \;\Longrightarrow\; \Lambda_i = R_i^{\top}(XQ)_{R_i} \]
+                \[ S \;=\; Q - \Lambda, \qquad X S = 0, \qquad
+                   S \succeq 0 \iff X \text{ is globally optimal for the relaxation} \]
+            </div>
+            <div class="equation-note">
+                \[ \text{rank 2, robust, GT-free init:}\quad \lambda_{\min} = -2.84\times10^{-5},\quad
+                   \lambda_{\max} = 8.94\times10^{11} \]
+                \[ \frac{\lambda_{\min}}{|\lambda_{\max}|} = -3.18\times10^{-17} \;<\; \varepsilon_{\text{double}} = 2.2\times10^{-16} \]
+            </div>
+            <p>
+                처음에는 \(\lambda_{\min}<0\)만 보고 "미인증"이라 판단했는데, 이는 오판이었다.
+                \(\lambda_{\min}\)의 절대값은 \(\kappa,\tau\) 스케일에 비례하므로 그 자체로는 의미가 없다.
+                상대 갭으로 보면 배정밀도 epsilon보다 작고, 이 norm의 행렬에 대한 고유해석기 자체의
+                오차 한계(\(\approx \varepsilon\|S\| \sim 2\times10^{-4}\))보다 훨씬 작아
+                <strong>0과 구별할 수 없다</strong>. 합성 그래프도 상대 \(-2\times10^{-17}\)로 같은 자릿수다.
+            </p>
+            <p>
+                이 해석은 staircase 관찰과도 맞물린다. rank 9까지 올려도 cost 개선은 총 <strong>0.15%</strong>였다.
+                escape가 진짜 하강 방향을 탄 것이 아니라 BCD가 재수렴하며 미세하게 나아진 것이다.
+                즉 <strong>rank 2에서 이미 인증</strong>되고, 이 문제에서 staircase는 불필요하다 —
+                분산 구현이 rank 2에 머물러도 이론적 손해가 없다는 뜻이라 설계가 단순해진다.
+            </p>
+
+            <h2>9. 무엇을 주장할 수 있고, 근거는 무엇인가</h2>
+
+            <div class="claim-card">
+                <h4>주장 1 — SGal(2)의 연속시간 결합은 이차 완화 안에 정확히 표현된다</h4>
+                근거: 항등식 (1)·(2)와 박스 식, 회귀 테스트에서 실제 구현 residual과 3.4e-13 일치.
+                조립된 이차형식이 직접 잔차 합과 2.1e-16 일치. 정답에서 cost 0, 섭동 후 rank d/d+1에서
+                1.7e-14 / 7.6e-15로 복원.
+            </div>
+
+            <div class="claim-card">
+                <h4>주장 2 — 실제 레이더 데이터에서 전역 최적으로 인증된다</h4>
+                근거: 상대 갭 \(-3.18\times10^{-17}\) (배정밀도 epsilon 미만), rank 9까지의 cost 개선 0.15%.
+                <strong>단서</strong>: 수치 정밀도 내 인증이고, 대상은 GNC 가중치가 확정된 최종 문제이며,
+                중앙에서 오프라인 계산이다.
+            </div>
+
+            <div class="claim-card">
+                <h4>주장 3 — 제한된 통신 예산에서 우월하다</h4>
+                근거: round 5에서 7.85 vs 11.26, round 10에서 7.93 vs 9.69. 1 라운드부터 최종값 근처.
+                payload가 궤적 길이와 무관(public 186/881), 실측 828 KB / 60 라운드.
+            </div>
+
+            <div class="claim-card">
+                <h4>주장 4 — 같은 정확도를 훨씬 적은 계산으로 얻는다</h4>
+                근거: 동일 서버 실제 ROS2 기준 0.26 s로 6.99 m vs libDPGO 25.8 s로 7.01 m.
+                <strong>단서</strong>: local optimize 시간만 계측했고, 두 백엔드는 알고리즘 급이 다르다
+                (rank-3 RTR vs rank-2 BCD). "우리 solver가 더 우수하다"로 확대 해석하지 않는다.
+            </div>
+
+            <div class="claim-card">
+                <h4>주장 5 — 속도 factor가 실제로 기여한다</h4>
+                근거: chordal·GT-free init에서 7.55 → 7.20 (0.35 m), 어려운 local-origin init에서
+                16.62 → 15.20 (1.42 m), LM 백엔드에서 9.70 → 8.12 (16.3%). 초기값이 나쁠수록 이득이 커진다 —
+                motion regularizer로서 기대되는 거동이며, featureless route에서 가장 중요할 것임을 시사한다.
+            </div>
+
+            <div class="claim-card caveat">
+                <h4>아직 주장할 수 없는 것</h4>
+                모든 수치는 <strong>Industrial 1개 route, 2 로봇, 단일 실행</strong>이다. 4 route ×
+                {2,3,4} 로봇, 반복 시행과 유의성, 두 번째 baseline(MM/AMM-PGO), 분산 인증이 남았다.
+                farm/forest는 raw odometry가 파국적이고 PR precision이 0.61이라 실패할 가능성이 있고,
+                그렇다면 limitation으로 정직하게 쓰는 것이 맞다.
+            </div>
+
+            <h2>10. 값비쌌던 버그들</h2>
+            <p>이 결과에 도달하기까지 실제로 정확도를 갉아먹던 결함들이다. 기록해 둘 가치가 있다.</p>
+            <ul>
+                <li><strong>frozen replay 비대칭</strong> — inter-robot loop은 검출한 로봇 파일에만 있는데
+                    각 로봇에 자기 파일만 서빙했다. robot 1이 참조하는 pose를 robot 0이 발행하지 않아
+                    <em>robot 1이 매 라운드 최적화에 실패</em>했다. 기존 7.14 m baseline은 사실
+                    "초기화 + r0 단독" 결과였다.</li>
+                <li><strong>rounding 게이지 불일치</strong> — <code>round()</code>가 X의 SVD로 전역 회전을
+                    적용하는데 두 에이전트의 X가 달라 서로 다른 프레임으로 반올림됐다. 20.2 → 7.45 m.</li>
+                <li><strong>미사용 노드 오염</strong> — 분산 인덱싱이 key stride를 예약하므로 factor가 없는
+                    노드가 생기는데, 그 퇴화된 Procrustes 부분문제에 임의의 직교행렬이 채워져 전역 reflection
+                    판정을 지배했다.</li>
+                <li><strong>robust 판정 기준 오류</strong> — "inter-robot 여부"로 판정해, 15–38 submap을 건너뛰며
+                    상대 translation이 0 m인 퇴화 intra-robot loop 27개가 known inlier로 들어갔다.
+                    <code>edge.type == LOOPCLOSE</code>로 고치니 중앙식이 7.62 → 7.02 m.</li>
+                <li><strong>power iteration 인증서</strong> — 스펙트럼이 뭉쳐 있어 참값 −2.8e-14인데 +8.8e-3을
+                    보고했다. <em>미인증 점을 인증으로 오판</em>했을 것이다. dense 고유해로 교체했다.</li>
+                <li><strong>stale install</strong> — "고치고 재실행" 두 번이 사실 옛 바이너리였다. colcon이
+                    libboost 누락으로 실패하는데 실행 스크립트가 그대로 진행했다. 이제 바이너리 mtime을 확인한다.</li>
+            </ul>
+
+            <h2>11. 다음</h2>
+            <p>
+                구현과 이론은 서 있고, 이제 필요한 것은 <strong>일반성</strong>이다.
+                4 route × {2,3,4} 로봇(16 sequence가 준비돼 있다), 반복 시행과 유의성,
+                두 번째 baseline, 그리고 route별 PCM threshold의 held-out 검증이 남았다.
+                결과가 나오면 다시 정리하겠다.
+            </p>
+
+            <div class="highlight-box">
+                이 작업에서 개인적으로 가장 값진 교훈은, <strong>가설을 죽이는 실험이 결국 답을 가리켰다는 것</strong>이다.
+                robustness도, 초기화도, 수렴도, Jacobian도, cost parameterization도 전부 아니라는 것이 확인되고 나서야
+                "최적화기의 급"이라는 진짜 원인이 남았고, 거기서 이차 완화라는 질문이 나왔다.
+                그리고 가장 두려워했던 wall-clock 취약점은, 재보니 오히려 가장 강한 결과였다.
+            </div>
+
+            <h2>참고</h2>
+            <ul class="references">
+                <li>SE-Sync: A Certifiably Correct Algorithm for Synchronization over the Special Euclidean Group, IJRR 2019.</li>
+                <li>Distributed Certifiably Correct Pose-Graph Optimization, IEEE T-RO 2021.</li>
+                <li>Majorization Minimization Methods for Distributed Pose Graph Optimization, IEEE T-RO 2024.</li>
+                <li>Kimera-Multi: Robust, Distributed, Dense Metric-Semantic SLAM for Multi-Robot Systems, IEEE T-RO 2022.</li>
+                <li>Boreas: A Multi-Season Autonomous Driving Dataset, IJRR 2023.</li>
+            </ul>
+        </article>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>
