@@ -109,6 +109,20 @@
                 <!-- filled from the Research tab by script (highlighted papers) -->
                 <div class="paper-grid" data-selected-papers></div>
             </section>
+
+            <section class="hm-block">
+                <div class="hm-block-head">
+                    <div><p class="hm-eyebrow">Research Thread</p><h2>Imaging Radar</h2></div>
+                    <a class="see-more" href="posts/place-recognition-to-multi-robot-slam-based-on-imaging-radar.html">Read the post <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <p class="hm-block-intro">
+                    Radar sees through rain, snow, fog, and dust, but its scans are full of speckle and multipath.
+                    I build radar place recognition and global localization that stay lightweight enough to share between robots,
+                    as a step toward radar-based multi-robot SLAM.
+                </p>
+                <!-- filled from the Research tab by script (cards with data-topic="radar") -->
+                <div class="paper-grid" data-topic-papers="radar"></div>
+            </section>
         </section>
 
         <!-- ============ Research ============ -->
@@ -131,7 +145,6 @@
                         <button class="chip" data-value="journal" type="button">Journal</button>
                         <button class="chip" data-value="conference" type="button">Conference</button>
                         <button class="chip" data-value="workshop" type="button">Workshop</button>
-                        <button class="chip" data-value="challenge" type="button">Challenge</button>
                     </div>
                 </div>
                 <div class="filter-row">
@@ -154,26 +167,9 @@
 
             <div class="paper-grid" data-paper-grid>
                 <!-- Card template:
-                     data-type: journal | conference | workshop | challenge
+                     data-type: journal | conference | workshop
                      data-role: first | co
                      class "is-hl" = highlighted (also shown on Home) -->
-
-                <article class="pcard" data-type="challenge" data-role="co" data-year="2026">
-                    <div class="pcard-img"><img src="images/imu_challenge.png" alt="TartanIMU Challenge" loading="lazy"></div>
-                    <div class="pcard-body">
-                        <div class="pills"><span class="pill">2026</span><span class="pill">Co-author</span><span class="pill pill--challenge">Challenge</span></div>
-                        <h3><a href="https://sparolab.github.io/research/imu_challenge/" target="_blank" rel="noopener">Single-Head IMU Velocity Estimation Across Platforms via a Multi-Scale, Embodiment-Aware Encoder</a></h3>
-                        <p class="pcard-authors">Jiwon Choi, <strong>Hogyun Kim</strong>, Jungwoo Lee, Geonmo Yang, Seunghee Yun, Younggun Cho</p>
-                        <p class="pcard-venue"><em>IROS Workshop on Beyond Exteroception, IMU Odometry Challenge</em> (IROS-W 2026)</p>
-                        <p class="pcard-award"><i class="fas fa-trophy"></i>2nd Place among 131 teams, TartanIMU Challenge</p>
-                        <div class="pcard-links">
-                            <a href="https://sparolab.github.io/research/imu_challenge/" target="_blank" rel="noopener"><i class="fas fa-globe"></i>project</a>
-                            <a href="https://www.kaggle.com/competitions/tartan-imu-challenge-iros2026" target="_blank" rel="noopener"><i class="fas fa-flag-checkered"></i>challenge</a>
-                            <a href="https://huggingface.co/jivvon2/tartanimu-sparo" target="_blank" rel="noopener"><i class="fas fa-cube"></i>model</a>
-                        </div>
-                        <p class="pcard-tldr">Cross-Platform IMU Velocity Estimation</p>
-                    </div>
-                </article>
 
                 <article class="pcard is-mine is-hl" data-type="journal" data-role="first" data-year="2026">
                     <div class="pcard-img"><img src="images/skid_slam_tfr.gif" alt="SKiD-SLAM (T-FR)" loading="lazy"></div>
@@ -204,12 +200,13 @@
                             <a href="https://arxiv.org/abs/2606.25386" target="_blank" rel="noopener"><i class="ai ai-arxiv"></i>arXiv</a>
                             <a href="https://drive.google.com/file/d/17UeaBRYygMi1qjcLcUuYRVGvpiRb2Vq4/view?usp=sharing" target="_blank" rel="noopener"><i class="fas fa-file-alt"></i>paper</a>
                             <a href="https://www.youtube.com/watch?v=LV_8_jZbHV8&amp;t=1s" target="_blank" rel="noopener"><i class="fab fa-youtube"></i>video</a>
+                            <a href="https://github.com/sparolab/Commerge" target="_blank" rel="noopener"><i class="fab fa-github"></i>code</a>
                         </div>
                         <p class="pcard-tldr">Communication-Efficient Multi-Robot Map Merging Framework</p>
                     </div>
                 </article>
 
-                <article class="pcard is-mine" data-type="conference" data-role="first" data-year="2026">
+                <article class="pcard is-mine" data-type="conference" data-role="first" data-year="2026" data-topic="radar">
                     <div class="pcard-img"><img src="images/radloc.gif" alt="RadLoc" loading="lazy"></div>
                     <div class="pcard-body">
                         <div class="pills"><span class="pill">2026</span><span class="pill pill--first">1st Author</span><span class="pill pill--conference">Conference</span></div>
@@ -221,24 +218,9 @@
                             <a href="https://arxiv.org/abs/2607.08115" target="_blank" rel="noopener"><i class="ai ai-arxiv"></i>arXiv</a>
                             <a href="https://drive.google.com/file/d/1o3Z-3WFIcTTSdscaOeDs4VW23FCbYd3j/view?usp=sharing" target="_blank" rel="noopener"><i class="fas fa-file-alt"></i>paper</a>
                             <a href="https://www.youtube.com/watch?v=q8iaEpMSANU" target="_blank" rel="noopener"><i class="fab fa-youtube"></i>video</a>
+                            <a href="https://github.com/sparolab/RadLoc" target="_blank" rel="noopener"><i class="fab fa-github"></i>code</a>
                         </div>
                         <p class="pcard-tldr">Radar-based 3-DoF Global Localization</p>
-                    </div>
-                </article>
-
-                <article class="pcard" data-type="challenge" data-role="co" data-year="2026">
-                    <div class="pcard-img"><img src="images/hilti_challenge.jpg" alt="Hilti-Trimble SLAM Challenge" loading="lazy"></div>
-                    <div class="pcard-body">
-                        <div class="pills"><span class="pill">2026</span><span class="pill">Co-author</span><span class="pill pill--challenge">Challenge</span></div>
-                        <h3><a href="https://sparolab.github.io/research/hilti_challenge/" target="_blank" rel="noopener">&radic;VINS-Based 360 Visual-Inertial SLAM Systems</a></h3>
-                        <p class="pcard-authors">Jungwoo Lee, <strong>Hogyun Kim</strong>, Jiwon Choi, Jinyong Jeong, Younggun Cho</p>
-                        <p class="pcard-venue"><em>ICRA Workshop on Open Challenges in Robotics for Asset Inspection and Management</em> (ICRA-W 2026)</p>
-                        <p class="pcard-award"><i class="fas fa-trophy"></i>2nd Place (SLAM Category), Hilti-Trimble SLAM Challenge 2026</p>
-                        <div class="pcard-links">
-                            <a href="https://sparolab.github.io/research/hilti_challenge/" target="_blank" rel="noopener"><i class="fas fa-globe"></i>project</a>
-                            <a href="https://hilti-trimble-challenge.com/" target="_blank" rel="noopener"><i class="fas fa-flag-checkered"></i>challenge</a>
-                        </div>
-                        <p class="pcard-tldr">360-camera Visual-Inertial SLAM</p>
                     </div>
                 </article>
 
@@ -369,7 +351,7 @@
                     </div>
                 </article>
 
-                <article class="pcard is-mine" data-type="journal" data-role="first" data-year="2024">
+                <article class="pcard is-mine" data-type="journal" data-role="first" data-year="2024" data-topic="radar">
                     <div class="pcard-img"><img src="images/referee.png" alt="ReFeree" loading="lazy"></div>
                     <div class="pcard-body">
                         <div class="pills"><span class="pill">2024</span><span class="pill pill--first">Co-1st Author</span><span class="pill pill--journal">Journal</span></div>
@@ -433,9 +415,9 @@
             <header class="hm-panel-head">
                 <p class="hm-eyebrow">Projects</p>
                 <h2>Projects</h2>
-                <p>Research grants and funded projects.</p>
+                <p>Research grants, challenges, and open-source projects.</p>
             </header>
-            <!-- data-role: pi | participant -->
+            <!-- data-role: pi | participant | maintainer -->
             <div class="proj-list">
                 <article class="proj-card is-pi" data-role="pi">
                     <div class="proj-img"><img src="images/nrf_project.jpg" alt="Real-time multi-robot SLAM framework in communication-constrained scenarios" loading="lazy"></div>
@@ -453,6 +435,61 @@
                             <li><span>Year 2</span>Submap-based inter-robot registration and distributed back-end optimization for globally consistent mapping</li>
                             <li><span>Year 3</span>Datasets and hardware with real communication logs, full-system integration, and field validation</li>
                         </ul>
+                    </div>
+                </article>
+
+                <article class="proj-card" data-role="participant">
+                    <div class="proj-img"><img src="images/imu_challenge.png" alt="TartanIMU Challenge" loading="lazy"></div>
+                    <div class="proj-body">
+                        <div class="pills"><span class="pill">2026.10</span><span class="pill">Team Member</span><span class="pill pill--challenge">Challenge</span></div>
+                        <h3><a href="https://sparolab.github.io/research/imu_challenge/" target="_blank" rel="noopener">TartanIMU Challenge @IROS 2026</a></h3>
+                        <p class="proj-agency"><i class="fas fa-flag-checkered"></i>IMU Odometry Challenge &middot; Beyond Exteroception Workshop, IROS 2026</p>
+                        <p class="pcard-award"><i class="fas fa-trophy"></i>2nd Place among 131 teams</p>
+                        <p class="proj-desc">
+                            <em>Single-Head IMU Velocity Estimation Across Platforms via a Multi-Scale, Embodiment-Aware Encoder</em> &mdash;
+                            one network that estimates velocity from IMU alone across cars, quadrupeds, drones, and handheld devices.
+                        </p>
+                        <p class="pcard-authors">Jiwon Choi, <strong>Hogyun Kim</strong>, Jungwoo Lee, Geonmo Yang, Seunghee Yun, Younggun Cho</p>
+                        <div class="pcard-links">
+                            <a href="https://sparolab.github.io/research/imu_challenge/" target="_blank" rel="noopener"><i class="fas fa-globe"></i>project</a>
+                            <a href="https://www.kaggle.com/competitions/tartan-imu-challenge-iros2026" target="_blank" rel="noopener"><i class="fas fa-flag-checkered"></i>challenge</a>
+                            <a href="https://huggingface.co/jivvon2/tartanimu-sparo" target="_blank" rel="noopener"><i class="fas fa-cube"></i>model</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="proj-card" data-role="participant">
+                    <div class="proj-img"><img src="images/hilti_challenge.jpg" alt="Hilti-Trimble SLAM Challenge" loading="lazy"></div>
+                    <div class="proj-body">
+                        <div class="pills"><span class="pill">2026.06</span><span class="pill">Team Member</span><span class="pill pill--challenge">Challenge</span></div>
+                        <h3><a href="https://sparolab.github.io/research/hilti_challenge/" target="_blank" rel="noopener">Hilti-Trimble SLAM Challenge 2026 @ICRA 2026</a></h3>
+                        <p class="proj-agency"><i class="fas fa-flag-checkered"></i>Workshop on Open Challenges in Robotics for Asset Inspection and Management, ICRA 2026</p>
+                        <p class="pcard-award"><i class="fas fa-trophy"></i>2nd Place, SLAM Category</p>
+                        <p class="proj-desc">
+                            <em>&radic;VINS-Based 360 Visual-Inertial SLAM Systems</em> &mdash;
+                            a 360-camera visual-inertial SLAM pipeline for long indoor sequences with dark regions, repetitive corridors, and dynamic objects.
+                        </p>
+                        <p class="pcard-authors">Jungwoo Lee, <strong>Hogyun Kim</strong>, Jiwon Choi, Jinyong Jeong, Younggun Cho</p>
+                        <div class="pcard-links">
+                            <a href="https://sparolab.github.io/research/hilti_challenge/" target="_blank" rel="noopener"><i class="fas fa-globe"></i>project</a>
+                            <a href="https://hilti-trimble-challenge.com/" target="_blank" rel="noopener"><i class="fas fa-flag-checkered"></i>challenge</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="proj-card" data-role="maintainer">
+                    <div class="proj-img"><img src="images/awesome_lidar_pr.gif" alt="Awesome LiDAR Place Recognition" loading="lazy"></div>
+                    <div class="proj-body">
+                        <div class="pills"><span class="pill">2024 &ndash; Present</span><span class="pill pill--first">Maintainer</span><span class="pill pill--oss">Open Source</span></div>
+                        <h3><a href="https://github.com/hogyun2/awesome-lidar-place-recognition" target="_blank" rel="noopener">Awesome LiDAR Place Recognition</a></h3>
+                        <p class="proj-agency"><i class="fab fa-github"></i>Personal Project &middot; Curated List</p>
+                        <p class="proj-desc">
+                            A curated list of LiDAR place recognition research with code or download pages, covering handcrafted and learning-based methods,
+                            single-session, multi-session, and multi-robot datasets, and related algorithms such as multi-robot mapping and SLAM.
+                        </p>
+                        <div class="pcard-links">
+                            <a href="https://github.com/hogyun2/awesome-lidar-place-recognition" target="_blank" rel="noopener"><i class="fab fa-github"></i>code</a>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -599,6 +636,9 @@
         document.querySelectorAll('[data-news-list] li').forEach((li, i) => { if (i < 6) latest.appendChild(li.cloneNode(true)); });
         const selected = document.querySelector('[data-selected-papers]');
         document.querySelectorAll('[data-paper-grid] .pcard.is-hl').forEach(card => selected.appendChild(card.cloneNode(true)));
+        document.querySelectorAll('[data-topic-papers]').forEach(grid => {
+            document.querySelectorAll('[data-paper-grid] .pcard[data-topic="' + grid.dataset.topicPapers + '"]').forEach(card => grid.appendChild(card.cloneNode(true)));
+        });
 
         // ── News filter ──
         const newsItems = document.querySelectorAll('[data-news-list] li');
@@ -655,6 +695,39 @@
         });
         search.addEventListener('input', applyPaperFilters);
         applyPaperFilters();
+
+        // ── GitHub stars on code links (cached for 6h; unauthenticated API allows 60 req/h) ──
+        const STAR_TTL = 6 * 60 * 60 * 1000;
+        const codeLinks = {};
+        document.querySelectorAll('.pcard-links a[href*="github.com/"]').forEach(a => {
+            const m = a.href.match(/github\.com\/([^\/?#]+)\/([^\/?#]+)/);
+            if (!m) return;
+            const repo = (m[1] + '/' + m[2].replace(/\.git$/, '')).toLowerCase();
+            (codeLinks[repo] = codeLinks[repo] || []).push(a);
+        });
+        function showStars(repo, n) {
+            codeLinks[repo].forEach(a => {
+                if (a.querySelector('.gh-stars')) return;
+                const span = document.createElement('span');
+                span.className = 'gh-stars';
+                span.innerHTML = '<i class="fas fa-star"></i>' + (n >= 1000 ? (n / 1000).toFixed(1) + 'k' : n);
+                a.appendChild(span);
+            });
+        }
+        Object.keys(codeLinks).forEach(repo => {
+            const key = 'gh-stars:' + repo;
+            try {
+                const c = JSON.parse(localStorage.getItem(key) || 'null');
+                if (c && Date.now() - c.t < STAR_TTL) { showStars(repo, c.n); return; }
+            } catch (e) {}
+            fetch('https://api.github.com/repos/' + repo)
+                .then(r => r.ok ? r.json() : Promise.reject())
+                .then(d => {
+                    showStars(repo, d.stargazers_count);
+                    try { localStorage.setItem(key, JSON.stringify({ n: d.stargazers_count, t: Date.now() })); } catch (e) {}
+                })
+                .catch(() => {});
+        });
     })();
     </script>
 </body>

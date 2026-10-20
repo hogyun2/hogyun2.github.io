@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Place Recognition to Multi-Robot SLAM Based on Imaging Radar · Hogyun Kim</title>
+    <meta name="description" content="How a radar place-recognition descriptor grew into a full multi-robot SLAM system, and what imaging radar taught me at each step.">
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../home.css">
+    <link rel="stylesheet" href="../post.css">
+    <script>
+        try {
+            const t = localStorage.getItem('theme');
+            if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+        window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 0.95 } };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+</head>
+<body>
+    <div class="post-progress" aria-hidden="true"></div>
+
+    <nav class="topnav" id="topnav">
+        <div class="hd-util">
+            <div class="hd-inner">
+                <a class="hd-home" href="../index.html"><i class="fas fa-house"></i> Hogyun Kim</a>
+                <span class="hd-aff">SPARO Lab · Inha University</span>
+                <div class="hd-util-right">
+                    <a class="hd-link" href="https://scholar.google.com/citations?user=t5UEbooAAAAJ&hl" target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i><span> Scholar</span></a>
+                    <a class="hd-link" href="https://github.com/hogyun2/" target="_blank" rel="noopener"><i class="fab fa-github"></i><span> GitHub</span></a>
+                    <a class="hd-link" href="https://www.linkedin.com/in/hogyun-kim/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i><span> LinkedIn</span></a>
+                    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="hd-brand">
+            <span class="hd-brand-title">Hogyun Kim</span>
+            <span class="hd-brand-sub">Multi-Robot SLAM · Scalable &amp; Collaborative Robot Autonomy</span>
+        </div>
+        <div class="tabs">
+            <div class="tabs-scroll">
+                <a class="tab" href="../index.html">Home</a>
+                <a class="tab" href="../index.html#research">Research</a>
+                <a class="tab" href="../index.html#projects">Projects</a>
+                <a class="tab" href="../index.html#news">News</a>
+                <a class="tab" href="../index.html#etc">ETC</a>
+                <a class="tab is-active" href="../posts.html">Posts</a>
+                <a class="tab-cta" href="../data/pdf/CV.pdf" target="_blank">CV</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hm">
+        <div class="post-wrap">
+            <div>
+                <header class="post-hero">
+                    <a class="post-back" href="../posts.html"><i class="fas fa-arrow-left"></i> All posts</a>
+                    <div class="pills"><span class="pill pill--tag">Radar</span><span class="pill pill--tag">Place Recognition</span><span class="pill pill--tag">Multi-Robot SLAM</span></div>
+                    <h1>From Place Recognition to Multi-Robot SLAM Based on <em>Imaging Radar</em></h1>
+                    <p class="post-lede">
+                        I started with a narrow question &mdash; can a robot recognize where it is from a single radar scan? &mdash;
+                        and ended up building a multi-robot SLAM system around the answer. This post walks through that path,
+                        what changed at each step, and what the sensor kept teaching me along the way.
+                    </p>
+                    <div class="post-meta">
+                        <span><i class="far fa-user"></i>Hogyun Kim</span>
+                        <span><i class="far fa-calendar"></i>Oct 20, 2026</span>
+                    </div>
+                </header>
+
+                <article class="prose">
+                    <div class="callout">
+                        <span class="callout-title">TL;DR</span>
+                        <ul>
+                            <li><strong>Place recognition</strong> on radar works best when you stop trusting the bright returns. <a href="https://sparolab.github.io/research/referee/" target="_blank" rel="noopener">ReFeree</a> describes a scan by its <em>free space</em> as much as by its features.</li>
+                            <li><strong>Global localization</strong> needs a pose, not just a match. <a href="https://sparolab.github.io/research/radloc/" target="_blank" rel="noopener">RadLoc</a> turns retrieval into a full 3-DoF localization module that is fast enough to run inside SLAM.</li>
+                            <li><strong>Multi-robot SLAM</strong> changes what “correct” means: every inter-robot loop is expensive to send and hard to undo. The bugs that hurt most were sign and direction conventions, not algorithms.</li>
+                            <li>Radar measures <strong>Doppler velocity for free</strong>. Putting it into the back-end turned out to keep the problem in the same certifiable form as SE(2) pose-graph optimization.</li>
+                        </ul>
+                    </div>
+
+
+                    <!-- Body: to be written -->
+
+                </article>
+
+                <div class="post-foot">
+                    <a href="../posts.html"><i class="fas fa-arrow-left"></i> All posts</a>
+                    <span>Questions or comments? <a href="mailto:hg.kim@inha.edu">hg.kim@inha.edu</a></span>
+                </div>
+            </div>
+
+            <aside class="toc">
+                <p class="toc-title">On this page</p>
+                <ol data-toc></ol>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Hogyun Kim · Design inspired by <a href="https://jivvon1.github.io/" target="_blank" rel="noopener">Jiwon Choi</a> and <a href="https://github.com/jonbarron/jonbarron_website" target="_blank" rel="noopener">Jon Barron</a>.</p>
+    </footer>
+
+    <script src="../site.js"></script>
+</body>
+</html>
